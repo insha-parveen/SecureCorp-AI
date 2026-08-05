@@ -1,0 +1,56 @@
+customer_id,company,industry,country,account_manager,contract_value,status
+CUST-001,ACME Manufacturing,Manufacturing,USA,Meera Iyer,7500000,active
+CUST-002,Horizon Retail,Retail,UAE,Meera Iyer,4500000,active
+CUST-003,Bluepeak Logistics,Logistics,Singapore,Daniel Lim,3800000,active
+CUST-004,Vertex Financial,Financial Services,India,Meera Iyer,5600000,active
+CUST-005,Nimbus Health,Healthcare,India,Daniel Lim,4900000,active
+CUST-006,MEA Retail Group,Retail,UAE,Meera Iyer,3000000,planning
+CUST-007,Tata Motors,E-commerce,UAE,Sunita Rao,27235203,active
+CUST-008,Reliance Digital,E-commerce,Singapore,Sunita Rao,15427613,prospect
+CUST-009,Infosys Consulting,Manufacturing,Canada,Sunita Rao,22674338,active
+CUST-010,Wipro Healthcare,Consumer Goods,India,Sunita Rao,8638167,active
+CUST-011,Oracle Retail,Consumer Goods,USA,Meera Iyer,1619673,archived
+CUST-012,Flipkart,Telecom,UAE,Meera Iyer,2415898,archived
+CUST-013,Amazon India,Manufacturing,UK,Sunita Rao,6139171,active
+CUST-014,HDFC Bank,Media,Japan,Ayesha Khan,12933886,archived
+CUST-015,ICICI Bank,Energy,Japan,Sunita Rao,2792742,prospect
+CUST-016,Kotak Securities,Logistics,Germany,Meera Iyer,6088581,prospect
+CUST-017,Airtel Business,IT Services,Canada,Daniel Lim,24522866,active
+CUST-018,Vodafone Idea,Energy,India,Meera Iyer,10111400,archived
+CUST-019,Jio Platforms,Pharma,Canada,Sunita Rao,17948730,archived
+CUST-020,Mahindra Group,Energy,USA,Daniel Lim,15556019,active
+CUST-021,L&T Infotech,Logistics,UK,Daniel Lim,29467113,active
+CUST-022,SBI Life,Manufacturing,Japan,Meera Iyer,8175420,active
+CUST-023,Adani Group,Retail,UAE,Meera Iyer,15080076,prospect
+CUST-024,Britannia,Pharma,India,Daniel Lim,24948435,active
+CUST-025,Asian Paints,IT Services,Australia,Daniel Lim,18211333,active
+CUST-026,Maruti Suzuki,Media,India,Daniel Lim,17007938,active
+CUST-027,HCL Technologies,Financial Services,Netherlands,Ayesha Khan,19476839,prospect
+CUST-028,Tech Mahindra,Media,Germany,Daniel Lim,10225534,active
+CUST-029,Lupin Pharma,Pharma,Canada,Daniel Lim,13976777,active
+CUST-030,Sun Pharma,Healthcare,India,Daniel Lim,21104844,archived
+CUST-031,Cipla,Automotive,Australia,Meera Iyer,11656643,archived
+CUST-032,Dabur,Media,Canada,Ayesha Khan,23464233,archived
+CUST-033,Godrej,IT Services,Singapore,Ayesha Khan,12731907,active
+CUST-034,Titan,Media,Canada,Sunita Rao,8185550,active
+CUST-035,Bajaj Auto,Healthcare,Singapore,Sunita Rao,2033538,prospect
+CUST-036,Hero MotoCorp,IT Services,Japan,Daniel Lim,13133180,active
+CUST-037,Samsung India,Healthcare,USA,Ayesha Khan,21799847,active
+CUST-038,LG India,E-commerce,Germany,Meera Iyer,18072946,active
+CUST-039,Sony India,Manufacturing,UK,Sunita Rao,22704678,prospect
+CUST-040,PepsiCo India,FMCG,India,Meera Iyer,6413712,prospect
+CUST-041,Coca-Cola India,Consumer Goods,Canada,Daniel Lim,16185800,active
+CUST-042,Nestle India,Energy,Germany,Ayesha Khan,614513,active
+CUST-043,Unilever India,Financial Services,UAE,Sunita Rao,8240076,prospect
+CUST-044,ITC Limited,Consumer Goods,USA,Sunita Rao,8130614,prospect
+CUST-045,Raymond,Telecom,UK,Sunita Rao,15744769,prospect
+CUST-046,Page Industries,Pharma,Germany,Ayesha Khan,8876551,active
+CUST-047,Adidas India,Automotive,Australia,Sunita Rao,3408743,archived
+CUST-048,Nike India,Media,Germany,Daniel Lim,12538793,active
+CUST-049,Zomato,IT Services,India,Daniel Lim,24972302,active
+CUST-050,Swiggy,Manufacturing,UK,Sunita Rao,10005009,active
+CUST-051,Paytm,Financial Services,Germany,Daniel Lim,12845307,prospect
+CUST-052,PhonePe,Energy,USA,Sunita Rao,18576497,active
+CUST-053,Razorpay,Healthcare,Australia,Sunita Rao,15562855,active
+CUST-054,CRED,Consumer Goods,Germany,Daniel Lim,4796228,prospect
+CUST-055,Freshworks,E-commerce,Singapore,Meera Iyer,17680657,active

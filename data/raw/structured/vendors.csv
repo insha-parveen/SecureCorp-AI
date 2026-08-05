@@ -1,0 +1,31 @@
+vendor_id,vendor_name,service_type,country,contract_start,contract_end,owner_department
+VEN-014,Bluewave Cloud Services,Cloud Hosting,USA,2025-01-01,2027-12-31,ENG
+VEN-001,TechSupply Corporation,Hardware,India,2025-03-01,2027-02-28,ADMIN
+VEN-002,CyberGuard Solutions,Security Software,USA,2025-06-01,2027-05-31,ITSEC
+VEN-003,DataMetrics Inc,Data Platform,Germany,2025-04-01,2027-03-31,ENG
+VEN-004,CloudNative Labs,DevOps Tools,UK,2025-05-01,2027-04-30,ENG
+VEN-005,AeroSpace Systems,Software,India,2025-01-01,2027-12-31,ADMIN
+VEN-006,FinServe Data,Hardware,Japan,2025-01-01,2027-12-31,ITSEC
+VEN-007,LogiTrack Corp,Training,Germany,2025-01-01,2027-12-31,ENG
+VEN-008,Healthcare IT,Support Services,UK,2025-01-01,2027-12-31,ENG
+VEN-009,RetailTech,Security,Australia,2025-01-01,2027-12-31,FIN
+VEN-010,SecureNet,Hardware,Australia,2025-01-01,2027-12-31,HR
+VEN-011,CloudSigma,Networking,India,2025-01-01,2027-12-31,ENG
+VEN-012,DataWare,Monitoring,Japan,2025-01-01,2027-12-31,ENG
+VEN-013,ITByte,Hardware,Singapore,2025-01-01,2027-12-31,SALES
+VEN-014,Meridian Soft,Data Platform,India,2025-01-01,2027-12-31,SALES
+VEN-015,Vertex Networks,Support Services,Japan,2025-01-01,2027-12-31,ADMIN
+VEN-016,Omega Electronics,Cloud Hosting,USA,2025-01-01,2027-12-31,ENG
+VEN-017,PrimeCloud,Monitoring,UK,2025-01-01,2027-12-31,ITSEC
+VEN-018,NexGen Security,Security,Singapore,2025-01-01,2027-12-31,ADMIN
+VEN-019,ComputeCore,DevOps Tools,Singapore,2025-01-01,2027-12-31,ADMIN
+VEN-020,DataStream,Telecom,USA,2025-01-01,2027-12-31,FIN
+VEN-021,Quantum Soft,Telecom,Australia,2025-01-01,2027-12-31,SALES
+VEN-022,UnifiedCloud,Security,Germany,2025-01-01,2027-12-31,FIN
+VEN-023,VertexLabs,Training,USA,2025-01-01,2027-12-31,HR
+VEN-024,SecureHost,Training,India,2025-01-01,2027-12-31,ENG
+VEN-025,NetSolutions,Telecom,Japan,2025-01-01,2027-12-31,OPS
+VEN-026,EliteHardware,Monitoring,Australia,2025-01-01,2027-12-31,ENG
+VEN-027,CoreMemory,Training,India,2025-01-01,2027-12-31,HR
+VEN-028,EdgeSignal,Cloud Hosting,USA,2025-01-01,2027-12-31,OPS
+VEN-029,Infinium,Telecom,UAE,2025-01-01,2027-12-31,SALES

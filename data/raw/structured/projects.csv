@@ -1,0 +1,31 @@
+project_id,project_name,customer,project_manager,status,budget,start_date,end_date,department
+PRJ-001,Project Orion Platform,Multiple,Sunita Rao,active,12000000,2025-01-01,2027-12-31,ENG
+PRJ-002,Project Atlas,MEA Retail Group,Sunita Rao,planning,8000000,2026-04-01,2028-03-31,ENG
+PRJ-003,Cloud Migration,Internal,Rahul Sharma,in_progress,8450000,2026-03-01,2026-11-06,ENG
+PRJ-004,ACME Manufacturing Deployment,ACME Manufacturing,Ayesha Khan,active,5000000,2026-03-09,2026-05-01,OPS
+PRJ-005,Internal Platform,Internal,Sunita Rao,active,3000000,2025-06-01,2026-12-31,ENG
+PRJ-006,Security Remediation,Internal,Rohit Verma,active,1500000,2026-04-01,2026-09-30,ITSEC
+PRJ-007,AI Adoption,Internal,Arvind Malhotra,active,2000000,2026-03-15,2027-01-31,ADMIN
+PRJ-008,Managed Monitoring,Internal,Neha Kapoor,on_hold,2186863,2026-01-01,2027-12-31,OPS
+PRJ-009,Cloud Optimization,ACME Manufacturing,Rohit Verma,completed,7326774,2026-01-01,2027-12-31,ITSEC
+PRJ-010,Data Analytics Platform,Multiple,Meera Iyer,completed,13182083,2026-01-01,2027-12-31,SALES
+PRJ-011,Client Portal,Nimbus Health,Meera Iyer,active,13397065,2025-01-01,2027-12-31,FIN
+PRJ-012,DevOps Transformation,Vertex Financial,Rohit Verma,active,3437099,2026-01-01,2027-12-31,OPS
+PRJ-013,Incident Automation,ACME Manufacturing,Ayesha Khan,on_hold,3625790,2026-01-01,2027-12-31,SALES
+PRJ-014,Observability Enhancement,ACME Manufacturing,Sunita Rao,planning,10028818,2026-01-01,2027-12-31,SALES
+PRJ-015,Southeast Asia Expansion,Nimbus Health,Ayesha Khan,on_hold,2751501,2026-01-01,2027-12-31,ITSEC
+PRJ-016,MEA Customer Delivery,Nimbus Health,Rahul Sharma,active,6047958,2025-01-01,2027-12-31,ITSEC
+PRJ-017,Retail Analytics,Nimbus Health,Meera Iyer,completed,736293,2026-01-01,2027-12-31,SALES
+PRJ-018,Logistics Monitoring,Vertex Financial,Rahul Sharma,on_hold,14374586,2026-01-01,2027-12-31,SALES
+PRJ-019,Healthcare Compliance,Horizon Retail,Ayesha Khan,active,3600114,2026-01-01,2027-12-31,ITSEC
+PRJ-020,Fintech Security,MEA Retail Group,Rahul Sharma,active,4875250,2026-01-01,2027-12-31,ITSEC
+PRJ-021,Public Sector Cloud,Nimbus Health,Neha Kapoor,planning,10272069,2026-01-01,2027-12-31,ENG
+PRJ-022,E-commerce Platform,Nimbus Health,Meera Iyer,planning,12122728,2025-01-01,2027-12-31,ADMIN
+PRJ-023,Telecom Migration,Horizon Retail,Ayesha Khan,planning,3179603,2026-01-01,2027-12-31,FIN
+PRJ-024,Manufacturing IoT,Nimbus Health,Meera Iyer,active,11215797,2026-01-01,2027-12-31,SALES
+PRJ-025,Customer Success Enablement,MEA Retail Group,Rohit Verma,completed,4176367,2026-01-01,2027-12-31,ITSEC
+PRJ-026,API Gateway Modernization,Bluepeak Logistics,Ayesha Khan,planning,7476731,2026-01-01,2027-12-31,ITSEC
+PRJ-027,Ransomware Response,Vertex Financial,Rahul Sharma,active,9316538,2026-01-01,2027-12-31,ADMIN
+PRJ-028,Backup Infrastructure,MEA Retail Group,Sunita Rao,active,1536128,2026-01-01,2027-12-31,FIN
+PRJ-029,Identity and Access,Vertex Financial,Rohit Verma,completed,3260475,2026-01-01,2027-12-31,FIN
+PRJ-030,Legacy Migration,Multiple,Sunita Rao,active,6513943,2026-01-01,2027-06-30,FIN

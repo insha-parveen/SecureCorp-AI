@@ -288,6 +288,7 @@ _(none yet — add as generated)_
 | `SLACK-CORPUS` | Slack Workspace Corpus | slack_corpus | ALL | v1 | 2026-03-03 | active | department_internal | null | HR-001, HR-002, HR-003, HR-004, HR-006, FIN-001, FIN-002, FIN-003, ITSEC-001, ITSEC-002, ITSEC-005, ITSEC-006, ITSEC-007, ITSEC-008, ENG-001, ENG-002, ENG-003, OPS-001, OPS-002, OPS-003, SEC-001, PM-001, CLIENT-001 | `data/raw/slack/` |
 | `JIRA-CORPUS` | Jira Project Corpus | jira_corpus | ALL | v1 | 2026-02-08 | active | department_internal | null | ENG-001, ENG-002, ENG-003, ENG-004, ITSEC-001, ITSEC-002, ITSEC-005, ITSEC-006, ITSEC-007, FIN-001, FIN-002, FIN-003, HR-006, SEC-001, OPS-002, OPS-003, PM-001, CLIENT-001 | `data/raw/jira/` |
 | `GITHUB-CORPUS` | GitHub Repository Corpus | github_corpus | ALL | v1 | 2026-02-09 | active | department_internal | null | ENG-001, ENG-002, ENG-003, ENG-004, ITSEC-001, ITSEC-002, ITSEC-006, ITSEC-007, FIN-001, FIN-003, SEC-001, OPS-002, PM-001, CLIENT-001 | `data/raw/github/` |
+| `STRUCTURED-CORPUS` | Structured Enterprise Datasets | structured | ALL | v1 | 2026-01-01 | active | mixed | null | ALL | `data/raw/structured/` |
 | `EMAIL-CORPUS` | Enterprise Email Archive | email | ALL | v1 | 2026-01-01 | active | mixed | null | ALL | `data/raw/emails/` |
 | `MEETING-CORPUS` | Enterprise Meeting Transcripts | meeting | ALL | v1 | 2026-01-01 | active | mixed | null | ALL | `data/raw/meetings/` |
 

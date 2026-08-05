@@ -1,0 +1,402 @@
+[
+  {
+    "role": "employee",
+    "query": "What is my annual leave entitlement?",
+    "should_allow": true,
+    "expected_docs": [
+      "HR-002"
+    ]
+  },
+  {
+    "role": "employee",
+    "query": "What is the remote work policy?",
+    "should_allow": true,
+    "expected_docs": [
+      "HR-003"
+    ]
+  },
+  {
+    "role": "employee",
+    "query": "What is the expense reimbursement deadline?",
+    "should_allow": true,
+    "expected_docs": [
+      "FIN-003"
+    ]
+  },
+  {
+    "role": "employee",
+    "query": "What is the password policy?",
+    "should_allow": true,
+    "expected_docs": [
+      "ITSEC-002"
+    ]
+  },
+  {
+    "role": "employee",
+    "query": "What is the acceptable use policy?",
+    "should_allow": true,
+    "expected_docs": [
+      "ITSEC-003"
+    ]
+  },
+  {
+    "role": "employee",
+    "query": "What is the employee handbook?",
+    "should_allow": true,
+    "expected_docs": [
+      "HR-001"
+    ]
+  },
+  {
+    "role": "employee",
+    "query": "What is the code of conduct?",
+    "should_allow": true,
+    "expected_docs": [
+      "HR-006"
+    ]
+  },
+  {
+    "role": "employee",
+    "query": "What is the VPN policy?",
+    "should_allow": true,
+    "expected_docs": [
+      "ITSEC-008"
+    ]
+  },
+  {
+    "role": "employee",
+    "query": "What is the data classification policy?",
+    "should_allow": true,
+    "expected_docs": [
+      "ITSEC-006"
+    ]
+  },
+  {
+    "role": "employee",
+    "query": "What is the incident response plan?",
+    "should_allow": true,
+    "expected_docs": [
+      "ITSEC-005"
+    ]
+  },
+  {
+    "role": "manager",
+    "query": "What is the leave approval process?",
+    "should_allow": true,
+    "expected_docs": [
+      "HR-002"
+    ]
+  },
+  {
+    "role": "manager",
+    "query": "What is the performance review process?",
+    "should_allow": true,
+    "expected_docs": [
+      "HR-005"
+    ]
+  },
+  {
+    "role": "manager",
+    "query": "What is the exit procedure?",
+    "should_allow": true,
+    "expected_docs": [
+      "HR-007"
+    ]
+  },
+  {
+    "role": "manager",
+    "query": "What is the offboarding checklist?",
+    "should_allow": true,
+    "expected_docs": [
+      "ITSEC-004"
+    ]
+  },
+  {
+    "role": "manager",
+    "query": "What is the incident severity classification?",
+    "should_allow": true,
+    "expected_docs": [
+      "ITSEC-005"
+    ]
+  },
+  {
+    "role": "manager",
+    "query": "What is the customer onboarding process?",
+    "should_allow": true,
+    "expected_docs": [
+      "OPS-001"
+    ]
+  },
+  {
+    "role": "manager",
+    "query": "What is the Project Orion architecture?",
+    "should_allow": true,
+    "expected_docs": [
+      "ENG-001"
+    ]
+  },
+  {
+    "role": "manager",
+    "query": "What is the cloud migration plan?",
+    "should_allow": true,
+    "expected_docs": [
+      "ENG-002"
+    ]
+  },
+  {
+    "role": "manager",
+    "query": "What is the ACME implementation plan?",
+    "should_allow": true,
+    "expected_docs": [
+      "CLIENT-001"
+    ]
+  },
+  {
+    "role": "manager",
+    "query": "What is the quarterly operations report?",
+    "should_allow": true,
+    "expected_docs": [
+      "OPS-003"
+    ]
+  },
+  {
+    "role": "finance",
+    "query": "What is the invoice approval threshold?",
+    "should_allow": true,
+    "expected_docs": [
+      "FIN-002"
+    ]
+  },
+  {
+    "role": "finance",
+    "query": "What is the expense reimbursement policy?",
+    "should_allow": true,
+    "expected_docs": [
+      "FIN-003"
+    ]
+  },
+  {
+    "role": "finance",
+    "query": "What is the procurement policy?",
+    "should_allow": true,
+    "expected_docs": [
+      "FIN-001"
+    ]
+  },
+  {
+    "role": "finance",
+    "query": "What is the budget variance?",
+    "should_allow": true,
+    "expected_docs": [
+      "OPS-003"
+    ]
+  },
+  {
+    "role": "finance",
+    "query": "What is the cloud migration budget?",
+    "should_allow": true,
+    "expected_docs": [
+      "ENG-002"
+    ]
+  },
+  {
+    "role": "finance",
+    "query": "What is the invoice payment status?",
+    "should_allow": true,
+    "expected_docs": [
+      "invoices.csv"
+    ]
+  },
+  {
+    "role": "finance",
+    "query": "What is the expense approval workflow?",
+    "should_allow": true,
+    "expected_docs": [
+      "FIN-003"
+    ]
+  },
+  {
+    "role": "finance",
+    "query": "What is the travel expense policy?",
+    "should_allow": true,
+    "expected_docs": [
+      "HR-004"
+    ]
+  },
+  {
+    "role": "finance",
+    "query": "What is the expense claim status?",
+    "should_allow": true,
+    "expected_docs": [
+      "expenses.csv"
+    ]
+  },
+  {
+    "role": "finance",
+    "query": "What is the vendor onboarding process?",
+    "should_allow": true,
+    "expected_docs": [
+      "FIN-001"
+    ]
+  },
+  {
+    "role": "hr",
+    "query": "What is the employee handbook?",
+    "should_allow": true,
+    "expected_docs": [
+      "HR-001"
+    ]
+  },
+  {
+    "role": "hr",
+    "query": "What is the leave policy?",
+    "should_allow": true,
+    "expected_docs": [
+      "HR-002"
+    ]
+  },
+  {
+    "role": "hr",
+    "query": "What is the remote work policy?",
+    "should_allow": true,
+    "expected_docs": [
+      "HR-003"
+    ]
+  },
+  {
+    "role": "hr",
+    "query": "What is the performance review policy?",
+    "should_allow": true,
+    "expected_docs": [
+      "HR-005"
+    ]
+  },
+  {
+    "role": "hr",
+    "query": "What is the code of conduct?",
+    "should_allow": true,
+    "expected_docs": [
+      "HR-006"
+    ]
+  },
+  {
+    "role": "hr",
+    "query": "What is the exit procedure?",
+    "should_allow": true,
+    "expected_docs": [
+      "HR-007"
+    ]
+  },
+  {
+    "role": "hr",
+    "query": "What is the grievance procedure?",
+    "should_allow": true,
+    "expected_docs": [
+      "HR-008"
+    ]
+  },
+  {
+    "role": "hr",
+    "query": "What is the employee exit procedure?",
+    "should_allow": true,
+    "expected_docs": [
+      "HR-007"
+    ]
+  },
+  {
+    "role": "hr",
+    "query": "What is the travel and expense policy?",
+    "should_allow": true,
+    "expected_docs": [
+      "HR-004"
+    ]
+  },
+  {
+    "role": "hr",
+    "query": "What is the employee offboarding checklist?",
+    "should_allow": true,
+    "expected_docs": [
+      "ITSEC-004"
+    ]
+  },
+  {
+    "role": "it",
+    "query": "What is the password policy?",
+    "should_allow": true,
+    "expected_docs": [
+      "ITSEC-002"
+    ]
+  },
+  {
+    "role": "it",
+    "query": "What is the information security policy?",
+    "should_allow": true,
+    "expected_docs": [
+      "ITSEC-001"
+    ]
+  },
+  {
+    "role": "it",
+    "query": "What is the incident response plan?",
+    "should_allow": true,
+    "expected_docs": [
+      "ITSEC-005"
+    ]
+  },
+  {
+    "role": "it",
+    "query": "What is the data classification policy?",
+    "should_allow": true,
+    "expected_docs": [
+      "ITSEC-006"
+    ]
+  },
+  {
+    "role": "it",
+    "query": "What is the backup and disaster recovery policy?",
+    "should_allow": true,
+    "expected_docs": [
+      "ITSEC-007"
+    ]
+  },
+  {
+    "role": "it",
+    "query": "What is the VPN policy?",
+    "should_allow": true,
+    "expected_docs": [
+      "ITSEC-008"
+    ]
+  },
+  {
+    "role": "it",
+    "query": "What is the acceptable use policy?",
+    "should_allow": true,
+    "expected_docs": [
+      "ITSEC-003"
+    ]
+  },
+  {
+    "role": "it",
+    "query": "What is the offboarding checklist?",
+    "should_allow": true,
+    "expected_docs": [
+      "ITSEC-004"
+    ]
+  },
+  {
+    "role": "it",
+    "query": "What is the security audit report?",
+    "should_allow": true,
+    "expected_docs": [
+      "SEC-001"
+    ]
+  },
+  {
+    "role": "admin",
+    "query": "What is the security audit report?",
+    "should_allow": true,
+    "expected_docs": [
+      "SEC-001"
+    ]
+  }
+]

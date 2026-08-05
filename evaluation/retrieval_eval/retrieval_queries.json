@@ -1,0 +1,588 @@
+[
+  {
+    "query": "What is the annual leave entitlement?",
+    "expected_chunk_sources": [
+      "HR-002"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "How many sick leave days are available?",
+    "expected_chunk_sources": [
+      "HR-002"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What is the remote work weekly limit?",
+    "expected_chunk_sources": [
+      "HR-003"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What is the extended remote work approval process?",
+    "expected_chunk_sources": [
+      "HR-003"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What is the notice period for resignation?",
+    "expected_chunk_sources": [
+      "HR-007"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What is the exit interview purpose?",
+    "expected_chunk_sources": [
+      "HR-007"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What does the code of conduct cover?",
+    "expected_chunk_sources": [
+      "HR-006"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What is the performance review process?",
+    "expected_chunk_sources": [
+      "HR-005"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What is the grievance procedure?",
+    "expected_chunk_sources": [
+      "HR-008"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What is the travel expense policy?",
+    "expected_chunk_sources": [
+      "HR-004"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What is the employee handbook?",
+    "expected_chunk_sources": [
+      "HR-001"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What is the expense submission deadline?",
+    "expected_chunk_sources": [
+      "FIN-003"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What is the invoice approval threshold?",
+    "expected_chunk_sources": [
+      "FIN-002"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What is the procurement policy?",
+    "expected_chunk_sources": [
+      "FIN-001"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What is the expense reimbursement process?",
+    "expected_chunk_sources": [
+      "FIN-003"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What is the minimum password length?",
+    "expected_chunk_sources": [
+      "ITSEC-002"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What is the account lockout policy?",
+    "expected_chunk_sources": [
+      "ITSEC-002"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What is the data classification for client data?",
+    "expected_chunk_sources": [
+      "ITSEC-006"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What is the RTO for Tier 1 systems?",
+    "expected_chunk_sources": [
+      "ITSEC-007"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What is the VPN access requirement?",
+    "expected_chunk_sources": [
+      "ITSEC-008"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What is the incident severity classification?",
+    "expected_chunk_sources": [
+      "ITSEC-005"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What is the acceptable use policy?",
+    "expected_chunk_sources": [
+      "ITSEC-003"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What is the offboarding access revocation?",
+    "expected_chunk_sources": [
+      "ITSEC-004"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What is the information security policy?",
+    "expected_chunk_sources": [
+      "ITSEC-001"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What is the Project Orion architecture?",
+    "expected_chunk_sources": [
+      "ENG-001"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What is the cloud migration plan?",
+    "expected_chunk_sources": [
+      "ENG-002"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What is the API design guideline?",
+    "expected_chunk_sources": [
+      "ENG-003"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What is the engineering handbook?",
+    "expected_chunk_sources": [
+      "ENG-004"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What is the customer onboarding process?",
+    "expected_chunk_sources": [
+      "OPS-001"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What was the DR test outcome?",
+    "expected_chunk_sources": [
+      "OPS-002"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What is the quarterly operations report?",
+    "expected_chunk_sources": [
+      "OPS-003"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What is the security audit result?",
+    "expected_chunk_sources": [
+      "SEC-001"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What is the AI adoption strategy?",
+    "expected_chunk_sources": [
+      "PM-001"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What is the ACME implementation plan?",
+    "expected_chunk_sources": [
+      "CLIENT-001"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What was the authentication service failure?",
+    "expected_chunk_sources": [
+      "JIRA-ORION-001",
+      "SLK-ENG-BE-001"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What was the CORS issue for ACME?",
+    "expected_chunk_sources": [
+      "JIRA-ACME-001",
+      "SLK-ENG-FE-001"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What was the phishing incident?",
+    "expected_chunk_sources": [
+      "JIRA-SEC-001",
+      "SLK-SEC-002"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What was the backup monitoring fix?",
+    "expected_chunk_sources": [
+      "JIRA-CLOUD-003",
+      "SLK-OPS-003"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What was the Cross-Encoder reranker optimization?",
+    "expected_chunk_sources": [
+      "GH-PR-005",
+      "JIRA-PLATFORM-002"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What was the Project Orion v1.4 release?",
+    "expected_chunk_sources": [
+      "GH-REL-001"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What was the auth-service v2.1 release?",
+    "expected_chunk_sources": [
+      "GH-REL-002"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What was the JWT clock skew fix?",
+    "expected_chunk_sources": [
+      "GH-PR-001",
+      "JIRA-ORION-001"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What was the API error format fix?",
+    "expected_chunk_sources": [
+      "GH-PR-002",
+      "JIRA-ORION-002"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What was the landing zone deployment?",
+    "expected_chunk_sources": [
+      "GH-PR-004",
+      "JIRA-CLOUD-001"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What was the tiered alerting for ACME?",
+    "expected_chunk_sources": [
+      "JIRA-ACME-002",
+      "SLK-ACME-001"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What was the expense approval automation?",
+    "expected_chunk_sources": [
+      "JIRA-PLATFORM-003",
+      "SLK-FIN-001"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What was the invoice workflow enhancement?",
+    "expected_chunk_sources": [
+      "JIRA-PLATFORM-004",
+      "SLK-FIN-002"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What was the MFA vendor issue?",
+    "expected_chunk_sources": [
+      "JIRA-SEC-004",
+      "GH-ISS-003"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What was the privileged account cleanup?",
+    "expected_chunk_sources": [
+      "JIRA-SEC-003",
+      "SEC-001"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What was the backup encryption fix?",
+    "expected_chunk_sources": [
+      "JIRA-SEC-002",
+      "SEC-001"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What was the account lockout incident?",
+    "expected_chunk_sources": [
+      "JIRA-SEC-006",
+      "SLK-SEC-003"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What was the hybrid search enhancement?",
+    "expected_chunk_sources": [
+      "JIRA-ORION-006",
+      "GH-DISC-004"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What was the semantic cache discussion?",
+    "expected_chunk_sources": [
+      "GH-DISC-001"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What was the RBAC discussion?",
+    "expected_chunk_sources": [
+      "GH-DISC-002"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What was the Wave 1 migration discussion?",
+    "expected_chunk_sources": [
+      "GH-DISC-003"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What was the ACME handover?",
+    "expected_chunk_sources": [
+      "JIRA-ACME-004",
+      "EMAIL-056"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What was the reporting enhancement for ACME?",
+    "expected_chunk_sources": [
+      "JIRA-ACME-003",
+      "EMAIL-064"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What was the dashboard performance issue?",
+    "expected_chunk_sources": [
+      "JIRA-ORION-003",
+      "GH-ISS-001"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What was the feature flag issue?",
+    "expected_chunk_sources": [
+      "JIRA-PLATFORM-005",
+      "GH-ISS-002"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What was the legacy decommissioning?",
+    "expected_chunk_sources": [
+      "JIRA-CLOUD-004",
+      "GH-ISS-004"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What was the expense workflow issue?",
+    "expected_chunk_sources": [
+      "JIRA-PLATFORM-003",
+      "GH-ISS-006"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What was the strategic priorities kickoff?",
+    "expected_chunk_sources": [
+      "EMAIL-001"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What was the security training deadline?",
+    "expected_chunk_sources": [
+      "EMAIL-003"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What was the DR test email?",
+    "expected_chunk_sources": [
+      "EMAIL-018"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What was the phishing alert email?",
+    "expected_chunk_sources": [
+      "EMAIL-024"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What was the ACME kickoff email?",
+    "expected_chunk_sources": [
+      "EMAIL-025"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What was the invoice approval email?",
+    "expected_chunk_sources": [
+      "EMAIL-027",
+      "EMAIL-028"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What was the security audit email?",
+    "expected_chunk_sources": [
+      "EMAIL-029"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What was the AI strategy email?",
+    "expected_chunk_sources": [
+      "EMAIL-035"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What was the cloud migration cutover email?",
+    "expected_chunk_sources": [
+      "EMAIL-079"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What was the mid-year review email?",
+    "expected_chunk_sources": [
+      "EMAIL-080"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What was the INC-1042 incident?",
+    "expected_chunk_sources": [
+      "MTG-004",
+      "INC-1042"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What was the MTG-004 agenda?",
+    "expected_chunk_sources": [
+      "MTG-004"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What was the root cause of INC-1042?",
+    "expected_chunk_sources": [
+      "MTG-004",
+      "INC-1042",
+      "ITSEC-004"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What was the leave policy question in #hr?",
+    "expected_chunk_sources": [
+      "SLK-HR-001"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What was the expense query in #finance?",
+    "expected_chunk_sources": [
+      "SLK-FIN-001"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What was the Q1 business review?",
+    "expected_chunk_sources": [
+      "SLK-LDR-001"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What was the ACME UAT feedback?",
+    "expected_chunk_sources": [
+      "SLK-ACME-001"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What was the backup alert in #operations?",
+    "expected_chunk_sources": [
+      "SLK-OPS-003"
+    ],
+    "top_k": 5
+  },
+  {
+    "query": "What was the VPN issue in #security?",
+    "expected_chunk_sources": [
+      "SLK-SEC-001"
+    ],
+    "top_k": 5
+  }
+]

@@ -1,0 +1,671 @@
+[
+  {
+    "id": "HARD-Q01",
+    "question": "Reconstruct the timeline of incident INC-1042 from the meeting MTG-004 and the incident report. What was the root cause and what remediation was applied?",
+    "expected_answer": "INC-1042 began at 03:15 AM on March 20th with unauthorized SSH access using a deprecated admin key. The session was killed and keys rotated by 07:15 AM. Root cause was a gap in ITSEC-004 (no ghost server audit). Remediation included updating the offboarding checklist and rotating keys.",
+    "expected_documents": [
+      "MTG-004",
+      "INC-1042",
+      "ITSEC-004"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "cross_source"
+  },
+  {
+    "id": "HARD-Q02",
+    "question": "Compare the password requirements in ITSEC-002 with the token handling requirements in ENG-003. What is the minimum password length and how does JWT validation align?",
+    "expected_answer": "ITSEC-002 requires a minimum 12-character password, MFA, and rotation every 90/180 days. ENG-003 requires JWT validation with clock skew tolerance and standard error envelope. The auth service must align token handling with ITSEC-002.",
+    "expected_documents": [
+      "ITSEC-002",
+      "ENG-003",
+      "JIRA-ORION-001"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "policy_comparison"
+  },
+  {
+    "id": "HARD-Q03",
+    "question": "What is the relationship between the expense reimbursement deadline in FIN-003 and the travel policy in HR-004?",
+    "expected_answer": "FIN-003 requires all Expense Reimbursement claims to be submitted within 30 days of the expense date. HR-004 defines the reimbursable travel cost categories. Both must be followed for travel expense claims.",
+    "expected_documents": [
+      "FIN-003",
+      "HR-004"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "finance"
+    ],
+    "difficulty": "hard",
+    "category": "policy_comparison"
+  },
+  {
+    "id": "HARD-Q04",
+    "question": "What is the invoice approval chain for an invoice of ₹600,000, referencing FIN-002 and the Company Bible?",
+    "expected_answer": "An invoice of ₹600,000 is above ₹500,000, so it requires CFO (Kabir Nair, EMP-0003) approval per FIN-002 and the Company Bible Section 7c.",
+    "expected_documents": [
+      "FIN-002",
+      "company_bible"
+    ],
+    "expected_roles": [
+      "finance",
+      "manager",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "policy_comparison"
+  },
+  {
+    "id": "HARD-Q05",
+    "question": "How does the remote work policy (HR-003) interact with the VPN policy (ITSEC-008) for remote access?",
+    "expected_answer": "HR-003 defines the 2-day/week Remote Work limit and requires Extended Remote Work approval. ITSEC-008 requires all remote access to use the company VPN with MFA. Remote workers must comply with both.",
+    "expected_documents": [
+      "HR-003",
+      "ITSEC-008"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "it"
+    ],
+    "difficulty": "hard",
+    "category": "policy_comparison"
+  },
+  {
+    "id": "HARD-Q06",
+    "question": "What was the outcome of the DR test (OPS-002) and how did it relate to the backup monitoring fix in JIRA-CLOUD-003?",
+    "expected_answer": "The DR test (OPS-002) found 2 components missed RPO, including the analytics ML pipelines and legacy reporting DB. JIRA-CLOUD-003 fixed the silent backup failure detection and re-enabled alerting per ITSEC-007.",
+    "expected_documents": [
+      "OPS-002",
+      "JIRA-CLOUD-003",
+      "ITSEC-007"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "cross_source"
+  },
+  {
+    "id": "HARD-Q07",
+    "question": "What security audit findings (SEC-001) relate to the MFA enforcement issue in JIRA-SEC-004?",
+    "expected_answer": "SEC-001 Finding H-03 identified that a third-party vendor console does not enforce MFA, violating ITSEC-002. JIRA-SEC-004 tracks the remediation to enforce MFA on the vendor console.",
+    "expected_documents": [
+      "SEC-001",
+      "JIRA-SEC-004",
+      "ITSEC-002"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "cross_source"
+  },
+  {
+    "id": "HARD-Q08",
+    "question": "What is the relationship between the ACME implementation plan (CLIENT-001) and the customer onboarding guide (OPS-001)?",
+    "expected_answer": "CLIENT-001 is a client-specific companion to OPS-001. It follows the four-phase onboarding process defined in OPS-001 and applies it to the ACME Manufacturing engagement.",
+    "expected_documents": [
+      "CLIENT-001",
+      "OPS-001"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "policy_comparison"
+  },
+  {
+    "id": "HARD-Q09",
+    "question": "What was the CORS issue (JIRA-ACME-001) and how did it relate to the frontend discussion in #eng-frontend?",
+    "expected_answer": "JIRA-ACME-001 was a CORS configuration issue where the ACME tenant origin was not added to the API gateway allowed origins. This was discussed in #eng-frontend (SLK-ENG-FE-001) and fixed by adding the origin and an automated check.",
+    "expected_documents": [
+      "JIRA-ACME-001",
+      "SLK-ENG-FE-001",
+      "ENG-003"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "cross_source"
+  },
+  {
+    "id": "HARD-Q10",
+    "question": "What is the relationship between the AI Adoption Strategy (PM-001) and the Cross-Encoder reranker optimization (GH-PR-005)?",
+    "expected_answer": "PM-001 defines the AI strategy including hybrid search and reranking use cases. GH-PR-005 implements the Cross-Encoder reranker optimization for the internal platform hybrid search, following the PM-001 strategy.",
+    "expected_documents": [
+      "PM-001",
+      "GH-PR-005",
+      "ENG-003"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "cross_source"
+  },
+  {
+    "id": "HARD-Q11",
+    "question": "What is the relationship between the cloud migration plan (ENG-002) and the budget approval (FIN-001)?",
+    "expected_answer": "ENG-002 defines the cloud migration strategy and phases. FIN-001 governs the budget and procurement. The cloud migration budget of ₹8,450,000 was approved per FIN-001.",
+    "expected_documents": [
+      "ENG-002",
+      "FIN-001",
+      "OPS-003"
+    ],
+    "expected_roles": [
+      "finance",
+      "manager",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "cross_source"
+  },
+  {
+    "id": "HARD-Q12",
+    "question": "What is the relationship between the offboarding checklist (ITSEC-004) and the employee exit procedure (HR-007)?",
+    "expected_answer": "ITSEC-004 is the technical offboarding checklist for revoking access and collecting assets. HR-007 is the overall exit procedure covering HR, IT, and Finance clearance. Both must be followed for a complete exit.",
+    "expected_documents": [
+      "ITSEC-004",
+      "HR-007"
+    ],
+    "expected_roles": [
+      "manager",
+      "hr",
+      "it"
+    ],
+    "difficulty": "hard",
+    "category": "policy_comparison"
+  },
+  {
+    "id": "HARD-Q13",
+    "question": "What was the phishing incident (JIRA-SEC-001) and how did it relate to the security alert email (EMAIL-024)?",
+    "expected_answer": "JIRA-SEC-001 tracked the targeted phishing campaign impersonating the cloud provider. EMAIL-024 was the security alert sent to all employees instructing them not to click links and to report suspicious emails per ITSEC-005.",
+    "expected_documents": [
+      "JIRA-SEC-001",
+      "EMAIL-024",
+      "ITSEC-005"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "cross_source"
+  },
+  {
+    "id": "HARD-Q14",
+    "question": "What is the relationship between the data classification policy (ITSEC-006) and the backup encryption finding (SEC-001 H-02)?",
+    "expected_answer": "ITSEC-006 requires Restricted and Confidential data to be encrypted at rest. SEC-001 H-02 found the legacy reporting DB backup was unencrypted, violating ITSEC-006 and ITSEC-007. JIRA-SEC-002 tracked the remediation.",
+    "expected_documents": [
+      "ITSEC-006",
+      "SEC-001",
+      "JIRA-SEC-002"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "cross_source"
+  },
+  {
+    "id": "HARD-Q15",
+    "question": "What is the relationship between the ACME UAT feedback (SLK-ACME-001) and the tiered alerting story (JIRA-ACME-002)?",
+    "expected_answer": "SLK-ACME-001 discussed ACME's UAT feedback that alerts were too sensitive for non-critical systems. JIRA-ACME-002 is the story to implement tiered alerting for Tier 2/3 systems per that feedback.",
+    "expected_documents": [
+      "SLK-ACME-001",
+      "JIRA-ACME-002",
+      "CLIENT-001"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "cross_source"
+  },
+  {
+    "id": "HARD-Q16",
+    "question": "What is the relationship between the quarterly operations report (OPS-003) and the incident follow-up (EMAIL-049)?",
+    "expected_answer": "OPS-003 reports the Q1 FY2026 operations metrics including the incident INC-1042. EMAIL-049 is the incident follow-up email about the May 22 configuration drift incident, referencing ITSEC-005 and SEC-001.",
+    "expected_documents": [
+      "OPS-003",
+      "EMAIL-049",
+      "ITSEC-005"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "cross_source"
+  },
+  {
+    "id": "HARD-Q17",
+    "question": "What is the relationship between the Project Orion architecture (ENG-001) and the cloud migration plan (ENG-002)?",
+    "expected_answer": "ENG-001 defines the Project Orion architecture including ingestion, analytics, and orchestration layers. ENG-002 defines the cloud migration strategy to move these services to the cloud in waves.",
+    "expected_documents": [
+      "ENG-001",
+      "ENG-002"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "policy_comparison"
+  },
+  {
+    "id": "HARD-Q18",
+    "question": "What is the relationship between the expense approval automation (JIRA-PLATFORM-003) and the expense policy (FIN-003)?",
+    "expected_answer": "JIRA-PLATFORM-003 automates the expense approval workflow. FIN-003 defines the 30-day submission deadline and approval process. The automation must comply with FIN-003.",
+    "expected_documents": [
+      "JIRA-PLATFORM-003",
+      "FIN-003"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "finance"
+    ],
+    "difficulty": "hard",
+    "category": "cross_source"
+  },
+  {
+    "id": "HARD-Q19",
+    "question": "What is the relationship between the invoice workflow enhancement (JIRA-PLATFORM-004) and the invoice approval SOP (FIN-002)?",
+    "expected_answer": "JIRA-PLATFORM-004 enhances the invoice workflow in the Finance portal. FIN-002 defines the approval routing based on amount thresholds. The enhancement must follow FIN-002 thresholds.",
+    "expected_documents": [
+      "JIRA-PLATFORM-004",
+      "FIN-002"
+    ],
+    "expected_roles": [
+      "finance",
+      "manager",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "cross_source"
+  },
+  {
+    "id": "HARD-Q20",
+    "question": "What is the relationship between the security audit (SEC-001) and the privileged account cleanup (JIRA-SEC-003)?",
+    "expected_answer": "SEC-001 Finding H-01 identified 7 inactive privileged vendor accounts. JIRA-SEC-003 tracked the removal of these accounts and implementation of automated lifecycle management per ITSEC-001 and ITSEC-002.",
+    "expected_documents": [
+      "SEC-001",
+      "JIRA-SEC-003",
+      "ITSEC-001"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "cross_source"
+  },
+  {
+    "id": "HARD-Q21",
+    "question": "What is the relationship between the ACME handover (JIRA-ACME-004) and the customer onboarding guide (OPS-001)?",
+    "expected_answer": "JIRA-ACME-004 is the task to prepare and deliver the ACME operational handover documentation. It follows the handover process defined in OPS-001 and the implementation plan in CLIENT-001.",
+    "expected_documents": [
+      "JIRA-ACME-004",
+      "OPS-001",
+      "CLIENT-001"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "cross_source"
+  },
+  {
+    "id": "HARD-Q22",
+    "question": "What is the relationship between the hybrid search enhancement (JIRA-ORION-006) and the Cross-Encoder reranker (GH-PR-005)?",
+    "expected_answer": "JIRA-ORION-006 enhances the hybrid search in the analytics module. GH-PR-005 optimizes the Cross-Encoder reranker which is a key component of the hybrid search pipeline.",
+    "expected_documents": [
+      "JIRA-ORION-006",
+      "GH-PR-005",
+      "PM-001"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "cross_source"
+  },
+  {
+    "id": "HARD-Q23",
+    "question": "What is the relationship between the Project Atlas epic (JIRA-ATLAS-001) and the architecture review (GH-DISC-004)?",
+    "expected_answer": "JIRA-ATLAS-001 is the epic to build and deliver the Project Atlas platform. GH-DISC-004 discusses the hybrid search improvements (BM25 + Dense Retrieval + Cross-Encoder) that inform the Atlas architecture.",
+    "expected_documents": [
+      "JIRA-ATLAS-001",
+      "GH-DISC-004",
+      "ENG-001"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "cross_source"
+  },
+  {
+    "id": "HARD-Q24",
+    "question": "What is the relationship between the cloud migration landing zone (JIRA-CLOUD-001) and the security baseline (ITSEC-001)?",
+    "expected_answer": "JIRA-CLOUD-001 deploys the secure cloud landing zone. ITSEC-001 defines the security framework including MFA, encryption, and access control that the landing zone must comply with.",
+    "expected_documents": [
+      "JIRA-CLOUD-001",
+      "ITSEC-001",
+      "ENG-002"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "cross_source"
+  },
+  {
+    "id": "HARD-Q25",
+    "question": "What is the relationship between the dashboard performance issue (JIRA-ORION-003) and the caching story (JIRA-ORION-005)?",
+    "expected_answer": "JIRA-ORION-003 is the improvement for dashboard performance on historical data. JIRA-ORION-005 is the story to implement caching for common historical queries, which addresses the performance issue.",
+    "expected_documents": [
+      "JIRA-ORION-003",
+      "JIRA-ORION-005",
+      "ENG-001"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "cross_source"
+  },
+  {
+    "id": "HARD-Q26",
+    "question": "What is the relationship between the feature flag issue (JIRA-PLATFORM-005) and the component library (SLK-ENG-FE-002)?",
+    "expected_answer": "JIRA-PLATFORM-005 is the bug where the feature flag for the dashboard component library is not working. SLK-ENG-FE-002 discussed the component library rollout behind the feature flag.",
+    "expected_documents": [
+      "JIRA-PLATFORM-005",
+      "SLK-ENG-FE-002",
+      "ENG-004"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "cross_source"
+  },
+  {
+    "id": "HARD-Q27",
+    "question": "What is the relationship between the MFA vendor issue (GH-ISS-003) and the security audit (SEC-001)?",
+    "expected_answer": "GH-ISS-003 is the GitHub issue about the third-party vendor console not enforcing MFA. This corresponds to SEC-001 Finding H-03 and JIRA-SEC-004.",
+    "expected_documents": [
+      "GH-ISS-003",
+      "SEC-001",
+      "JIRA-SEC-004"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "cross_source"
+  },
+  {
+    "id": "HARD-Q28",
+    "question": "What is the relationship between the semantic cache discussion (GH-DISC-001) and the AI strategy (PM-001)?",
+    "expected_answer": "GH-DISC-001 discusses implementing a semantic cache for the hybrid search and analytics module. This aligns with the AI strategy in PM-001 and the data lifecycle in ENG-001.",
+    "expected_documents": [
+      "GH-DISC-001",
+      "PM-001",
+      "ENG-001"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "cross_source"
+  },
+  {
+    "id": "HARD-Q29",
+    "question": "What is the relationship between the RBAC discussion (GH-DISC-002) and the token validation (JIRA-SEC-005)?",
+    "expected_answer": "GH-DISC-002 discusses adding RBAC role claims to JWT tokens. JIRA-SEC-005 tracks the refresh token validation alignment with ITSEC-002. Both relate to token-based auth security.",
+    "expected_documents": [
+      "GH-DISC-002",
+      "JIRA-SEC-005",
+      "ITSEC-002"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "cross_source"
+  },
+  {
+    "id": "HARD-Q30",
+    "question": "What is the relationship between the Wave 1 migration discussion (GH-DISC-003) and the cloud migration plan (ENG-002)?",
+    "expected_answer": "GH-DISC-003 discusses Wave 1 migration readiness including security baseline, budget, and runbooks. ENG-002 defines the migration phases and Wave 1 scope (ingestion and core services).",
+    "expected_documents": [
+      "GH-DISC-003",
+      "ENG-002",
+      "ITSEC-001"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "cross_source"
+  },
+  {
+    "id": "HARD-Q31",
+    "question": "What is the relationship between the auth-service release (GH-REL-002) and the password policy (ITSEC-002)?",
+    "expected_answer": "GH-REL-002 (auth-service v2.1) includes refresh token validation aligned with ITSEC-002, RBAC role claims, and improved MFA recovery. It references ITSEC-002 and JIRA-SEC-005.",
+    "expected_documents": [
+      "GH-REL-002",
+      "ITSEC-002",
+      "JIRA-SEC-005"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "cross_source"
+  },
+  {
+    "id": "HARD-Q32",
+    "question": "What is the relationship between the Project Orion release (GH-REL-001) and the bug fixes in Jira?",
+    "expected_answer": "GH-REL-001 (Project Orion v1.4) lists bug fixes including JWT clock skew (JIRA-ORION-001), CORS for ACME (JIRA-ACME-001), and silent backup failure (JIRA-CLOUD-003).",
+    "expected_documents": [
+      "GH-REL-001",
+      "JIRA-ORION-001",
+      "JIRA-ACME-001",
+      "JIRA-CLOUD-003"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "cross_source"
+  },
+  {
+    "id": "HARD-Q33",
+    "question": "What is the relationship between the expense reimbursement email (EMAIL-036) and the expense policy (FIN-003)?",
+    "expected_answer": "EMAIL-036 is Neha Kapoor's expense reimbursement submission for the Dubai client visit (EXP-0567). It references FIN-003 and the 30-day submission deadline.",
+    "expected_documents": [
+      "EMAIL-036",
+      "FIN-003",
+      "expenses.csv"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "finance"
+    ],
+    "difficulty": "hard",
+    "category": "cross_source"
+  },
+  {
+    "id": "HARD-Q34",
+    "question": "What is the relationship between the invoice approval email (EMAIL-027) and the invoice approval SOP (FIN-002)?",
+    "expected_answer": "EMAIL-027 requests CFO approval for the cloud provider invoice INV-2026-0119, which is above ₹500,000. This follows the FIN-002 approval thresholds and the Company Bible Section 7c.",
+    "expected_documents": [
+      "EMAIL-027",
+      "FIN-002",
+      "company_bible"
+    ],
+    "expected_roles": [
+      "finance",
+      "manager",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "cross_source"
+  },
+  {
+    "id": "HARD-Q35",
+    "question": "What is the relationship between the security audit email (EMAIL-029) and the security audit report (SEC-001)?",
+    "expected_answer": "EMAIL-029 summarizes the Q1 FY2026 security audit results: Satisfactory posture (82%), 3 High, 7 Medium, 12 Low findings. SEC-001 is the full audit report.",
+    "expected_documents": [
+      "EMAIL-029",
+      "SEC-001"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "cross_source"
+  },
+  {
+    "id": "HARD-Q36",
+    "question": "What is the relationship between the ACME handover email (EMAIL-056) and the implementation plan (CLIENT-001)?",
+    "expected_answer": "EMAIL-056 announces the ACME operational handover per CLIENT-001, with engineering runbooks finalized, security validation passed per ITSEC-001, and handover documentation per OPS-001.",
+    "expected_documents": [
+      "EMAIL-056",
+      "CLIENT-001",
+      "OPS-001"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "cross_source"
+  },
+  {
+    "id": "HARD-Q37",
+    "question": "What is the relationship between the leadership escalation email (EMAIL-064) and the reporting enhancement (JIRA-ACME-003)?",
+    "expected_answer": "EMAIL-064 is the leadership escalation about ACME's concern on dashboard reporting frequency. JIRA-ACME-003 is the improvement to enhance the reporting feature, following ENG-003.",
+    "expected_documents": [
+      "EMAIL-064",
+      "JIRA-ACME-003",
+      "ENG-003"
+    ],
+    "expected_roles": [
+      "manager",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "cross_source"
+  },
+  {
+    "id": "HARD-Q38",
+    "question": "What is the relationship between the cloud migration cutover email (EMAIL-079) and the migration plan (ENG-002)?",
+    "expected_answer": "EMAIL-079 announces the Wave 1 cloud migration cutover is complete, with all ingestion and core services migrated. This follows the migration phases in ENG-002.",
+    "expected_documents": [
+      "EMAIL-079",
+      "ENG-002"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "cross_source"
+  },
+  {
+    "id": "HARD-Q39",
+    "question": "What is the relationship between the mid-year review email (EMAIL-080) and the AI strategy (PM-001)?",
+    "expected_answer": "EMAIL-080 is the mid-year review from Arvind Malhotra, highlighting achievements including Project Orion v1.4, ACME onboarding, cloud migration Wave 1, and the AI Adoption Strategy (PM-001).",
+    "expected_documents": [
+      "EMAIL-080",
+      "PM-001",
+      "ENG-001"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "cross_source"
+  },
+  {
+    "id": "HARD-Q40",
+    "question": "What is the relationship between the security posture update (EMAIL-062) and the security audit (SEC-001)?",
+    "expected_answer": "EMAIL-062 is the leadership briefing on security posture for Q2, reporting that 2 of 3 High findings from SEC-001 are resolved, MFA adoption is 95%+, and security awareness training is 100% complete.",
+    "expected_documents": [
+      "EMAIL-062",
+      "SEC-001",
+      "ITSEC-002"
+    ],
+    "expected_roles": [
+      "manager",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "cross_source"
+  }
+]

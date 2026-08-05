@@ -1,0 +1,1823 @@
+[
+  {
+    "id": "HR-Q01",
+    "question": "What is the annual Annual Leave entitlement for full-time employees?",
+    "expected_answer": "Every full-time employee is entitled to 18 days of Annual Leave per year, accrued at 1.5 days per month.",
+    "expected_documents": [
+      "HR-002"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "hr"
+    ],
+    "difficulty": "medium",
+    "category": "hr"
+  },
+  {
+    "id": "HR-Q02",
+    "question": "How many days of Sick Leave is an employee entitled to per year?",
+    "expected_answer": "Employees are entitled to 10 days of Sick Leave per year.",
+    "expected_documents": [
+      "HR-002"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "hr"
+    ],
+    "difficulty": "easy",
+    "category": "hr"
+  },
+  {
+    "id": "HR-Q03",
+    "question": "What is the maximum number of unused Annual Leave days that can be carried forward into the next fiscal year?",
+    "expected_answer": "A maximum of 5 days of unused Annual Leave can be carried forward into the next fiscal year. Any balance exceeding 5 days at the end of the fiscal year (March 31) is forfeited.",
+    "expected_documents": [
+      "HR-002"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "hr"
+    ],
+    "difficulty": "medium",
+    "category": "hr"
+  },
+  {
+    "id": "HR-Q04",
+    "question": "Who is the primary authority for approving or denying Leave requests?",
+    "expected_answer": "The Reporting Manager is the primary authority for approving or denying Leave requests, as they have the most direct visibility into project timelines and team capacity. HR provides secondary oversight.",
+    "expected_documents": [
+      "HR-002"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "hr"
+    ],
+    "difficulty": "medium",
+    "category": "hr"
+  },
+  {
+    "id": "HR-Q05",
+    "question": "What is the standard weekly limit for Remote Work at NexaCore?",
+    "expected_answer": "The standard arrangement for hybrid employees is a maximum of 2 days per week of Remote Work. The remaining 3 days must be spent at the employee's designated office location.",
+    "expected_documents": [
+      "HR-003"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "hr"
+    ],
+    "difficulty": "easy",
+    "category": "hr"
+  },
+  {
+    "id": "HR-Q06",
+    "question": "What approval is required for Extended Remote Work?",
+    "expected_answer": "Extended Remote Work requires formal, joint sign-off from both the Reporting Manager and the HR department. It is reviewed quarterly.",
+    "expected_documents": [
+      "HR-003"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "hr"
+    ],
+    "difficulty": "easy",
+    "category": "hr"
+  },
+  {
+    "id": "HR-Q07",
+    "question": "What is the notice period for voluntary resignation?",
+    "expected_answer": "The specific notice period is defined in the individual's signed employment contract. Notice periods may be waived or shortened by mutual agreement between the Reporting Manager and the HR department.",
+    "expected_documents": [
+      "HR-007"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "hr"
+    ],
+    "difficulty": "hard",
+    "category": "hr"
+  },
+  {
+    "id": "HR-Q08",
+    "question": "What happens to an employee's access on an immediate exit for cause?",
+    "expected_answer": "For terminations for cause, all access is revoked the moment the termination meeting concludes, with all access revoked instantly.",
+    "expected_documents": [
+      "HR-007",
+      "ITSEC-004"
+    ],
+    "expected_roles": [
+      "manager",
+      "hr",
+      "it"
+    ],
+    "difficulty": "medium",
+    "category": "hr"
+  },
+  {
+    "id": "HR-Q09",
+    "question": "What is the purpose of the exit interview?",
+    "expected_answer": "The exit interview is a confidential session to gather honest feedback regarding the employee's experience, the effectiveness of their management, and suggestions for organizational improvement.",
+    "expected_documents": [
+      "HR-007"
+    ],
+    "expected_roles": [
+      "hr",
+      "manager"
+    ],
+    "difficulty": "easy",
+    "category": "hr"
+  },
+  {
+    "id": "HR-Q10",
+    "question": "What does the Code of Conduct cover?",
+    "expected_answer": "The Code of Conduct (HR-006) covers ethical standards, professional behavior, and the disciplinary framework for policy violations.",
+    "expected_documents": [
+      "HR-006"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "hr"
+    ],
+    "difficulty": "medium",
+    "category": "hr"
+  },
+  {
+    "id": "HR-Q11",
+    "question": "What is the performance review cycle?",
+    "expected_answer": "The performance review process is documented in HR-005 (Performance Review Policy). It includes self-assessments, manager reviews, and final reviews submitted on a defined schedule.",
+    "expected_documents": [
+      "HR-005"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "hr"
+    ],
+    "difficulty": "medium",
+    "category": "hr"
+  },
+  {
+    "id": "HR-Q12",
+    "question": "What is the grievance procedure for workplace complaints?",
+    "expected_answer": "The Workplace Complaint and Grievance Procedure (HR-008) defines the process for employees to raise workplace complaints and have them addressed.",
+    "expected_documents": [
+      "HR-008"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "hr"
+    ],
+    "difficulty": "easy",
+    "category": "hr"
+  },
+  {
+    "id": "HR-Q13",
+    "question": "What is the travel and expense policy?",
+    "expected_answer": "The Travel and Expense Policy (HR-004) defines the rules for reimbursable travel costs and expense categories.",
+    "expected_documents": [
+      "HR-004"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "hr",
+      "finance"
+    ],
+    "difficulty": "medium",
+    "category": "hr"
+  },
+  {
+    "id": "HR-Q14",
+    "question": "What is the Employee Handbook?",
+    "expected_answer": "The Employee Handbook (HR-001) is the general overview of employment policies, professional responsibilities, and company culture.",
+    "expected_documents": [
+      "HR-001"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "hr"
+    ],
+    "difficulty": "easy",
+    "category": "hr"
+  },
+  {
+    "id": "HR-Q15",
+    "question": "What is the leave balance of Neha Kapoor (EMP-0104)?",
+    "expected_answer": "Neha Kapoor (EMP-0104) has a leave balance of 14 days.",
+    "expected_documents": [
+      "employees.csv"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "hr"
+    ],
+    "difficulty": "easy",
+    "category": "hr"
+  },
+  {
+    "id": "HR-Q16",
+    "question": "What is the standard remote work arrangement for hybrid employees?",
+    "expected_answer": "The standard arrangement is a maximum of 2 days per week of Remote Work, with the remaining 3 days spent at the designated office location.",
+    "expected_documents": [
+      "HR-003"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "hr"
+    ],
+    "difficulty": "easy",
+    "category": "hr"
+  },
+  {
+    "id": "HR-Q17",
+    "question": "What happens if an employee exceeds the 5-day Annual Leave carry-forward limit?",
+    "expected_answer": "Any balance exceeding 5 days at the end of the fiscal year (March 31) will be forfeited.",
+    "expected_documents": [
+      "HR-002"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "hr"
+    ],
+    "difficulty": "medium",
+    "category": "hr"
+  },
+  {
+    "id": "HR-Q18",
+    "question": "What is the accrual basis for Annual Leave?",
+    "expected_answer": "Annual Leave is accrued on a monthly basis at 1.5 days per month.",
+    "expected_documents": [
+      "HR-002"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "hr"
+    ],
+    "difficulty": "medium",
+    "category": "hr"
+  },
+  {
+    "id": "HR-Q19",
+    "question": "What is the role of HR in the offboarding process?",
+    "expected_answer": "HR initiates the offboarding process, coordinates the exit interview, and confirms administrative clearance per HR-007.",
+    "expected_documents": [
+      "HR-007",
+      "ITSEC-004"
+    ],
+    "expected_roles": [
+      "hr",
+      "manager"
+    ],
+    "difficulty": "easy",
+    "category": "hr"
+  },
+  {
+    "id": "HR-Q20",
+    "question": "What is the notice period modification process?",
+    "expected_answer": "Notice periods may be waived or shortened by mutual agreement between the Reporting Manager and the HR department, typically if the employee's role is not critical to current deliveries.",
+    "expected_documents": [
+      "HR-007"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "hr"
+    ],
+    "difficulty": "easy",
+    "category": "hr"
+  },
+  {
+    "id": "HR-Q21",
+    "question": "What is the purpose of the Employee Handbook annual review?",
+    "expected_answer": "The Employee Handbook (HR-001) undergoes an annual review, and all employees are encouraged to submit feedback or suggestions to HR.",
+    "expected_documents": [
+      "HR-001"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "hr"
+    ],
+    "difficulty": "hard",
+    "category": "hr"
+  },
+  {
+    "id": "HR-Q22",
+    "question": "What is the standard for professional conduct in the Code of Conduct?",
+    "expected_answer": "The Code of Conduct (HR-006) requires professional, courteous, and ethical behavior in all communications and interactions, consistent with company values.",
+    "expected_documents": [
+      "HR-006"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "hr"
+    ],
+    "difficulty": "medium",
+    "category": "hr"
+  },
+  {
+    "id": "HR-Q23",
+    "question": "What is the leave request approval process?",
+    "expected_answer": "Leave requests must be submitted through the HR portal and require approval from the Reporting Manager. HR provides secondary oversight.",
+    "expected_documents": [
+      "HR-002"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "hr"
+    ],
+    "difficulty": "medium",
+    "category": "hr"
+  },
+  {
+    "id": "HR-Q24",
+    "question": "What is the remote work eligibility requirement regarding probation?",
+    "expected_answer": "To be eligible for Remote Work, an employee must have successfully completed the initial probation period and received a positive performance confirmation.",
+    "expected_documents": [
+      "HR-003"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "hr"
+    ],
+    "difficulty": "hard",
+    "category": "hr"
+  },
+  {
+    "id": "HR-Q25",
+    "question": "What is the exit procedure for voluntary resignation?",
+    "expected_answer": "Employees submit a formal resignation letter via the HR portal addressed to their Reporting Manager and HR, specifying the intended last working day.",
+    "expected_documents": [
+      "HR-007"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "hr"
+    ],
+    "difficulty": "medium",
+    "category": "hr"
+  },
+  {
+    "id": "HR-Q26",
+    "question": "What is the final settlement process?",
+    "expected_answer": "Once full clearance is obtained, the Finance department processes the final settlement, including salary, accrued bonuses, and leave encashment per HR-002.",
+    "expected_documents": [
+      "HR-007",
+      "HR-002",
+      "FIN-003"
+    ],
+    "expected_roles": [
+      "hr",
+      "finance",
+      "manager"
+    ],
+    "difficulty": "easy",
+    "category": "hr"
+  },
+  {
+    "id": "HR-Q27",
+    "question": "What is the post-employment confidentiality obligation?",
+    "expected_answer": "The NDA signed at the start of employment remains in effect indefinitely. The unauthorized disclosure of client data or internal strategies after departure is a legal violation.",
+    "expected_documents": [
+      "HR-007"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "hr"
+    ],
+    "difficulty": "easy",
+    "category": "hr"
+  },
+  {
+    "id": "HR-Q28",
+    "question": "What is the remote work infrastructure requirement?",
+    "expected_answer": "Employees must possess a secure, quiet home environment with reliable high-speed internet capable of supporting high-definition video conferencing.",
+    "expected_documents": [
+      "HR-003"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "hr"
+    ],
+    "difficulty": "medium",
+    "category": "hr"
+  },
+  {
+    "id": "HR-Q29",
+    "question": "What is the role of the Reporting Manager in the exit process?",
+    "expected_answer": "The Reporting Manager confirms that all knowledge transfer is complete, verifies project documentation is updated, and approves the final clearance.",
+    "expected_documents": [
+      "HR-007"
+    ],
+    "expected_roles": [
+      "manager",
+      "hr"
+    ],
+    "difficulty": "hard",
+    "category": "hr"
+  },
+  {
+    "id": "HR-Q30",
+    "question": "What is the leave encashment rule?",
+    "expected_answer": "Payment for eligible unused Annual Leave is made as per the terms in the Leave Policy (HR-002) and local labor laws.",
+    "expected_documents": [
+      "HR-002",
+      "HR-007"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "hr",
+      "finance"
+    ],
+    "difficulty": "hard",
+    "category": "hr"
+  },
+  {
+    "id": "FIN-Q01",
+    "question": "What happens if an expense claim is submitted after 30 days?",
+    "expected_answer": "Claims submitted after the 30-day window may be rejected. An exception request may be submitted, which must be approved by the Department Head and reviewed by the Finance Manager.",
+    "expected_documents": [
+      "FIN-003"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "finance"
+    ],
+    "difficulty": "hard",
+    "category": "finance"
+  },
+  {
+    "id": "FIN-Q02",
+    "question": "What is the canonical deadline for Expense Reimbursement submission?",
+    "expected_answer": "All Expense Reimbursement claims must be submitted through the Finance portal within 30 days of the expense date.",
+    "expected_documents": [
+      "FIN-003"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "finance"
+    ],
+    "difficulty": "medium",
+    "category": "finance"
+  },
+  {
+    "id": "FIN-Q03",
+    "question": "What approval is required for invoices above ₹500,000?",
+    "expected_answer": "Invoices above ₹500,000 require CFO (Kabir Nair, EMP-0003) approval.",
+    "expected_documents": [
+      "FIN-002",
+      "company_bible"
+    ],
+    "expected_roles": [
+      "finance",
+      "manager",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "finance"
+  },
+  {
+    "id": "FIN-Q04",
+    "question": "What is the approval threshold for invoices up to ₹50,000?",
+    "expected_answer": "Invoices up to ₹50,000 require Department Manager approval.",
+    "expected_documents": [
+      "FIN-002",
+      "company_bible"
+    ],
+    "expected_roles": [
+      "finance",
+      "manager"
+    ],
+    "difficulty": "hard",
+    "category": "finance"
+  },
+  {
+    "id": "FIN-Q05",
+    "question": "What is the approval threshold for invoices between ₹50,001 and ₹500,000?",
+    "expected_answer": "Invoices between ₹50,001 and ₹500,000 require Finance Manager approval.",
+    "expected_documents": [
+      "FIN-002",
+      "company_bible"
+    ],
+    "expected_roles": [
+      "finance",
+      "manager"
+    ],
+    "difficulty": "hard",
+    "category": "finance"
+  },
+  {
+    "id": "FIN-Q06",
+    "question": "What is the Procurement Policy?",
+    "expected_answer": "The Procurement Policy (FIN-001) governs the vendor onboarding and procurement process, including budget approval and vendor contracts.",
+    "expected_documents": [
+      "FIN-001"
+    ],
+    "expected_roles": [
+      "finance",
+      "manager",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "finance"
+  },
+  {
+    "id": "FIN-Q07",
+    "question": "What is the Invoice Approval SOP?",
+    "expected_answer": "The Invoice Approval SOP (FIN-002) defines the process for approving invoices based on the amount thresholds.",
+    "expected_documents": [
+      "FIN-002"
+    ],
+    "expected_roles": [
+      "finance",
+      "manager"
+    ],
+    "difficulty": "easy",
+    "category": "finance"
+  },
+  {
+    "id": "FIN-Q08",
+    "question": "What is the Expense Reimbursement Policy?",
+    "expected_answer": "The Expense Reimbursement Policy (FIN-003) defines the rules and procedures for reimbursing legitimate business expenses, including the 30-day submission deadline.",
+    "expected_documents": [
+      "FIN-003"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "finance"
+    ],
+    "difficulty": "medium",
+    "category": "finance"
+  },
+  {
+    "id": "FIN-Q09",
+    "question": "What is the total amount of the canonical invoice INV-2026-0108?",
+    "expected_answer": "The canonical invoice INV-2026-0108 from Bluewave Cloud Services has a total of ₹218,300 (subtotal ₹185,000 + tax ₹33,300).",
+    "expected_documents": [
+      "invoices.csv",
+      "company_bible"
+    ],
+    "expected_roles": [
+      "finance",
+      "manager",
+      "admin"
+    ],
+    "difficulty": "easy",
+    "category": "finance"
+  },
+  {
+    "id": "FIN-Q10",
+    "question": "What is the expense amount for EXP-0567?",
+    "expected_answer": "The expense EXP-0567 for Neha Kapoor's Dubai client visit is ₹6,200 INR.",
+    "expected_documents": [
+      "expenses.csv",
+      "company_bible"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "finance"
+    ],
+    "difficulty": "easy",
+    "category": "finance"
+  },
+  {
+    "id": "FIN-Q11",
+    "question": "What is the cloud migration budget for FY2026-27?",
+    "expected_answer": "The cloud migration budget for FY2026-27 is ₹8,450,000 for Operations, covering cloud infrastructure, tooling, personnel, and incident response.",
+    "expected_documents": [
+      "ENG-002",
+      "FIN-001"
+    ],
+    "expected_roles": [
+      "finance",
+      "manager",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "finance"
+  },
+  {
+    "id": "FIN-Q12",
+    "question": "What is the Q1 FY2026-27 Operations budget variance?",
+    "expected_answer": "The Operations department finished Q1 FY2026-27 at 2.7% under budget, with cloud infrastructure 4% under forecast.",
+    "expected_documents": [
+      "OPS-003"
+    ],
+    "expected_roles": [
+      "finance",
+      "manager",
+      "admin"
+    ],
+    "difficulty": "easy",
+    "category": "finance"
+  },
+  {
+    "id": "FIN-Q13",
+    "question": "What is the expense reimbursement documentation requirement?",
+    "expected_answer": "Every reimbursement request must be accompanied by itemized receipts, a business justification, and an attendee log for meals or entertainment.",
+    "expected_documents": [
+      "FIN-003"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "finance"
+    ],
+    "difficulty": "medium",
+    "category": "finance"
+  },
+  {
+    "id": "FIN-Q14",
+    "question": "What is the non-reimbursable expense policy?",
+    "expected_answer": "Non-reimbursable expenses include personal amenities, alcohol (except pre-approved client entertainment), legal penalties, guests, and unsupported claims.",
+    "expected_documents": [
+      "FIN-003"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "finance"
+    ],
+    "difficulty": "hard",
+    "category": "finance"
+  },
+  {
+    "id": "FIN-Q15",
+    "question": "What is the dispute resolution process for rejected expense claims?",
+    "expected_answer": "If an employee disagrees with a rejection, they may request a review by providing additional justification or documentation to the Finance Manager. The Finance Manager's decision is final.",
+    "expected_documents": [
+      "FIN-003"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "finance"
+    ],
+    "difficulty": "medium",
+    "category": "finance"
+  },
+  {
+    "id": "FIN-Q16",
+    "question": "What is the client entertainment pre-approval threshold?",
+    "expected_answer": "Any client entertainment expense expected to exceed ₹5,000 must be pre-approved by the Reporting Manager.",
+    "expected_documents": [
+      "FIN-003"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "finance"
+    ],
+    "difficulty": "easy",
+    "category": "finance"
+  },
+  {
+    "id": "FIN-Q17",
+    "question": "What is the operational expense consent threshold?",
+    "expected_answer": "For any operational expense over ₹2,000, the employee should seek verbal or email consent from their Reporting Manager before making the purchase.",
+    "expected_documents": [
+      "FIN-003"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "finance"
+    ],
+    "difficulty": "medium",
+    "category": "finance"
+  },
+  {
+    "id": "FIN-Q18",
+    "question": "What is the vendor onboarding process?",
+    "expected_answer": "The vendor onboarding process is governed by the Procurement Policy (FIN-001), and the IT and Security department must be consulted for any vendor engagement involving access to sensitive systems or data.",
+    "expected_documents": [
+      "FIN-001",
+      "ITSEC-001"
+    ],
+    "expected_roles": [
+      "finance",
+      "manager",
+      "it"
+    ],
+    "difficulty": "easy",
+    "category": "finance"
+  },
+  {
+    "id": "FIN-Q19",
+    "question": "What is the invoice payment status of INV-2026-0108?",
+    "expected_answer": "The invoice INV-2026-0108 has a payment status of 'paid'.",
+    "expected_documents": [
+      "invoices.csv"
+    ],
+    "expected_roles": [
+      "finance",
+      "manager",
+      "admin"
+    ],
+    "difficulty": "easy",
+    "category": "finance"
+  },
+  {
+    "id": "FIN-Q20",
+    "question": "What is the expense approval workflow?",
+    "expected_answer": "The expense approval workflow is: submission by the employee, Reporting Manager approval, Finance audit, and payment execution in the next payroll cycle.",
+    "expected_documents": [
+      "FIN-003"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "finance"
+    ],
+    "difficulty": "easy",
+    "category": "finance"
+  },
+  {
+    "id": "SEC-Q01",
+    "question": "What is the minimum password length required by the Password Policy?",
+    "expected_answer": "All passwords must have a minimum of 12 characters.",
+    "expected_documents": [
+      "ITSEC-002"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "it"
+    ],
+    "difficulty": "medium",
+    "category": "it_security"
+  },
+  {
+    "id": "SEC-Q02",
+    "question": "What is the account lockout threshold?",
+    "expected_answer": "After five consecutive failed login attempts, the account is locked for 15 minutes. After ten consecutive failed attempts, the account is locked until the user contacts IT.",
+    "expected_documents": [
+      "ITSEC-002"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "it"
+    ],
+    "difficulty": "hard",
+    "category": "it_security"
+  },
+  {
+    "id": "SEC-Q03",
+    "question": "What is the password rotation requirement for MFA-protected systems?",
+    "expected_answer": "For systems protected by MFA, password rotation is required every 180 days. For systems without MFA, rotation is required every 90 days.",
+    "expected_documents": [
+      "ITSEC-002"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "it"
+    ],
+    "difficulty": "hard",
+    "category": "it_security"
+  },
+  {
+    "id": "SEC-Q04",
+    "question": "What is the password history requirement?",
+    "expected_answer": "When rotating a password, users must not reuse any of their previous five passwords.",
+    "expected_documents": [
+      "ITSEC-002"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "it"
+    ],
+    "difficulty": "medium",
+    "category": "it_security"
+  },
+  {
+    "id": "SEC-Q05",
+    "question": "What is the data classification level for client data?",
+    "expected_answer": "Client data is typically classified as Restricted or Confidential, depending on the sensitivity of the data and the terms of the client contract.",
+    "expected_documents": [
+      "ITSEC-006"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "it"
+    ],
+    "difficulty": "easy",
+    "category": "it_security"
+  },
+  {
+    "id": "SEC-Q06",
+    "question": "What is the RTO for Tier 1 critical systems?",
+    "expected_answer": "The RTO for Tier 1 (critical systems, client-facing) is 4 hours.",
+    "expected_documents": [
+      "ITSEC-007"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "medium",
+    "category": "it_security"
+  },
+  {
+    "id": "SEC-Q07",
+    "question": "What is the RPO for Tier 1 critical databases?",
+    "expected_answer": "The RPO for Tier 1 (critical databases) is 15 minutes.",
+    "expected_documents": [
+      "ITSEC-007"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "it_security"
+  },
+  {
+    "id": "SEC-Q08",
+    "question": "What is the VPN access requirement?",
+    "expected_answer": "All remote access to corporate resources must be conducted through the company-approved VPN. MFA is mandatory for all VPN connections.",
+    "expected_documents": [
+      "ITSEC-008",
+      "ITSEC-002"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "it"
+    ],
+    "difficulty": "medium",
+    "category": "it_security"
+  },
+  {
+    "id": "SEC-Q09",
+    "question": "What is the incident severity classification for a data breach involving client data?",
+    "expected_answer": "A data breach involving client data is classified as High severity, requiring immediate response.",
+    "expected_documents": [
+      "ITSEC-005"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "easy",
+    "category": "it_security"
+  },
+  {
+    "id": "SEC-Q10",
+    "question": "What is the acceptable use policy regarding personal use of company devices?",
+    "expected_answer": "Limited personal use of company devices is permitted provided it does not interfere with work, consume excessive resources, or involve illegal activities.",
+    "expected_documents": [
+      "ITSEC-003"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "it"
+    ],
+    "difficulty": "easy",
+    "category": "it_security"
+  },
+  {
+    "id": "SEC-Q11",
+    "question": "What is the backup frequency for critical databases?",
+    "expected_answer": "Critical databases require a daily full backup plus continuous transaction log, with a 30-day retention period.",
+    "expected_documents": [
+      "ITSEC-007"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "it_security"
+  },
+  {
+    "id": "SEC-Q12",
+    "question": "What is the data classification level for source code?",
+    "expected_answer": "Source code and proprietary intellectual property are classified as Restricted.",
+    "expected_documents": [
+      "ITSEC-006"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "it"
+    ],
+    "difficulty": "medium",
+    "category": "it_security"
+  },
+  {
+    "id": "SEC-Q13",
+    "question": "What is the incident reporting requirement for employees?",
+    "expected_answer": "All employees are required to report any suspected Security Incident to the IT and Security department immediately through the designated channels.",
+    "expected_documents": [
+      "ITSEC-005"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "it"
+    ],
+    "difficulty": "hard",
+    "category": "it_security"
+  },
+  {
+    "id": "SEC-Q14",
+    "question": "What is the MFA requirement for cloud consoles?",
+    "expected_answer": "Multi-factor authentication is mandatory for all users accessing cloud consoles (AWS, Azure, GCP).",
+    "expected_documents": [
+      "ITSEC-002"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "it"
+    ],
+    "difficulty": "hard",
+    "category": "it_security"
+  },
+  {
+    "id": "SEC-Q15",
+    "question": "What is the backup storage requirement for ransomware protection?",
+    "expected_answer": "Critical backups must be stored in an immutable format that cannot be modified or deleted, protecting them from ransomware attacks.",
+    "expected_documents": [
+      "ITSEC-007"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "medium",
+    "category": "it_security"
+  },
+  {
+    "id": "SEC-Q16",
+    "question": "What is the data classification level for employee personal data?",
+    "expected_answer": "Employee personal data (salary, performance reviews, medical information) is classified as Restricted.",
+    "expected_documents": [
+      "ITSEC-006"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "hr",
+      "it"
+    ],
+    "difficulty": "medium",
+    "category": "it_security"
+  },
+  {
+    "id": "SEC-Q17",
+    "question": "What is the offboarding access revocation schedule for standard exits?",
+    "expected_answer": "For standard exits, access to email, Slack, VPN, and cloud consoles is revoked at the close of business on the employee's last working day.",
+    "expected_documents": [
+      "ITSEC-004",
+      "HR-007"
+    ],
+    "expected_roles": [
+      "manager",
+      "hr",
+      "it"
+    ],
+    "difficulty": "hard",
+    "category": "it_security"
+  },
+  {
+    "id": "SEC-Q18",
+    "question": "What is the incident response phase for removing malware?",
+    "expected_answer": "Eradication is the phase where malware or malicious files are removed, vulnerabilities patched, and compromised systems rebuilt from clean images.",
+    "expected_documents": [
+      "ITSEC-005"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "medium",
+    "category": "it_security"
+  },
+  {
+    "id": "SEC-Q19",
+    "question": "What is the acceptable use policy regarding public Wi-Fi?",
+    "expected_answer": "Employees must not use public, unsecured Wi-Fi for corporate work. They should use a secure home network or a company-authorized personal hotspot.",
+    "expected_documents": [
+      "ITSEC-008",
+      "ITSEC-003"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "it"
+    ],
+    "difficulty": "medium",
+    "category": "it_security"
+  },
+  {
+    "id": "SEC-Q20",
+    "question": "What is the security audit finding H-02?",
+    "expected_answer": "Finding H-02 from the Security Audit (SEC-001) is that the backup of the legacy reporting database is stored without encryption at rest, violating ITSEC-006 and ITSEC-007.",
+    "expected_documents": [
+      "SEC-001",
+      "ITSEC-006",
+      "ITSEC-007"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "it_security"
+  },
+  {
+    "id": "GD-Q01",
+    "question": "Who approved the Project Orion architecture?",
+    "expected_answer": "The Project Orion Architecture Overview (ENG-001) was approved by Arvind Malhotra, with Sunita Rao as the author.",
+    "expected_documents": [
+      "ENG-001"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "google_drive"
+  },
+  {
+    "id": "GD-Q02",
+    "question": "What is the target uptime for Project Orion?",
+    "expected_answer": "Project Orion is deployed with redundant availability zones to achieve a target uptime of 99.95%.",
+    "expected_documents": [
+      "ENG-001"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "easy",
+    "category": "google_drive"
+  },
+  {
+    "id": "GD-Q03",
+    "question": "What is the cloud migration Wave 1 scope?",
+    "expected_answer": "Wave 1 of the cloud migration covers ingestion and core services only. The analytics service goes in Wave 2.",
+    "expected_documents": [
+      "ENG-002"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "medium",
+    "category": "google_drive"
+  },
+  {
+    "id": "GD-Q04",
+    "question": "What is the API versioning strategy?",
+    "expected_answer": "APIs use URL path versioning (e.g., /v1/clients, /v2/clients).",
+    "expected_documents": [
+      "ENG-003"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "easy",
+    "category": "google_drive"
+  },
+  {
+    "id": "GD-Q05",
+    "question": "What is the standard API error format?",
+    "expected_answer": "The standard error envelope includes code, message, details, and requestId.",
+    "expected_documents": [
+      "ENG-003"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "easy",
+    "category": "google_drive"
+  },
+  {
+    "id": "GD-Q06",
+    "question": "What is the customer onboarding process?",
+    "expected_answer": "The Customer Onboarding Guide (OPS-001) defines a four-phase process: Initiation, Technical Integration, Validation & UAT, and Operational Handover.",
+    "expected_documents": [
+      "OPS-001"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "easy",
+    "category": "google_drive"
+  },
+  {
+    "id": "GD-Q07",
+    "question": "What was the outcome of the Q1 FY2026 disaster recovery exercise?",
+    "expected_answer": "14 of 16 tested components met their RTO and RPO targets. Two components (Analytics ML Pipelines and Legacy Reporting DB) missed their RPO targets.",
+    "expected_documents": [
+      "OPS-002"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "medium",
+    "category": "google_drive"
+  },
+  {
+    "id": "GD-Q08",
+    "question": "What is the managed services uptime for Q1 FY2026?",
+    "expected_answer": "The managed services uptime for Q1 FY2026 was 99.94%, slightly below the 99.95% target.",
+    "expected_documents": [
+      "OPS-003"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "medium",
+    "category": "google_drive"
+  },
+  {
+    "id": "GD-Q09",
+    "question": "What is the overall security posture rating from the Q1 audit?",
+    "expected_answer": "The overall security posture is rated Satisfactory, with 82% of controls assessed as compliant.",
+    "expected_documents": [
+      "SEC-001"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "easy",
+    "category": "google_drive"
+  },
+  {
+    "id": "GD-Q10",
+    "question": "What is the AI Adoption Strategy?",
+    "expected_answer": "The AI Adoption Strategy (PM-001) defines NexaCore's approach to adopting and scaling AI/ML capabilities, including an AI Governance Committee and prioritized use cases.",
+    "expected_documents": [
+      "PM-001"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "google_drive"
+  },
+  {
+    "id": "GD-Q11",
+    "question": "What is the ACME Manufacturing implementation timeline?",
+    "expected_answer": "The ACME Manufacturing implementation is scheduled over 8 weeks, starting 2026-03-09 and completing 2026-05-01.",
+    "expected_documents": [
+      "CLIENT-001"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "medium",
+    "category": "google_drive"
+  },
+  {
+    "id": "GD-Q12",
+    "question": "What is the Engineering Handbook?",
+    "expected_answer": "The Engineering Handbook (ENG-004) is the definitive reference for engineering team members, covering SDLC, engineering standards, DevOps, and security responsibilities.",
+    "expected_documents": [
+      "ENG-004"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "easy",
+    "category": "google_drive"
+  },
+  {
+    "id": "GD-Q13",
+    "question": "What is the data retention for financial records?",
+    "expected_answer": "Financial records are retained for 7 years in accordance with the Procurement Policy (FIN-001) and applicable tax regulations.",
+    "expected_documents": [
+      "ITSEC-007",
+      "FIN-001"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "finance"
+    ],
+    "difficulty": "medium",
+    "category": "google_drive"
+  },
+  {
+    "id": "GD-Q14",
+    "question": "What is the Project Orion ingestion throughput improvement in v1.4?",
+    "expected_answer": "The Project Orion v1.4 release improved ingestion throughput by 25%.",
+    "expected_documents": [
+      "OPS-003",
+      "GH-REL-001"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "easy",
+    "category": "google_drive"
+  },
+  {
+    "id": "GD-Q15",
+    "question": "What is the ACME UAT feedback regarding alerting?",
+    "expected_answer": "ACME felt the alerts were too sensitive for their non-critical systems and wanted to tune thresholds for Tier 2 and Tier 3 systems.",
+    "expected_documents": [
+      "CLIENT-001",
+      "OPS-001"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "medium",
+    "category": "google_drive"
+  },
+  {
+    "id": "EM-Q01",
+    "question": "What was the subject of the email about the FY2026-27 strategic priorities?",
+    "expected_answer": "The email from Arvind Malhotra was titled 'FY2026-27 Strategic Priorities Kickoff' and covered Project Orion, cloud migration, AI adoption, security posture, and customer growth.",
+    "expected_documents": [
+      "EMAIL-001"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "email"
+  },
+  {
+    "id": "EM-Q02",
+    "question": "What was the security awareness training deadline?",
+    "expected_answer": "All employees were required to complete the annual security awareness training by January 31, 2026.",
+    "expected_documents": [
+      "EMAIL-003"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "hr"
+    ],
+    "difficulty": "medium",
+    "category": "email"
+  },
+  {
+    "id": "EM-Q03",
+    "question": "What was the outcome of the DR test email?",
+    "expected_answer": "The DR test email reported that 14 of 16 tested components met their RTO and RPO targets, with 2 components missing RPO.",
+    "expected_documents": [
+      "EMAIL-018"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "medium",
+    "category": "email"
+  },
+  {
+    "id": "EM-Q04",
+    "question": "What was the phishing alert email about?",
+    "expected_answer": "The phishing alert email warned about a targeted phishing campaign impersonating the cloud provider, instructing employees not to click links and to report suspicious emails.",
+    "expected_documents": [
+      "EMAIL-024"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "it"
+    ],
+    "difficulty": "easy",
+    "category": "email"
+  },
+  {
+    "id": "EM-Q05",
+    "question": "What was the ACME implementation kickoff email about?",
+    "expected_answer": "The email announced the ACME Manufacturing implementation kickoff with an 8-week timeline per CLIENT-001.",
+    "expected_documents": [
+      "EMAIL-025"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "email"
+  },
+  {
+    "id": "EM-Q06",
+    "question": "What was the invoice approval email about?",
+    "expected_answer": "The email requested CFO approval for the cloud provider invoice INV-2026-0119, which was above ₹500,000 per FIN-002.",
+    "expected_documents": [
+      "EMAIL-027",
+      "EMAIL-028"
+    ],
+    "expected_roles": [
+      "finance",
+      "manager",
+      "admin"
+    ],
+    "difficulty": "easy",
+    "category": "email"
+  },
+  {
+    "id": "EM-Q07",
+    "question": "What was the security audit results email about?",
+    "expected_answer": "The email reported the Q1 FY2026 security audit results: Satisfactory posture (82% compliance), 3 High, 7 Medium, and 12 Low findings.",
+    "expected_documents": [
+      "EMAIL-029"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "email"
+  },
+  {
+    "id": "EM-Q08",
+    "question": "What was the AI Adoption Strategy announcement email about?",
+    "expected_answer": "The email announced the publication of the AI Adoption Strategy (PM-001), including the AI Governance Committee and prioritized use cases.",
+    "expected_documents": [
+      "EMAIL-035"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "email"
+  },
+  {
+    "id": "EM-Q09",
+    "question": "What was the cloud migration Wave 1 cutover email about?",
+    "expected_answer": "The email announced that Wave 1 of the cloud migration was complete, with all ingestion and core services successfully migrated.",
+    "expected_documents": [
+      "EMAIL-079"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "medium",
+    "category": "email"
+  },
+  {
+    "id": "EM-Q10",
+    "question": "What was the mid-year review email about?",
+    "expected_answer": "The email from Arvind Malhotra shared mid-year progress and Q2 priorities, including Project Orion v1.4, ACME onboarding, cloud migration Wave 1, and AI adoption.",
+    "expected_documents": [
+      "EMAIL-080"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "admin"
+    ],
+    "difficulty": "medium",
+    "category": "email"
+  },
+  {
+    "id": "SL-Q01",
+    "question": "What was the root cause of the authentication service failure discussed in #eng-backend?",
+    "expected_answer": "The root cause was the removal of JWT clock skew tolerance in the refresh token validation, causing valid tokens to be rejected.",
+    "expected_documents": [
+      "SLK-ENG-BE-001"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "medium",
+    "category": "slack"
+  },
+  {
+    "id": "SL-Q02",
+    "question": "What was the CORS issue discussed in #eng-frontend?",
+    "expected_answer": "The ACME tenant origin was not added to the API gateway allowed origins, causing the browser to block dashboard responses.",
+    "expected_documents": [
+      "SLK-ENG-FE-001"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "slack"
+  },
+  {
+    "id": "SL-Q03",
+    "question": "What was the cloud migration Wave 1 readiness discussion in #project-orion?",
+    "expected_answer": "The team confirmed readiness for Wave 1, including security baseline per ITSEC-001, budget approval per FIN-001, and runbook readiness per OPS-001.",
+    "expected_documents": [
+      "SLK-ORION-001"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "easy",
+    "category": "slack"
+  },
+  {
+    "id": "SL-Q04",
+    "question": "What was the VPN issue discussed in #security?",
+    "expected_answer": "The VPN endpoint was rejecting MFA tokens due to a misconfigured MFA provider integration during a change, which was rolled back.",
+    "expected_documents": [
+      "SLK-SEC-001"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "medium",
+    "category": "slack"
+  },
+  {
+    "id": "SL-Q05",
+    "question": "What was the phishing incident discussed in #security?",
+    "expected_answer": "A targeted phishing campaign impersonating the cloud provider was detected, and an internal alert was sent per HR-006.",
+    "expected_documents": [
+      "SLK-SEC-002"
+    ],
+    "expected_roles": [
+      "manager",
+      "hr",
+      "it"
+    ],
+    "difficulty": "medium",
+    "category": "slack"
+  },
+  {
+    "id": "SL-Q06",
+    "question": "What was the expense reimbursement query in #finance?",
+    "expected_answer": "Neha Kapoor asked about the status of her expense claim EXP-0567, which was pending Reporting Manager approval per FIN-003.",
+    "expected_documents": [
+      "SLK-FIN-001"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "finance"
+    ],
+    "difficulty": "hard",
+    "category": "slack"
+  },
+  {
+    "id": "SL-Q07",
+    "question": "What was the leave policy question in #hr?",
+    "expected_answer": "Neha Kapoor asked about using Annual Leave, and Farah Hussain confirmed the 18-day entitlement per HR-002.",
+    "expected_documents": [
+      "SLK-HR-001"
+    ],
+    "expected_roles": [
+      "employee",
+      "manager",
+      "hr"
+    ],
+    "difficulty": "easy",
+    "category": "slack"
+  },
+  {
+    "id": "SL-Q08",
+    "question": "What was the ACME UAT feedback in #customer-acme?",
+    "expected_answer": "ACME felt the alerts were too sensitive for non-critical systems and wanted tiered alerting for Tier 2/3 systems.",
+    "expected_documents": [
+      "SLK-ACME-001"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "easy",
+    "category": "slack"
+  },
+  {
+    "id": "SL-Q09",
+    "question": "What was the backup monitoring alert in #operations?",
+    "expected_answer": "A backup job for the analytics database failed, but the monitoring alert fired correctly, confirming the fix from the DR test was working.",
+    "expected_documents": [
+      "SLK-OPS-003"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "medium",
+    "category": "slack"
+  },
+  {
+    "id": "SL-Q10",
+    "question": "What was the Q1 business review discussion in #leadership?",
+    "expected_answer": "The leadership team aligned on Q1 metrics: revenue ahead of forecast, Orion v1.4 delivered, uptime 99.94%, and 5 new customers signed.",
+    "expected_documents": [
+      "SLK-LDR-001"
+    ],
+    "expected_roles": [
+      "admin"
+    ],
+    "difficulty": "easy",
+    "category": "slack"
+  },
+  {
+    "id": "MT-Q01",
+    "question": "What was the root cause of incident INC-1042 discussed in MTG-004?",
+    "expected_answer": "The root cause was unauthorized access to a legacy backup server via SSH using a valid but deprecated administrative key. The server was supposed to be decommissioned but was still running.",
+    "expected_documents": [
+      "MTG-004",
+      "INC-1042"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "medium",
+    "category": "meetings"
+  },
+  {
+    "id": "MT-Q02",
+    "question": "What security policy gap was identified in MTG-004?",
+    "expected_answer": "The incident pointed to a gap in ITSEC-004 (Employee Offboarding Checklist) - there is no rigorous process for auditing 'ghost' servers or rotating keys on legacy hardware.",
+    "expected_documents": [
+      "MTG-004",
+      "ITSEC-004"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "medium",
+    "category": "meetings"
+  },
+  {
+    "id": "MT-Q03",
+    "question": "Who organized MTG-004?",
+    "expected_answer": "MTG-004 was organized by Rohit Verma (EMP-0005).",
+    "expected_documents": [
+      "MTG-004"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "medium",
+    "category": "meetings"
+  },
+  {
+    "id": "MT-Q04",
+    "question": "What was the date of the security incident review MTG-004?",
+    "expected_answer": "MTG-004 was held on 2026-03-21 at 02:00 PM IST.",
+    "expected_documents": [
+      "MTG-004"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "medium",
+    "category": "meetings"
+  },
+  {
+    "id": "MT-Q05",
+    "question": "What was the agenda of MTG-004?",
+    "expected_answer": "The agenda was: Timeline Review of INC-1042, Root Cause Analysis, Impact Assessment, Remediation and Preventative Measures, and Updates to Offboarding Checklist (ITSEC-004).",
+    "expected_documents": [
+      "MTG-004"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "easy",
+    "category": "meetings"
+  },
+  {
+    "id": "MT-Q06",
+    "question": "What was the time of the unauthorized access in INC-1042?",
+    "expected_answer": "The unauthorized access began at 03:15 AM on March 20th, when an external IP attempted to authenticate via SSH.",
+    "expected_documents": [
+      "MTG-004",
+      "INC-1042"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "easy",
+    "category": "meetings"
+  },
+  {
+    "id": "MT-Q07",
+    "question": "What was the remediation action for INC-1042?",
+    "expected_answer": "The session was killed and the keys were rotated by 07:15 AM. The incident pointed to a need to update the offboarding checklist (ITSEC-004) to audit ghost servers and rotate keys.",
+    "expected_documents": [
+      "MTG-004",
+      "ITSEC-004"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "meetings"
+  },
+  {
+    "id": "MT-Q08",
+    "question": "What was the legacy server in INC-1042 used for?",
+    "expected_answer": "The legacy server was a backup for the old Finance records. It was supposed to have been decommissioned last year but the VM was still running.",
+    "expected_documents": [
+      "MTG-004",
+      "INC-1042"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "medium",
+    "category": "meetings"
+  },
+  {
+    "id": "MT-Q09",
+    "question": "What was the classification of MTG-004?",
+    "expected_answer": "MTG-004 was classified as restricted, with allowed roles of it, manager, and admin.",
+    "expected_documents": [
+      "MTG-004"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "medium",
+    "category": "meetings"
+  },
+  {
+    "id": "MT-Q10",
+    "question": "What was the duration of MTG-004?",
+    "expected_answer": "MTG-004 had a duration of 60 minutes.",
+    "expected_documents": [
+      "MTG-004"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "medium",
+    "category": "meetings"
+  },
+  {
+    "id": "JG-Q01",
+    "question": "What was the root cause of JIRA-ORION-001?",
+    "expected_answer": "JIRA-ORION-001 was a critical bug where the JWT clock skew tolerance was removed, causing the auth service to reject valid refresh tokens.",
+    "expected_documents": [
+      "JIRA-ORION-001"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "easy",
+    "category": "jira_github"
+  },
+  {
+    "id": "JG-Q02",
+    "question": "What was the merge status of GH-PR-001?",
+    "expected_answer": "GH-PR-001 (Restore JWT clock skew tolerance) was MERGED, with approvals from Sunita Rao and Rohit Verma.",
+    "expected_documents": [
+      "GH-PR-001"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "medium",
+    "category": "jira_github"
+  },
+  {
+    "id": "JG-Q03",
+    "question": "What was the Cross-Encoder reranker optimization in GH-PR-005?",
+    "expected_answer": "GH-PR-005 optimized the Cross-Encoder reranker batching and model configuration to improve search relevance and reduce inference latency.",
+    "expected_documents": [
+      "GH-PR-005"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "easy",
+    "category": "jira_github"
+  },
+  {
+    "id": "JG-Q04",
+    "question": "What was the Project Orion v1.4 release feature?",
+    "expected_answer": "Project Orion v1.4 included improved ingestion throughput by 25%, standardized API error envelope, and dashboard performance improvements.",
+    "expected_documents": [
+      "GH-REL-001"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "hard",
+    "category": "jira_github"
+  },
+  {
+    "id": "JG-Q05",
+    "question": "What was the security incident JIRA-SEC-001?",
+    "expected_answer": "JIRA-SEC-001 was a critical security incident involving a targeted phishing campaign impersonating the cloud provider.",
+    "expected_documents": [
+      "JIRA-SEC-001"
+    ],
+    "expected_roles": [
+      "manager",
+      "it",
+      "admin"
+    ],
+    "difficulty": "medium",
+    "category": "jira_github"
+  }
+]

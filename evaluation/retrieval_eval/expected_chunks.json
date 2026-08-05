@@ -1,0 +1,2108 @@
+[
+  {
+    "query_id": "RQ-001",
+    "query": "What is the annual leave entitlement?",
+    "expected_documents": [
+      "HR-002"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-002",
+    "query": "How many sick leave days are available?",
+    "expected_documents": [
+      "HR-002"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-003",
+    "query": "What is the remote work weekly limit?",
+    "expected_documents": [
+      "HR-003"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-004",
+    "query": "What is the extended remote work approval process?",
+    "expected_documents": [
+      "HR-003"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-005",
+    "query": "What is the notice period for resignation?",
+    "expected_documents": [
+      "HR-007"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-006",
+    "query": "What is the exit interview purpose?",
+    "expected_documents": [
+      "HR-007"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-007",
+    "query": "What does the code of conduct cover?",
+    "expected_documents": [
+      "HR-006"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-008",
+    "query": "What is the performance review process?",
+    "expected_documents": [
+      "HR-005"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-009",
+    "query": "What is the grievance procedure?",
+    "expected_documents": [
+      "HR-008"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-010",
+    "query": "What is the travel expense policy?",
+    "expected_documents": [
+      "HR-004"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-011",
+    "query": "What is the employee handbook?",
+    "expected_documents": [
+      "HR-001"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-012",
+    "query": "What is the expense submission deadline?",
+    "expected_documents": [
+      "FIN-003"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-013",
+    "query": "What is the invoice approval threshold?",
+    "expected_documents": [
+      "FIN-002"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-014",
+    "query": "What is the procurement policy?",
+    "expected_documents": [
+      "FIN-001"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-015",
+    "query": "What is the expense reimbursement process?",
+    "expected_documents": [
+      "FIN-003"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-016",
+    "query": "What is the minimum password length?",
+    "expected_documents": [
+      "ITSEC-002"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-017",
+    "query": "What is the account lockout policy?",
+    "expected_documents": [
+      "ITSEC-002"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-018",
+    "query": "What is the data classification for client data?",
+    "expected_documents": [
+      "ITSEC-006"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-019",
+    "query": "What is the RTO for Tier 1 systems?",
+    "expected_documents": [
+      "ITSEC-007"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-020",
+    "query": "What is the VPN access requirement?",
+    "expected_documents": [
+      "ITSEC-008"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-021",
+    "query": "What is the incident severity classification?",
+    "expected_documents": [
+      "ITSEC-005"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-022",
+    "query": "What is the acceptable use policy?",
+    "expected_documents": [
+      "ITSEC-003"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-023",
+    "query": "What is the offboarding access revocation?",
+    "expected_documents": [
+      "ITSEC-004"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-024",
+    "query": "What is the information security policy?",
+    "expected_documents": [
+      "ITSEC-001"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-025",
+    "query": "What is the Project Orion architecture?",
+    "expected_documents": [
+      "ENG-001"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-026",
+    "query": "What is the cloud migration plan?",
+    "expected_documents": [
+      "ENG-002"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-027",
+    "query": "What is the API design guideline?",
+    "expected_documents": [
+      "ENG-003"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-028",
+    "query": "What is the engineering handbook?",
+    "expected_documents": [
+      "ENG-004"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-029",
+    "query": "What is the customer onboarding process?",
+    "expected_documents": [
+      "OPS-001"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-030",
+    "query": "What was the DR test outcome?",
+    "expected_documents": [
+      "OPS-002"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-031",
+    "query": "What is the quarterly operations report?",
+    "expected_documents": [
+      "OPS-003"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-032",
+    "query": "What is the security audit result?",
+    "expected_documents": [
+      "SEC-001"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-033",
+    "query": "What is the AI adoption strategy?",
+    "expected_documents": [
+      "PM-001"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-034",
+    "query": "What is the ACME implementation plan?",
+    "expected_documents": [
+      "CLIENT-001"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-035",
+    "query": "What was the authentication service failure?",
+    "expected_documents": [
+      "JIRA-ORION-001",
+      "SLK-ENG-BE-001"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-036",
+    "query": "What was the CORS issue for ACME?",
+    "expected_documents": [
+      "JIRA-ACME-001",
+      "SLK-ENG-FE-001"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-037",
+    "query": "What was the phishing incident?",
+    "expected_documents": [
+      "JIRA-SEC-001",
+      "SLK-SEC-002"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-038",
+    "query": "What was the backup monitoring fix?",
+    "expected_documents": [
+      "JIRA-CLOUD-003",
+      "SLK-OPS-003"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-039",
+    "query": "What was the Cross-Encoder reranker optimization?",
+    "expected_documents": [
+      "GH-PR-005",
+      "JIRA-PLATFORM-002"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-040",
+    "query": "What was the Project Orion v1.4 release?",
+    "expected_documents": [
+      "GH-REL-001"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-041",
+    "query": "What was the auth-service v2.1 release?",
+    "expected_documents": [
+      "GH-REL-002"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-042",
+    "query": "What was the JWT clock skew fix?",
+    "expected_documents": [
+      "GH-PR-001",
+      "JIRA-ORION-001"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-043",
+    "query": "What was the API error format fix?",
+    "expected_documents": [
+      "GH-PR-002",
+      "JIRA-ORION-002"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-044",
+    "query": "What was the landing zone deployment?",
+    "expected_documents": [
+      "GH-PR-004",
+      "JIRA-CLOUD-001"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-045",
+    "query": "What was the tiered alerting for ACME?",
+    "expected_documents": [
+      "JIRA-ACME-002",
+      "SLK-ACME-001"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-046",
+    "query": "What was the expense approval automation?",
+    "expected_documents": [
+      "JIRA-PLATFORM-003",
+      "SLK-FIN-001"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-047",
+    "query": "What was the invoice workflow enhancement?",
+    "expected_documents": [
+      "JIRA-PLATFORM-004",
+      "SLK-FIN-002"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-048",
+    "query": "What was the MFA vendor issue?",
+    "expected_documents": [
+      "JIRA-SEC-004",
+      "GH-ISS-003"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-049",
+    "query": "What was the privileged account cleanup?",
+    "expected_documents": [
+      "JIRA-SEC-003",
+      "SEC-001"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-050",
+    "query": "What was the backup encryption fix?",
+    "expected_documents": [
+      "JIRA-SEC-002",
+      "SEC-001"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-051",
+    "query": "What was the account lockout incident?",
+    "expected_documents": [
+      "JIRA-SEC-006",
+      "SLK-SEC-003"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-052",
+    "query": "What was the hybrid search enhancement?",
+    "expected_documents": [
+      "JIRA-ORION-006",
+      "GH-DISC-004"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-053",
+    "query": "What was the semantic cache discussion?",
+    "expected_documents": [
+      "GH-DISC-001"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-054",
+    "query": "What was the RBAC discussion?",
+    "expected_documents": [
+      "GH-DISC-002"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-055",
+    "query": "What was the Wave 1 migration discussion?",
+    "expected_documents": [
+      "GH-DISC-003"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-056",
+    "query": "What was the ACME handover?",
+    "expected_documents": [
+      "JIRA-ACME-004",
+      "EMAIL-056"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-057",
+    "query": "What was the reporting enhancement for ACME?",
+    "expected_documents": [
+      "JIRA-ACME-003",
+      "EMAIL-064"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-058",
+    "query": "What was the dashboard performance issue?",
+    "expected_documents": [
+      "JIRA-ORION-003",
+      "GH-ISS-001"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-059",
+    "query": "What was the feature flag issue?",
+    "expected_documents": [
+      "JIRA-PLATFORM-005",
+      "GH-ISS-002"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-060",
+    "query": "What was the legacy decommissioning?",
+    "expected_documents": [
+      "JIRA-CLOUD-004",
+      "GH-ISS-004"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-061",
+    "query": "What was the expense workflow issue?",
+    "expected_documents": [
+      "JIRA-PLATFORM-003",
+      "GH-ISS-006"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-062",
+    "query": "What was the strategic priorities kickoff?",
+    "expected_documents": [
+      "EMAIL-001"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-063",
+    "query": "What was the security training deadline?",
+    "expected_documents": [
+      "EMAIL-003"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-064",
+    "query": "What was the DR test email?",
+    "expected_documents": [
+      "EMAIL-018"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-065",
+    "query": "What was the phishing alert email?",
+    "expected_documents": [
+      "EMAIL-024"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-066",
+    "query": "What was the ACME kickoff email?",
+    "expected_documents": [
+      "EMAIL-025"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-067",
+    "query": "What was the invoice approval email?",
+    "expected_documents": [
+      "EMAIL-027",
+      "EMAIL-028"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-068",
+    "query": "What was the security audit email?",
+    "expected_documents": [
+      "EMAIL-029"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-069",
+    "query": "What was the AI strategy email?",
+    "expected_documents": [
+      "EMAIL-035"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-070",
+    "query": "What was the cloud migration cutover email?",
+    "expected_documents": [
+      "EMAIL-079"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-071",
+    "query": "What was the mid-year review email?",
+    "expected_documents": [
+      "EMAIL-080"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-072",
+    "query": "What was the INC-1042 incident?",
+    "expected_documents": [
+      "MTG-004",
+      "INC-1042"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-073",
+    "query": "What was the MTG-004 agenda?",
+    "expected_documents": [
+      "MTG-004"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-074",
+    "query": "What was the root cause of INC-1042?",
+    "expected_documents": [
+      "MTG-004",
+      "INC-1042",
+      "ITSEC-004"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-075",
+    "query": "What was the leave policy question in #hr?",
+    "expected_documents": [
+      "SLK-HR-001"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-076",
+    "query": "What was the expense query in #finance?",
+    "expected_documents": [
+      "SLK-FIN-001"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-077",
+    "query": "What was the Q1 business review?",
+    "expected_documents": [
+      "SLK-LDR-001"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-078",
+    "query": "What was the ACME UAT feedback?",
+    "expected_documents": [
+      "SLK-ACME-001"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-079",
+    "query": "What was the backup alert in #operations?",
+    "expected_documents": [
+      "SLK-OPS-003"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  },
+  {
+    "query_id": "RQ-080",
+    "query": "What was the VPN issue in #security?",
+    "expected_documents": [
+      "SLK-SEC-001"
+    ],
+    "expected_sections": [
+      "Purpose",
+      "Scope",
+      "Key Requirements"
+    ],
+    "expected_metadata": {
+      "source_type": "generated",
+      "classification": "department_internal"
+    },
+    "expected_document_types": [
+      "policy",
+      "project_doc",
+      "incident_report",
+      "slack",
+      "email",
+      "meeting",
+      "jira",
+      "github"
+    ]
+  }
+]

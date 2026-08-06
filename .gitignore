@@ -220,4 +220,10 @@ __marimo__/
 AGENTS.md
 CLAUDE.md
 
+# SecureCorp AI generated artifacts (never commit processed/index data)
+data/processed/
+data/chroma_db/
+data/cache/
+
+.claude/
 

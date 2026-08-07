@@ -7,6 +7,7 @@ from hybridrag.domain.models import (
     DocumentStatus,
     RankedChunk,
     SourceType,
+    content_hash,
     make_chunk_id,
 )
 
@@ -17,5 +18,6 @@ __all__ = [
     "DocumentStatus",
     "RankedChunk",
     "SourceType",
+    "content_hash",
     "make_chunk_id",
 ]

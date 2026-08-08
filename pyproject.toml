@@ -45,5 +45,11 @@ python_version = "3.11"
 strict = true
 mypy_path = "src"
 
+# rank_bm25 is a single untyped module with no py.typed marker. Scoped to that
+# import only, so the rest of the codebase stays strictly checked.
+[[tool.mypy.overrides]]
+module = ["rank_bm25"]
+ignore_missing_imports = true
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]

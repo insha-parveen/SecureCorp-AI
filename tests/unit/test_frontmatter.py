@@ -50,9 +50,7 @@ class TestParseFrontmatter:
         meta, body = parse_frontmatter(DOC_WITH_FRONTMATTER)
         assert meta["document_id"] == "HR-003"
         assert meta["allowed_roles"] == ["employee", "admin"]
-        assert body.startswith("\n# Remote Work Policy") or body.startswith(
-            "# Remote Work Policy"
-        )
+        assert body.lstrip().startswith("# Remote Work Policy")
 
     def test_no_frontmatter_returns_empty_meta(self) -> None:
         meta, body = parse_frontmatter("# Just a heading\n\nText.")

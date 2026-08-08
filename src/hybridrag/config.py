@@ -45,12 +45,16 @@ class Settings(BaseSettings):
     embedding_device: str | None = None
     chroma_collection: str = "nexacore_chunks"
 
-    # --- Retrieval parameters ---
+    # --- BM25 / sparse index ---
+    bm25_index_file: str = "bm25_index.json"
+    bm25_remove_stopwords: bool = True
+    bm25_expand_identifiers: bool = True
     bm25_top_n: int = 50
     # Okapi BM25 term-frequency saturation (k1) and length normalization (b).
     # Library defaults; re-tune against the golden set in Phase 8.
     bm25_k1: float = 1.5
     bm25_b: float = 0.75
+
     dense_top_n: int = 50
     rrf_k: int = 60
     rerank_candidates: int = 30

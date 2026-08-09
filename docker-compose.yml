@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: securecorp-ai-db
+    restart: always
+    environment:
+      POSTGRES_USER: nexacore_admin
+      POSTGRES_PASSWORD: nexacore_password
+      POSTGRES_DB: nexacore_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

@@ -10,6 +10,9 @@ from pathlib import Path
 from hybridrag.config import Settings, get_settings
 from hybridrag.domain import Chunk, RankedChunk
 from hybridrag.ingestion.chunk_store import load_chunks
+from hybridrag.authorization.engine import AuthorizationEngine
+from hybridrag.authorization.models import UserContext
+
 
 RETRIEVER_NAME = "bm25"
 
@@ -93,7 +96,7 @@ class BM25Index:
     def get(self, chunk_id: str) -> Chunk | None:
         return self._by_id.get(chunk_id)
 
-    def search(self, query: str, top_n: int | None = None) -> list[RankedChunk]:
+    def search(self, query: str, user_context: UserContext, top_n: int | None = None) -> list[RankedChunk]:
         limit = self._default_top_n if top_n is None else top_n
 
         # Use config-driven analysis for the query
@@ -112,6 +115,13 @@ class BM25Index:
             (i for i, term_set in enumerate(self._term_sets) if term_set & wanted),
             key=lambda i: (-float(scores[i]), self._chunks[i].chunk_id),
         )
+
+        # Filter for authorization
+        authorized_ordered = [
+            i for i in ordered
+            if AuthorizationEngine.is_authorized(user_context, self._chunks[i])
+        ]
+
         return [
             RankedChunk(
                 chunk=self._chunks[i],
@@ -119,7 +129,7 @@ class BM25Index:
                 rank=rank,
                 retriever=RETRIEVER_NAME,
             )
-            for rank, i in enumerate(ordered[:limit], start=1)
+            for rank, i in enumerate(authorized_ordered[:limit], start=1)
         ]
 
     @property

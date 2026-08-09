@@ -7,6 +7,8 @@ from hybridrag.domain.models import (
     DocumentStatus,
     RankedChunk,
     SourceType,
+    StructuredAnswer,
+    FinalResponse,
     content_hash,
     make_chunk_id,
 )
@@ -18,6 +20,8 @@ __all__ = [
     "DocumentStatus",
     "RankedChunk",
     "SourceType",
+    "StructuredAnswer",
+    "FinalResponse",
     "content_hash",
     "make_chunk_id",
 ]

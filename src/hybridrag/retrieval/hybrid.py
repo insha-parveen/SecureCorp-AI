@@ -26,6 +26,8 @@ from typing import Any
 
 from hybridrag.config import Settings, get_settings
 from hybridrag.domain import RankedChunk
+from hybridrag.authorization.models import UserContext
+from hybridrag.authorization.engine import AuthorizationEngine
 from hybridrag.indexing import (
     BM25Index,
     EmbeddingProvider,
@@ -57,23 +59,33 @@ class HybridRetriever:
         self._settings = settings or get_settings()
 
     def retrieve(
-        self, query: str, *, where: dict[str, Any] | None = None
+        self, query: str, user_context: UserContext, *, where: dict[str, Any] | None = None
     ) -> list[RankedChunk]:
         """Return the final top-K evidence chunks for ``query``.
 
         Args:
             query: The user's natural-language question.
-            where: Optional metadata filter forwarded to dense retrieval only
-                (the hook the Phase 5 authorization layer will use). BM25 has no
-                equivalent filter, so it is not applied there.
+            user_context: The identity and roles of the requester.
+            where: Optional metadata filter forwarded to dense retrieval only.
 
         Returns:
             The reranked ``final_top_k`` ``RankedChunk`` results, best first.
         """
         cfg = self._settings
 
-        bm25_results = self._bm25.search(query, top_n=cfg.bm25_top_n)
-        dense_results = self._dense_search(query, where=where, top_n=cfg.dense_top_n)
+        # 1. Build the authorization filter for dense retrieval
+        auth_filter = AuthorizationEngine.build_dense_filter(user_context)
+
+        # Combine the provided 'where' filter with the auth filter if both exist
+        final_where = auth_filter
+        if where:
+            # Basic merge of filters (simplification: we just use the auth filter
+            # since security must take precedence).
+            final_where = {"$and": [auth_filter, where]}
+
+        # 2. Run retrieval
+        bm25_results = self._bm25.search(query, user_context=user_context, top_n=cfg.bm25_top_n)
+        dense_results = self._dense_search(query, where=final_where, top_n=cfg.dense_top_n)
 
         fused = rrf_fuse(bm25_results, dense_results)
         return rerank_top(

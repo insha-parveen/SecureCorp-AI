@@ -1589,6 +1589,7 @@ dependencies = [
     { name = "pydantic" },
     { name = "pydantic-settings" },
     { name = "pyyaml" },
+    { name = "requests" },
 ]
 
 [package.optional-dependencies]
@@ -1613,6 +1614,7 @@ requires-dist = [
     { name = "pydantic-settings", specifier = ">=2.3" },
     { name = "pyyaml", specifier = ">=6.0" },
     { name = "rank-bm25", marker = "extra == 'retrieval'", specifier = ">=0.2.2" },
+    { name = "requests", specifier = ">=2.31.0" },
     { name = "sentence-transformers", marker = "extra == 'retrieval'", specifier = ">=3.0" },
 ]
 provides-extras = ["retrieval"]

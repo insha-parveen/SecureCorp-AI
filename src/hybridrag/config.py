@@ -31,6 +31,17 @@ class Settings(BaseSettings):
     # --- Models (baselines per CLAUDE.md; override via env) ---
     embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2"
     reranker_model: str = "cross-encoder/ms-marco-MiniLM-L6-v2"
+    llm_model: str = "llama3"
+    ollama_base_url: str = "http://localhost:11434"
+    groq_api_key: str | None = None
+    openai_api_key: str | None = None
+
+    # --- Database (PostgreSQL) ---
+    # Railway provides this as DATABASE_URL. For local docker:
+    # postgresql://nexacore_admin:nexacore_password@localhost:5432/nexacore_db
+    database_url: str = "postgresql://nexacore_admin:nexacore_password@localhost:5432/nexacore_db"
+
+
 
     # --- Embedding / dense index ---
     # Asymmetric models (e5, bge, ...) need different prefixes for passages and

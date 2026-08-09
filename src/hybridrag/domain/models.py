@@ -123,7 +123,8 @@ class Chunk(BaseModel):
 
 class RankedChunk(BaseModel):
     """A chunk with a retrieval score — the common result model that BM25 and
-    dense retrieval both return, enabling RRF fusion over ``chunk_id``."""
+    dense retrieval both return, enabling RRF fusion over ``chunk_id``.
+    """
 
     model_config = ConfigDict(frozen=True)
 
@@ -135,3 +136,27 @@ class RankedChunk(BaseModel):
     @property
     def chunk_id(self) -> str:
         return self.chunk.chunk_id
+
+
+class StructuredAnswer(BaseModel):
+    """The expected JSON format from the LLM.
+
+    Used to separate the final answer from the cited evidence ranks.
+    """
+    answer: str
+    citations: list[int] = Field(default_factory=list)
+
+
+class FinalResponse(BaseModel):
+    """The final output of the RAG system.
+
+    Includes the generated answer, the validated citations, and
+    the evidence used for provenance and UI display.
+    """
+    model_config = ConfigDict(frozen=True)
+
+    answer: str
+    evidence: list[RankedChunk]
+    citations: list[int]
+    model: str
+    usage: dict[str, float | int]

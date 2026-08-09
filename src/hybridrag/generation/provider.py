@@ -4,17 +4,20 @@ This module ensures the application is decoupled from any specific LLM API (Olla
 The generator only cares about sending a prompt and receiving a structured response.
 """
 
-from typing import Protocol, runtime_checkable
 from dataclasses import dataclass
+from typing import Any, Protocol, runtime_checkable
 
 import requests
+
 
 @dataclass(frozen=True)
 class GenerationResponse:
     """The raw output from an LLM provider."""
+
     text: str
     model: str
     usage: dict[str, int]  # e.g., {"prompt_tokens": 120, "completion_tokens": 45}
+
 
 @runtime_checkable
 class GenerationProvider(Protocol):
@@ -29,6 +32,7 @@ class GenerationProvider(Protocol):
         """Generate a response based on the provided prompts."""
         ...
 
+
 class LocalLLMProvider:
     """Ollama-based local LLM implementation."""
 
@@ -41,7 +45,7 @@ class LocalLLMProvider:
         return self._model_name
 
     def generate(self, prompt: str, system_prompt: str | None = None) -> GenerationResponse:
-        payload = {
+        payload: dict[str, Any] = {
             "model": self._model_name,
             "prompt": prompt,
             "stream": False,
@@ -50,11 +54,7 @@ class LocalLLMProvider:
         if system_prompt:
             payload["system"] = system_prompt
 
-        response = requests.post(
-            f"{self._base_url}/api/generate",
-            json=payload,
-            timeout=120
-        )
+        response = requests.post(f"{self._base_url}/api/generate", json=payload, timeout=120)
         response.raise_for_status()
         data = response.json()
 
@@ -64,8 +64,9 @@ class LocalLLMProvider:
             usage={
                 "prompt_tokens": data.get("prompt_eval_count", 0),
                 "completion_tokens": data.get("eval_count", 0),
-            }
+            },
         )
+
 
 class GroqLLMProvider:
     """Groq-based hosted LLM implementation using the OpenAI-compatible API."""
@@ -85,12 +86,12 @@ class GroqLLMProvider:
             "Content-Type": "application/json",
         }
 
-        messages = []
+        messages: list[dict[str, Any]] = []
         if system_prompt:
             messages.append({"role": "system", "content": system_prompt})
         messages.append({"role": "user", "content": prompt})
 
-        payload = {
+        payload: dict[str, Any] = {
             "model": self._model_name,
             "messages": messages,
             "temperature": 0,
@@ -113,18 +114,13 @@ class GroqLLMProvider:
             usage=data.get("usage", {"prompt_tokens": 0, "completion_tokens": 0}),
         )
 
-def get_generation_provider(settings) -> GenerationProvider:
+
+def get_generation_provider(settings: Any) -> GenerationProvider:
     """Factory to get the configured LLM provider.
 
     Priority: Groq (if key exists) -> Ollama (fallback).
     """
     if settings.groq_api_key:
-        return GroqLLMProvider(
-            model_name=settings.llm_model,
-            api_key=settings.groq_api_key
-        )
+        return GroqLLMProvider(model_name=settings.llm_model, api_key=settings.groq_api_key)
 
-    return LocalLLMProvider(
-        model_name=settings.llm_model,
-        base_url=settings.ollama_base_url
-    )
+    return LocalLLMProvider(model_name=settings.llm_model, base_url=settings.ollama_base_url)

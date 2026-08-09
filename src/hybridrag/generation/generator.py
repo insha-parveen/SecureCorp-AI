@@ -4,13 +4,18 @@ This module coordinates the flow from retrieved evidence to a final generated an
 handling formatting, provider calls, and citation validation.
 """
 
-import json
-from typing import Any
+from typing import cast
 
 from hybridrag.config import Settings, get_settings
-from hybridrag.domain import RankedChunk, StructuredAnswer, FinalResponse
+from hybridrag.domain import FinalResponse, RankedChunk, StructuredAnswer
 from hybridrag.generation.formatter import create_generation_prompt, format_evidence
-from hybridrag.generation.provider import GenerationProvider, GenerationResponse, get_generation_provider
+from hybridrag.generation.provider import GenerationProvider, get_generation_provider
+
+__all__ = [
+    "RAGGenerator",
+    "FinalResponse",
+    "get_generator",
+]
 
 
 class RAGGenerator:
@@ -46,7 +51,7 @@ class RAGGenerator:
         # 3. Call the LLM provider
         response = self._provider.generate(
             prompt=prompt,
-            system_prompt="You are a secure enterprise assistant for NexaCore Solutions."
+            system_prompt="You are a secure enterprise assistant for NexaCore Solutions.",
         )
 
         # 4. Parse structured output
@@ -64,12 +69,15 @@ class RAGGenerator:
         validated_citations = self._validate_citations(citations, evidence)
 
         # 6. Return the final response object
+        # ``response.usage`` is typed as dict[str, int] by the provider; the
+        # FinalResponse contract allows dict[str, float | int]. The cast keeps
+        # the provider contract narrow without widening it everywhere.
         return FinalResponse(
             answer=answer,
             evidence=evidence,
             citations=validated_citations,
             model=response.model,
-            usage=response.usage
+            usage=cast(dict[str, float | int], response.usage),
         )
 
     def _validate_citations(

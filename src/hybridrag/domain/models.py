@@ -143,6 +143,7 @@ class StructuredAnswer(BaseModel):
 
     Used to separate the final answer from the cited evidence ranks.
     """
+
     answer: str
     citations: list[int] = Field(default_factory=list)
 
@@ -153,6 +154,7 @@ class FinalResponse(BaseModel):
     Includes the generated answer, the validated citations, and
     the evidence used for provenance and UI display.
     """
+
     model_config = ConfigDict(frozen=True)
 
     answer: str

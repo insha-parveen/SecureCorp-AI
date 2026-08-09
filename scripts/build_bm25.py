@@ -20,11 +20,9 @@ byte-stable for an unchanged corpus anyway.
 """
 
 import argparse
-from pathlib import Path
 
 from hybridrag.config import get_settings
 from hybridrag.indexing import BM25Index
-from hybridrag.ingestion.chunk_store import load_chunks
 
 
 def _print_stats(retriever: BM25Index) -> None:
@@ -33,12 +31,16 @@ def _print_stats(retriever: BM25Index) -> None:
 
 
 def _run_query(retriever: BM25Index, query: str, top_n: int) -> None:
-    terms = retriever.analyze_query(query) if hasattr(retriever, 'analyze_query') else []
+    terms = retriever.analyze_query(query) if hasattr(retriever, "analyze_query") else []
     # Fallback for the newer BM25Index implementation
     if not terms:
         from hybridrag.indexing.bm25_store import analyze
-        terms = analyze(query, remove_stopwords=retriever._settings.bm25_remove_stopwords,
-                        expand_identifiers=retriever._settings.bm25_expand_identifiers)
+
+        terms = analyze(
+            query,
+            remove_stopwords=retriever._settings.bm25_remove_stopwords,
+            expand_identifiers=retriever._settings.bm25_expand_identifiers,
+        )
 
     print(f'\nQuery:  "{query}"')
     print(f"Terms:  {terms}")
@@ -87,9 +89,10 @@ def main() -> None:
 
     # We implement a simple save here since BM25Index doesn't have .save() anymore
     import json
+
     payload = {
         "chunks": [
-            {"chunk_id": c.chunk_id, "tokens": []} # Simplified for now, just to keep the file
+            {"chunk_id": c.chunk_id, "tokens": []}  # Simplified for now, just to keep the file
             for c in retriever._chunks
         ]
     }

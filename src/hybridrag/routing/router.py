@@ -5,13 +5,16 @@ unstructured document retrieval path (RAG) or the structured SQL path.
 """
 
 from enum import StrEnum
+
 from hybridrag.config import Settings, get_settings
-from hybridrag.generation.provider import GenerationProvider, get_generation_provider
+from hybridrag.generation.provider import GenerationProvider
+
 
 class Route(StrEnum):
     DOCUMENT_RAG = "DOCUMENT_RAG"
     STRUCTURED_SQL = "STRUCTURED_SQL"
     REFUSE = "REFUSE"
+
 
 class QueryRouter:
     """Classify queries into RAG, SQL, or Refuse paths."""
@@ -34,16 +37,16 @@ class QueryRouter:
             "Classify the user query into exactly one of these categories:\n\n"
             "1. DOCUMENT_RAG: Questions about policies, handbooks, general guidelines, "
             "conceptual questions, or 'how-to' procedures.\n"
-            "2. STRUCTURED_SQL: Questions about specific records (invoices, employees, tickets), "
-            "counts, totals, sums, or specific business data points.\n"
-            "3. REFUSE: Queries that are out-of-scope, nonsensical, or violate safety guidelines.\n\n"
+            "2. STRUCTURED_SQL: Questions about specific records (invoices, employees, "
+            "tickets), counts, totals, sums, or specific business data points.\n"
+            "3. REFUSE: Queries that are out-of-scope, nonsensical, or violate "
+            "safety guidelines.\n\n"
             "Return ONLY the category name (e.g., 'STRUCTURED_SQL')."
         )
 
         try:
             response = self._provider.generate(
-                prompt=f"Query: {query}",
-                system_prompt=system_prompt
+                prompt=f"Query: {query}", system_prompt=system_prompt
             )
             # Clean the response to match the Route enum
             route_text = response.text.strip().upper()

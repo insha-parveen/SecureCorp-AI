@@ -6,12 +6,14 @@ a way to execute parameterized queries against structured tables.
 
 import logging
 from typing import Any
-from psycopg import connect, Cursor
+
+from psycopg import Connection, connect
 from psycopg.rows import dict_row
 
 from hybridrag.config import Settings, get_settings
 
 logger = logging.getLogger(__name__)
+
 
 class DatabaseManager:
     """Manages the connection and schema for the structured data store."""
@@ -20,7 +22,7 @@ class DatabaseManager:
         self._settings = settings or get_settings()
         self._conn_url = self._settings.database_url
 
-    def get_connection(self):
+    def get_connection(self) -> Connection[Any]:
         """Return a new connection to the PostgreSQL database."""
         return connect(self._conn_url, row_factory=dict_row)
 
@@ -90,10 +92,10 @@ class DatabaseManager:
         Returns results as a list of dictionaries.
         """
         try:
-            with self.get_connection() as conn:
-                with conn.cursor() as cur:
-                    cur.execute(query, params)
-                    return cur.fetchall()
+            with self.get_connection() as conn, conn.cursor() as cur:
+                cur.execute(query, params)
+                rows = cur.fetchall()
+                return [dict(row) for row in rows]
         except Exception as e:
             logger.error(f"Database read error: {e} | Query: {query}")
             return []

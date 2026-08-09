@@ -21,13 +21,12 @@ An optional ``where`` filter is forwarded to dense retrieval only. Authorization
 is intentionally NOT implemented here — that is a separate milestone.
 """
 
-from collections.abc import Sequence
 from typing import Any
 
+from hybridrag.authorization.engine import AuthorizationEngine
+from hybridrag.authorization.models import UserContext
 from hybridrag.config import Settings, get_settings
 from hybridrag.domain import RankedChunk
-from hybridrag.authorization.models import UserContext
-from hybridrag.authorization.engine import AuthorizationEngine
 from hybridrag.indexing import (
     BM25Index,
     EmbeddingProvider,

@@ -77,7 +77,7 @@ class ChromaVectorStore:
             ids=[r.id for r in records],
             documents=[r.text for r in records],
             metadatas=[r.metadata for r in records],
-            embeddings=[r.embedding for r in records],  # type: ignore[arg-type]
+            embeddings=[r.embedding for r in records],
         )
 
     def delete(self, ids: Sequence[str]) -> None:
@@ -107,7 +107,7 @@ class ChromaVectorStore:
         where: dict[str, Any] | None = None,
     ) -> list[VectorMatch]:
         result = self.collection.query(
-            query_embeddings=[list(embedding)],  # type: ignore[arg-type]
+            query_embeddings=[list(embedding)],
             n_results=top_k,
             where=where,
             include=["documents", "metadatas", "distances"],

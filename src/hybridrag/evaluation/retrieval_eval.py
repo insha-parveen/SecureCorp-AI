@@ -10,16 +10,27 @@ Metrics measured:
 """
 
 import json
-from collections.abc import Sequence
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 
+from hybridrag.authorization.models import UserContext
 from hybridrag.config import Settings, get_settings
 from hybridrag.domain import RankedChunk
-from hybridrag.indexing import BM25Index, ChromaVectorStore, EmbeddingProvider, get_embedding_provider
+from hybridrag.indexing import (
+    BM25Index,
+    ChromaVectorStore,
+    get_embedding_provider,
+)
 from hybridrag.retrieval.fusion import rrf_fuse
 from hybridrag.retrieval.hybrid import HybridRetriever
-from hybridrag.retrieval.reranker import CrossEncoderReranker, rerank_top
+from hybridrag.retrieval.reranker import CrossEncoderReranker
+
+# Admin user for the eval harness so the golden set is not gated by role
+# checks. The harness measures retrieval quality, not authorization.
+_EVAL_USER_CONTEXT = UserContext(
+    user_id="eval", roles=("admin",), department="HR", tenant_id="nexacore"
+)
 
 
 @dataclass(frozen=True)
@@ -45,7 +56,7 @@ class RetrievalEvaluator:
 
     def evaluate(
         self,
-        retrieval_fn,
+        retrieval_fn: Callable[[str, UserContext], list[RankedChunk]],
         strategy_name: str,
         k: int = 5,
     ) -> RetrievalMetric:
@@ -58,8 +69,9 @@ class RetrievalEvaluator:
             query_text = q["query"]
             expected_docs = set(q.get("expected_chunk_sources", q.get("expected_documents", [])))
 
-            # Execute retrieval
-            results = retrieval_fn(query_text)
+            # Anonymous, unrestricted user — the eval harness must surface
+            # every relevant chunk regardless of authorization scope.
+            results = retrieval_fn(query_text, _EVAL_USER_CONTEXT)
 
             # Find the rank of the first correct document
             first_hit_rank = 0
@@ -111,33 +123,32 @@ def run_ablation_study(
     # Define the 4 arms
     # We use the retrieved chunk_id to resolve the full Chunk object from BM25's
     # in-memory store, which is the most efficient way to get the full metadata.
-    arms = [
-        ("Dense-Only", lambda q: [
-            RankedChunk(
-                chunk=bm25.get(res.id),
-                score=res.distance,
-                rank=r,
-                retriever="dense"
-            )
-            for r, res in enumerate(store.query(embeddings.embed_query(q), top_k=cfg.dense_top_n), start=1)
-            if bm25.get(res.id) is not None
-        ]),
-        ("BM25-Only", lambda q: bm25.search(q, top_n=cfg.bm25_top_n)),
-        ("Hybrid-RRF", lambda q: rrf_fuse(
-            bm25.search(q, top_n=cfg.bm25_top_n),
-            [
-                RankedChunk(
-                    chunk=bm25.get(res.id),
-                    score=res.distance,
-                    rank=r,
-                    retriever="dense"
+    arms: list[tuple[str, Callable[[str, UserContext], list[RankedChunk]]]] = [
+        (
+            "Dense-Only",
+            lambda q, _user: [
+                RankedChunk(chunk=chunk, score=res.distance, rank=r, retriever="dense")
+                for r, res in enumerate(
+                    store.query(embeddings.embed_query(q), top_k=cfg.dense_top_n), start=1
                 )
-                for r, res in enumerate(store.query(embeddings.embed_query(q), top_k=cfg.dense_top_n), start=1)
-                if bm25.get(res.id) is not None
-            ]
-        )),
-
-        ("Hybrid-Rerank", lambda q: hybrid.retrieve(q)),
+                if (chunk := bm25.get(res.id)) is not None
+            ],
+        ),
+        ("BM25-Only", lambda q, user: bm25.search(q, user_context=user, top_n=cfg.bm25_top_n)),
+        (
+            "Hybrid-RRF",
+            lambda q, user: rrf_fuse(
+                bm25.search(q, user_context=user, top_n=cfg.bm25_top_n),
+                [
+                    RankedChunk(chunk=chunk, score=res.distance, rank=r, retriever="dense")
+                    for r, res in enumerate(
+                        store.query(embeddings.embed_query(q), top_k=cfg.dense_top_n), start=1
+                    )
+                    if (chunk := bm25.get(res.id)) is not None
+                ],
+            ),
+        ),
+        ("Hybrid-Rerank", lambda q, user: hybrid.retrieve(q, user_context=user)),
     ]
 
     results = []

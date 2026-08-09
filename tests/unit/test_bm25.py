@@ -10,12 +10,22 @@ from pathlib import Path
 
 import pytest
 
+from hybridrag.authorization.models import UserContext
 from hybridrag.domain import Chunk, Classification, SourceType, content_hash, make_chunk_id
 from hybridrag.indexing import BM25Index, analyze
 
 CHUNK_FILE = Path(__file__).resolve().parents[2] / "data" / "processed" / "chunks.jsonl"
 
 needs_corpus = pytest.mark.skipif(not CHUNK_FILE.exists(), reason="chunks.jsonl not built")
+
+# Privileged user with the IT department (the corpus stores it as "ITSEC")
+# so that the corpus's restricted chunks (e.g. the LAP-220 email) are visible.
+DUMMY_USER = UserContext(
+    user_id="test_user",
+    roles=("employee", "manager", "hr", "admin"),
+    department="ITSEC",
+    tenant_id="nexacore",
+)
 
 
 def _chunk(index: int, text: str, *, document_id: str = "DOC-1") -> Chunk:
@@ -32,6 +42,7 @@ def _chunk(index: int, text: str, *, document_id: str = "DOC-1") -> Chunk:
         department="HR",
         classification=Classification.PUBLIC,
         allowed_roles=("employee",),
+        tenant_id="nexacore",
         effective_date=date(2025, 1, 1),
     )
 
@@ -41,7 +52,9 @@ class TestAnalyze:
         assert analyze("Remote Work Policy") == ["remote", "work", "policy"]
 
     def test_punctuation_is_dropped(self) -> None:
-        assert analyze("approved, then paid.") == ["approved", "then", "paid"]
+        # Use words that are NOT in the stopword set so we exercise punctuation
+        # handling without coupling to the stopword list.
+        assert analyze("approved, billed, paid.") == ["approved", "billed", "paid"]
 
     def test_compound_identifier_is_kept_whole(self) -> None:
         assert "inv-2026-0108" in analyze("See invoice INV-2026-0108 for details.")
@@ -69,60 +82,60 @@ class TestRankingContract:
         )
 
     def test_ranks_are_one_based_and_contiguous(self) -> None:
-        results = self._index().search("policy vendor onboarding")
+        results = self._index().search("policy vendor onboarding", user_context=DUMMY_USER)
         assert [r.rank for r in results] == list(range(1, len(results) + 1))
 
     def test_results_are_tagged_with_the_retriever(self) -> None:
-        results = self._index().search("remote work")
+        results = self._index().search("remote work", user_context=DUMMY_USER)
         assert results
         assert all(r.retriever == "bm25" for r in results)
 
     def test_scores_are_descending(self) -> None:
-        results = self._index().search("policy invoice remotely")
+        results = self._index().search("policy invoice remotely", user_context=DUMMY_USER)
         assert [r.score for r in results] == sorted((r.score for r in results), reverse=True)
 
     def test_chunks_sharing_no_term_are_excluded(self) -> None:
         # Padding the result list would feed pure noise into RRF downstream.
-        results = self._index().search("remotely")
+        results = self._index().search("remotely", user_context=DUMMY_USER)
         assert [r.chunk_id for r in results] == ["DOC-1:v1:0000"]
 
     def test_top_n_bounds_the_result_size(self) -> None:
-        results = self._index().search("policy invoice remotely", top_n=2)
+        results = self._index().search("policy invoice remotely", user_context=DUMMY_USER, top_n=2)
         assert len(results) == 2
 
     def test_non_positive_top_n_returns_nothing(self) -> None:
-        assert self._index().search("policy", top_n=0) == []
+        assert self._index().search("policy", user_context=DUMMY_USER, top_n=0) == []
 
     def test_query_with_no_indexable_terms_returns_nothing(self) -> None:
-        assert self._index().search("!!! ???") == []
+        assert self._index().search("!!! ???", user_context=DUMMY_USER) == []
 
     def test_unknown_query_terms_return_nothing(self) -> None:
-        assert self._index().search("kubernetes helm chart") == []
+        assert self._index().search("kubernetes helm chart", user_context=DUMMY_USER) == []
 
     def test_empty_corpus_is_searchable_and_empty(self) -> None:
         empty = BM25Index([])
         assert len(empty) == 0
-        assert empty.search("anything") == []
+        assert empty.search("anything", user_context=DUMMY_USER) == []
 
     def test_results_expose_full_authorization_metadata(self) -> None:
         # Retrieval hands these chunks to the authorization layer in Phase 5,
         # so the fields must survive the retriever intact.
-        result = self._index().search("remotely")[0]
+        result = self._index().search("remotely", user_context=DUMMY_USER)[0]
         assert result.chunk.allowed_roles == ("employee",)
         assert result.chunk.classification is Classification.PUBLIC
         assert result.chunk.tenant_id == "nexacore"
 
     def test_search_is_deterministic(self) -> None:
         index = self._index()
-        first = index.search("policy invoice remotely")
-        second = index.search("policy invoice remotely")
+        first = index.search("policy invoice remotely", user_context=DUMMY_USER)
+        second = index.search("policy invoice remotely", user_context=DUMMY_USER)
         assert [(r.chunk_id, r.score, r.rank) for r in first] == [
             (r.chunk_id, r.score, r.rank) for r in second
         ]
 
     def test_ties_break_on_chunk_id_not_insertion_order(self) -> None:
         index = BM25Index([_chunk(1, "identical text"), _chunk(0, "identical text")])
-        assert [r.chunk_id for r in index.search("identical text")] == [
+        assert [r.chunk_id for r in index.search("identical text", user_context=DUMMY_USER)] == [
             "DOC-1:v1:0000",
             "DOC-1:v1:0001",
         ]
@@ -137,7 +150,7 @@ class TestExactIdentifierRetrieval:
                 _chunk(2, "Invoice INV-2026-0109 totals 12,000 INR and is pending."),
             ]
         )
-        results = index.search("INV-2026-0108")
+        results = index.search("INV-2026-0108", user_context=DUMMY_USER)
         assert results[0].chunk_id == "DOC-1:v1:0000"
 
     def test_a_near_miss_identifier_does_not_win(self) -> None:
@@ -151,7 +164,7 @@ class TestExactIdentifierRetrieval:
                 _chunk(3, "Purchase order PO-8494 was raised for docks."),
             ]
         )
-        assert index.search("PO-8492")[0].chunk_id == "DOC-1:v1:0001"
+        assert index.search("PO-8492", user_context=DUMMY_USER)[0].chunk_id == "DOC-1:v1:0001"
 
 
 class TestLookupAndStats:
@@ -188,17 +201,27 @@ class TestRealCorpus:
 
     def test_purchase_order_id_retrieves_its_own_chunk(self, index: BM25Index) -> None:
         # PO-9102 appears in exactly one chunk of the corpus.
-        assert index.search("PO-9102")[0].chunk_id == "EMAIL-2026-0040:v1:0000"
+        assert (
+            index.search("PO-9102", user_context=DUMMY_USER)[0].chunk_id
+            == "EMAIL-2026-0040:v1:0000"
+        )
 
     def test_asset_tag_retrieves_its_own_chunk(self, index: BM25Index) -> None:
-        assert index.search("LAP-220")[0].chunk_id == "EMAIL-2026-0085:v1:0000"
+        assert (
+            index.search("LAP-220", user_context=DUMMY_USER)[0].chunk_id
+            == "EMAIL-2026-0085:v1:0000"
+        )
 
     def test_natural_language_query_retrieves_the_remote_work_policy(
         self, index: BM25Index
     ) -> None:
-        results = index.search("how many days per week can I work remotely", top_n=10)
+        results = index.search(
+            "how many days per week can I work remotely",
+            user_context=DUMMY_USER,
+            top_n=10,
+        )
         assert any(r.chunk.document_id == "HR-003" for r in results)
 
     def test_every_result_resolves_back_through_get(self, index: BM25Index) -> None:
-        for result in index.search("security incident response", top_n=10):
+        for result in index.search("security incident response", user_context=DUMMY_USER, top_n=10):
             assert index.get(result.chunk_id) == result.chunk

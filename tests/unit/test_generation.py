@@ -5,10 +5,10 @@ using a fake provider to avoid API costs and network flakiness.
 """
 
 import pytest
-from hybridrag.config import Settings
-from hybridrag.domain import Chunk, RankedChunk, StructuredAnswer, FinalResponse
+
+from hybridrag.domain import Chunk, RankedChunk
 from hybridrag.generation.generator import RAGGenerator
-from hybridrag.generation.provider import GenerationProvider, GenerationResponse
+from hybridrag.generation.provider import GenerationResponse
 
 
 class FakeGenerationProvider:
@@ -24,9 +24,7 @@ class FakeGenerationProvider:
 
     def generate(self, prompt: str, system_prompt: str | None = None) -> GenerationResponse:
         return GenerationResponse(
-            text=self.text,
-            model=self.model,
-            usage={"prompt_tokens": 10, "completion_tokens": 10}
+            text=self.text, model=self.model, usage={"prompt_tokens": 10, "completion_tokens": 10}
         )
 
 
@@ -35,11 +33,21 @@ def evidence() -> list[RankedChunk]:
     # 3 chunks of evidence
     chunks = [
         Chunk(
-            chunk_id="C1", document_id="D1", document_version="v1", text="The sky is blue.",
-            chunk_index=0, token_count=4, content_hash="h1", source_type="policy",
-            document_type="policy", classification="public", allowed_roles=("employee",),
-            effective_date=None, metadata={}
-        ) for _ in range(3)
+            chunk_id="C1",
+            document_id="D1",
+            document_version="v1",
+            text="The sky is blue.",
+            chunk_index=0,
+            token_count=4,
+            content_hash="h1",
+            source_type="policy",
+            document_type="policy",
+            classification="public",
+            allowed_roles=("employee",),
+            effective_date=None,
+            metadata={},
+        )
+        for _ in range(3)
     ]
     # Give them unique IDs for the test
     chunks = [
@@ -47,12 +55,16 @@ def evidence() -> list[RankedChunk]:
         Chunk(**{**chunks[0].model_dump(), "chunk_id": "C2"}),
         Chunk(**{**chunks[0].model_dump(), "chunk_id": "C3"}),
     ]
-    return [RankedChunk(chunk=c, score=1.0, rank=i+1, retriever="bm25") for i, c in enumerate(chunks)]
+    return [
+        RankedChunk(chunk=c, score=1.0, rank=i + 1, retriever="bm25") for i, c in enumerate(chunks)
+    ]
 
 
 def test_citation_validation_filters_out_of_bounds(evidence) -> None:
     # Mock provider returns valid JSON with one correct and one hallucinated citation
-    fake_json = '{"answer": "The sky is blue [1], and the grass is green [99].", "citations": [1, 99]}'
+    fake_json = (
+        '{"answer": "The sky is blue [1], and the grass is green [99].", "citations": [1, 99]}'
+    )
     provider = FakeGenerationProvider(fake_json)
     generator = RAGGenerator(provider)
 
@@ -60,10 +72,9 @@ def test_citation_validation_filters_out_of_bounds(evidence) -> None:
 
     # [1] is valid, [99] is out of bounds (only 3 chunks provided)
     assert response.citations == [1]
-    assert response.answer == fake_json # Note: current implementation returns raw text as answer if parsing fails,
-                                       # but here we use model_validate_json.
-                                       # Actually, the generator uses StructuredAnswer.model_validate_json.
-                                       # Let's verify the parsing.
+    # The generator parses the structured JSON and extracts the `answer` field,
+    # so the returned answer is the parsed text, not the raw JSON envelope.
+    assert response.answer == "The sky is blue [1], and the grass is green [99]."
 
 
 def test_parsing_fallback_on_malformed_json(evidence) -> None:

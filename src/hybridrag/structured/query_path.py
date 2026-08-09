@@ -6,6 +6,7 @@ enforcing multi-tenant isolation and role-based access control.
 
 import logging
 from typing import Any
+
 from hybridrag.authorization.models import UserContext
 from hybridrag.structured.db import DatabaseManager
 
@@ -19,6 +20,7 @@ ACCESS_CONTROL_MAP = {
     "expense_claims": {"finance", "admin"},
     "it_tickets": {"it", "admin"},
 }
+
 
 class StructuredQueryPath:
     """Handles NL-to-SQL translation via safe templates and enforces security."""
@@ -53,7 +55,7 @@ class StructuredQueryPath:
         """Verify if the user's roles allow access to the specified table."""
         required_roles = ACCESS_CONTROL_MAP.get(table)
         if not required_roles:
-            return True # Open table
+            return True  # Open table
         return any(role in required_roles for role in user_context.roles)
 
     def _handle_invoice_query(self, text: str, user_context: UserContext) -> dict[str, Any]:
@@ -65,10 +67,14 @@ class StructuredQueryPath:
         if "total" in text or "amount" in text:
             # Simple extraction of the ID (e.g., INV-XXXX)
             import re
+
             match = re.search(r"inv-[\w-]+", text)
             if match:
                 inv_id = match.group(0).upper()
-                sql = "SELECT amount, vendor, status FROM invoices WHERE invoice_id = %s AND tenant_id = %s"
+                sql = (
+                    "SELECT amount, vendor, status FROM invoices "
+                    "WHERE invoice_id = %s AND tenant_id = %s"
+                )
                 results = self._db.execute_read(sql, (inv_id, user_context.tenant_id))
                 if results:
                     return {"table": "invoices", "data": results, "query": sql}
@@ -90,11 +96,16 @@ class StructuredQueryPath:
         if "how many" in text or "count" in text:
             # Optional filter by status
             status = None
-            if "open" in text: status = "Open"
-            elif "closed" in text: status = "Closed"
+            if "open" in text:
+                status = "Open"
+            elif "closed" in text:
+                status = "Closed"
 
+            params: tuple[Any, ...]
             if status:
-                sql = "SELECT COUNT(*) as count FROM it_tickets WHERE status = %s AND tenant_id = %s"
+                sql = (
+                    "SELECT COUNT(*) as count FROM it_tickets WHERE status = %s AND tenant_id = %s"
+                )
                 params = (status, user_context.tenant_id)
             else:
                 sql = "SELECT COUNT(*) as count FROM it_tickets WHERE tenant_id = %s"
@@ -103,7 +114,11 @@ class StructuredQueryPath:
             results = self._db.execute_read(sql, params)
             return {"table": "it_tickets", "data": results, "query": sql}
 
-        return {"error": "I can count IT tickets or filter them by status (e.g., 'How many open tickets?')."}
+        return {
+            "error": (
+                "I can count IT tickets or filter them by status (e.g., 'How many open tickets?')."
+            )
+        }
 
     def _handle_employee_query(self, text: str, user_context: UserContext) -> dict[str, Any]:
         if not self._check_access("employees", user_context):
@@ -111,15 +126,18 @@ class StructuredQueryPath:
 
         # Template 1: Department list
         if "department" in text and ("who" in text or "list" in text):
-            import re
             # Simple search for department names
             for dept in ["HR", "Engineering", "Finance", "Operations", "IT and Security"]:
                 if dept.lower() in text.lower():
-                    sql = "SELECT name, role FROM employees WHERE department = %s AND tenant_id = %s"
+                    sql = (
+                        "SELECT name, role FROM employees WHERE department = %s AND tenant_id = %s"
+                    )
                     results = self._db.execute_read(sql, (dept, user_context.tenant_id))
                     return {"table": "employees", "data": results, "query": sql}
 
-        return {"error": "I can list employees by department (e.g., 'Who is in the HR department?')."}
+        return {
+            "error": "I can list employees by department (e.g., 'Who is in the HR department?')."
+        }
 
     def _handle_expense_query(self, text: str, user_context: UserContext) -> dict[str, Any]:
         if not self._check_access("expense_claims", user_context):
@@ -127,7 +145,10 @@ class StructuredQueryPath:
 
         # Template 1: User's own expenses (Row-level security)
         if "my" in text or "own" in text:
-            sql = "SELECT amount, category, date, status FROM expense_claims WHERE employee_id = %s AND tenant_id = %s"
+            sql = (
+                "SELECT amount, category, date, status FROM expense_claims "
+                "WHERE employee_id = %s AND tenant_id = %s"
+            )
             results = self._db.execute_read(sql, (user_context.user_id, user_context.tenant_id))
             return {"table": "expense_claims", "data": results, "query": sql}
 

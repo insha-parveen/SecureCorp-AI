@@ -41,7 +41,10 @@ class Settings(BaseSettings):
     # postgresql://nexacore_admin:nexacore_password@localhost:5432/nexacore_db
     database_url: str = "postgresql://nexacore_admin:nexacore_password@localhost:5432/nexacore_db"
 
-
+    # --- Cache (Redis) ---
+    redis_url: str = "redis://localhost:6379/0"
+    cache_ttl: int = 3600  # 1 hour default
+    semantic_cache_threshold: float = 0.95
 
     # --- Embedding / dense index ---
     # Asymmetric models (e5, bge, ...) need different prefixes for passages and

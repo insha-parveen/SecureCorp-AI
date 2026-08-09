@@ -11,12 +11,17 @@ from typing import Any
 
 import pytest
 
+from hybridrag.authorization.models import UserContext
 from hybridrag.domain import RankedChunk
 from hybridrag.indexing import VectorMatch, encode_chunk
 from hybridrag.retrieval import HybridRetriever, Reranker
 from hybridrag.retrieval.hybrid import RETRIEVER_NAME as DENSE_NAME
 from hybridrag.retrieval.reranker import RETRIEVER_NAME as RERANK_NAME
 from tests.unit.test_indexing import MODEL, FakeEmbeddings, _chunk
+
+# Dummy user that satisfies the basic authorization checks performed by the
+# retriever's dense filter (employee + HR department).
+DUMMY_USER = UserContext(user_id="test_user", roles=("employee", "hr", "admin"), department="HR")
 
 
 class FakeBM25:
@@ -26,7 +31,12 @@ class FakeBM25:
         self._results = list(results)
         self.calls: list[tuple[str, int]] = []
 
-    def search(self, query: str, top_n: int | None = None) -> list[RankedChunk]:
+    def search(
+        self,
+        query: str,
+        user_context: UserContext | None = None,
+        top_n: int | None = None,
+    ) -> list[RankedChunk]:
         self.calls.append((query, top_n or 0))
         return list(self._results)
 
@@ -36,8 +46,7 @@ class FakeStore:
 
     def __init__(self, chunks: Sequence[Any]) -> None:
         self._records = [
-            encode_chunk(c, embedding_model=MODEL, corpus_version="test-corpus-v1")
-            for c in chunks
+            encode_chunk(c, embedding_model=MODEL, corpus_version="test-corpus-v1") for c in chunks
         ]
         self._texts = [c.text for c in chunks]
         self.calls: list[tuple[Sequence[float], int, dict[str, Any] | None]] = []
@@ -52,7 +61,7 @@ class FakeStore:
         self.calls.append((embedding, top_k, where))
         return [
             VectorMatch(id=meta["chunk_id"], text=text, metadata=meta, distance=0.5 + i)
-            for i, (meta, text) in enumerate(zip(self._records, self._texts))
+            for i, (meta, text) in enumerate(zip(self._records, self._texts, strict=False))
         ][:top_k]
 
 
@@ -68,9 +77,7 @@ class FakeReranker:
 
     def rerank(self, query: str, candidates: Sequence[RankedChunk]) -> list[RankedChunk]:
         return [
-            RankedChunk(
-                chunk=c.chunk, score=float(1.0 / rank), rank=rank, retriever=RERANK_NAME
-            )
+            RankedChunk(chunk=c.chunk, score=float(1.0 / rank), rank=rank, retriever=RERANK_NAME)
             for rank, c in enumerate(candidates, start=1)
         ]
 
@@ -116,12 +123,11 @@ class TestHybridRetriever:
     def test_runs_both_retrievers_and_reranks(self, settings: Any) -> None:
         chunks = _chunks(4)
         bm25_results = [
-            RankedChunk(chunk=chunks[i], score=1.0, rank=i + 1, retriever="bm25")
-            for i in range(4)
+            RankedChunk(chunk=chunks[i], score=1.0, rank=i + 1, retriever="bm25") for i in range(4)
         ]
         retriever, bm25, store, _ = _retriever(bm25_results, chunks, settings=settings)
 
-        out = retriever.retrieve("what is remote work")
+        out = retriever.retrieve("what is remote work", user_context=DUMMY_USER)
         assert bm25.calls and store.calls  # both retrievers were invoked
         assert out  # non-empty fused + reranked result
         # Final result is bounded by final_top_k and tagged with the reranker.
@@ -130,12 +136,10 @@ class TestHybridRetriever:
 
     def test_preserves_chunk_id_and_authorization_metadata(self, settings: Any) -> None:
         chunks = _chunks(3)
-        bm25_results = [
-            RankedChunk(chunk=chunks[0], score=1.0, rank=1, retriever="bm25")
-        ]
+        bm25_results = [RankedChunk(chunk=chunks[0], score=1.0, rank=1, retriever="bm25")]
         retriever, _, _, _ = _retriever(bm25_results, chunks, settings=settings)
 
-        out = retriever.retrieve("what is remote work")
+        out = retriever.retrieve("what is remote work", user_context=DUMMY_USER)
         assert [r.chunk_id for r in out]  # chunk_id preserved
         for r in out:
             assert r.chunk.allowed_roles == ("employee", "hr", "admin")
@@ -146,19 +150,21 @@ class TestHybridRetriever:
         retriever, _, store, _ = _retriever([], chunks, settings=settings)
 
         where = {"classification": "confidential"}
-        retriever.retrieve("query", where=where)
+        retriever.retrieve("query", user_context=DUMMY_USER, where=where)
         assert store.calls
-        assert store.calls[0][2] == where
+        # The auth filter is combined with the user-supplied filter via $and.
+        forwarded = store.calls[0][2]
+        assert forwarded is not None
+        assert where in forwarded.get("$and", [forwarded])
 
     def test_empty_dense_results_still_return_bm25_results(self, settings: Any) -> None:
         chunks = _chunks(2)
         bm25_results = [
-            RankedChunk(chunk=chunks[i], score=1.0, rank=i + 1, retriever="bm25")
-            for i in range(2)
+            RankedChunk(chunk=chunks[i], score=1.0, rank=i + 1, retriever="bm25") for i in range(2)
         ]
         retriever, _, _, _ = _retriever(bm25_results, [], settings=settings)
 
-        out = retriever.retrieve("query")
+        out = retriever.retrieve("query", user_context=DUMMY_USER)
         assert out
         assert all(r.chunk_id in {c.chunk_id for c in chunks} for r in out)
 
@@ -166,29 +172,27 @@ class TestHybridRetriever:
         chunks = _chunks(2)
         retriever, _, _, _ = _retriever([], chunks, settings=settings)
 
-        out = retriever.retrieve("query")
+        out = retriever.retrieve("query", user_context=DUMMY_USER)
         assert out
         assert all(r.chunk_id in {c.chunk_id for c in chunks} for r in out)
 
     def test_final_top_k_bounds_the_result(self, settings: Any) -> None:
         chunks = _chunks(8)
         bm25_results = [
-            RankedChunk(chunk=chunks[i], score=1.0, rank=i + 1, retriever="bm25")
-            for i in range(8)
+            RankedChunk(chunk=chunks[i], score=1.0, rank=i + 1, retriever="bm25") for i in range(8)
         ]
         retriever, _, _, _ = _retriever(bm25_results, chunks, settings=settings)
 
-        out = retriever.retrieve("query")
+        out = retriever.retrieve("query", user_context=DUMMY_USER)
         assert len(out) == settings.final_top_k
 
     def test_all_results_are_tagged_with_a_retriever(self, settings: Any) -> None:
         chunks = _chunks(3)
         bm25_results = [
-            RankedChunk(chunk=chunks[i], score=1.0, rank=i + 1, retriever="bm25")
-            for i in range(3)
+            RankedChunk(chunk=chunks[i], score=1.0, rank=i + 1, retriever="bm25") for i in range(3)
         ]
         retriever, _, _, _ = _retriever(bm25_results, chunks, settings=settings)
 
-        out = retriever.retrieve("query")
+        out = retriever.retrieve("query", user_context=DUMMY_USER)
         assert out
         assert all(r.retriever in {DENSE_NAME, "bm25", "rrf", RERANK_NAME} for r in out)

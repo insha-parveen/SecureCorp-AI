@@ -5,6 +5,7 @@ that the LLM can use to generate grounded answers with valid citations.
 """
 
 from collections.abc import Sequence
+
 from hybridrag.domain import RankedChunk
 
 
@@ -40,7 +41,7 @@ def create_generation_prompt(query: str, context: str) -> str:
         f"1. Answer the question using ONLY the provided evidence.\n"
         f"2. If the answer is not in the evidence, state that you do not know.\n"
         f"3. Provide the output as a valid JSON object with the following keys:\n"
-        f"   - \"answer\": The concise, professional answer string.\n"
-        f"   - \"citations\": A list of integers representing the [rank] of the evidence used.\n"
-        f"4. Do not include any markdown formatting (like ```json) in your response; return ONLY the raw JSON."
+        f'   - "answer": The concise, professional answer string.\n'
+        f'   - "citations": A list of integers representing the [rank] of the evidence used.\n'
+        f"4. Return ONLY the raw JSON — no markdown code fences.\n"
     )

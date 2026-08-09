@@ -4,12 +4,13 @@ Verifies tenant isolation, RBAC, and routing accuracy.
 """
 
 import pytest
-from hybridrag.config import get_settings
+
 from hybridrag.authorization.models import UserContext
+from hybridrag.config import get_settings
+from hybridrag.routing.router import QueryRouter, Route
 from hybridrag.structured.db import DatabaseManager
 from hybridrag.structured.query_path import StructuredQueryPath
-from hybridrag.routing.router import QueryRouter, Route
-from hybridrag.generation.provider import LocalLLMProvider
+
 
 @pytest.fixture
 def db_setup():
@@ -21,23 +22,34 @@ def db_setup():
     with db.get_connection() as conn:
         with conn.cursor() as cur:
             cur.execute(
-                "INSERT INTO employees (id, name, role, department, tenant_id) VALUES (%s, %s, %s, %s, %s) ON CONFLICT (id) DO NOTHING",
-                ("EMP-MAIN-001", "Alice", "hr", "HR", "nexacore_main")
+                "INSERT INTO employees "
+                "(id, name, role, department, tenant_id) "
+                "VALUES (%s, %s, %s, %s, %s) ON CONFLICT (id) DO NOTHING",
+                ("EMP-MAIN-001", "Alice", "hr", "HR", "nexacore_main"),
             )
             cur.execute(
-                "INSERT INTO employees (id, name, role, department, tenant_id) VALUES (%s, %s, %s, %s, %s) ON CONFLICT (id) DO NOTHING",
-                ("EMP-GLOB-001", "Bob", "employee", "Sales", "nexacore_global")
+                "INSERT INTO employees "
+                "(id, name, role, department, tenant_id) "
+                "VALUES (%s, %s, %s, %s, %s) ON CONFLICT (id) DO NOTHING",
+                ("EMP-GLOB-001", "Bob", "employee", "Sales", "nexacore_global"),
             )
             cur.execute(
-                "INSERT INTO invoices (invoice_id, amount, date, vendor, status, tenant_id) VALUES (%s, %s, %s, %s, %s) ON CONFLICT (invoice_id) DO NOTHING",
-                ("INV-MAIN-001", 1500.00, "2026-01-01", "Vendor A", "Paid", "nexacore_main")
+                "INSERT INTO invoices "
+                "(invoice_id, amount, date, vendor, status, tenant_id) "
+                "VALUES (%s, %s, %s, %s, %s, %s) "
+                "ON CONFLICT (invoice_id) DO NOTHING",
+                ("INV-MAIN-001", 1500.00, "2026-01-01", "Vendor A", "Paid", "nexacore_main"),
             )
             cur.execute(
-                "INSERT INTO invoices (invoice_id, amount, date, vendor, status, tenant_id) VALUES (%s, %s, %s, %s, %s) ON CONFLICT (invoice_id) DO NOTHING",
-                ("INV-GLOB-001", 2000.00, "2026-01-01", "Vendor B", "Paid", "nexacore_global")
+                "INSERT INTO invoices "
+                "(invoice_id, amount, date, vendor, status, tenant_id) "
+                "VALUES (%s, %s, %s, %s, %s, %s) "
+                "ON CONFLICT (invoice_id) DO NOTHING",
+                ("INV-GLOB-001", 2000.00, "2026-01-01", "Vendor B", "Paid", "nexacore_global"),
             )
         conn.commit()
     return db
+
 
 def test_tenant_isolation(db_setup):
     path = StructuredQueryPath(db_setup)
@@ -51,16 +63,18 @@ def test_tenant_isolation(db_setup):
     # Should return not found or error, NOT the data from other tenant
     assert "not found" in result["error"].lower() or result.get("data") == []
 
+
 def test_rbac_denial(db_setup):
     path = StructuredQueryPath(db_setup)
 
     # User with no HR/Admin roles
     user_low = UserContext(user_id="u2", roles=("employee",), tenant_id="nexacore_main")
 
-    # Attempt to query employees
-    result = path.query("Who is in the HR department?", user_low)
+    # Attempt to query employees - needs to trigger the employee branch first
+    result = path.query("Who is the employee in the HR department?", user_low)
 
     assert "Access denied" in result["error"]
+
 
 def test_functional_lookup(db_setup):
     path = StructuredQueryPath(db_setup)
@@ -71,12 +85,15 @@ def test_functional_lookup(db_setup):
     assert "data" in result
     assert result["data"][0]["amount"] == 1500.00
 
+
 def test_routing_logic():
     # Use a fake provider for routing tests
     class FakeProvider:
-        def __init__(self, response): self.response = response
+        def __init__(self, response):
+            self.response = response
+
         def generate(self, prompt, system_prompt=None):
-            return type('obj', (object,), {'text': self.response})()
+            return type("obj", (object,), {"text": self.response})()
 
     # Test SQL Route
     router = QueryRouter(FakeProvider("STRUCTURED_SQL"))

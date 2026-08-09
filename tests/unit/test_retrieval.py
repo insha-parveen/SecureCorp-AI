@@ -61,9 +61,7 @@ class TestRRFFusion:
         assert [r.chunk_id for r in fused] == ["C", "A", "B", "D"]
 
     def test_ranks_are_one_based_and_contiguous(self) -> None:
-        fused = rrf_fuse(
-            _results(["A", "B", "C"], "bm25"), _results(["A", "D"], "dense")
-        )
+        fused = rrf_fuse(_results(["A", "B", "C"], "bm25"), _results(["A", "D"], "dense"))
         assert [r.rank for r in fused] == list(range(1, len(fused) + 1))
 
     def test_results_are_tagged_rrf_and_carry_full_chunk_metadata(self) -> None:
@@ -116,9 +114,7 @@ class FakeReranker:
                 rank=rank,
                 retriever=RERANK_NAME,
             )
-            for rank, (i, candidate) in enumerate(
-                reversed(list(enumerate(candidates))), start=1
-            )
+            for rank, (i, candidate) in enumerate(reversed(list(enumerate(candidates))), start=1)
         ]
 
 
@@ -126,18 +122,14 @@ class TestRerankTop:
     def test_bounds_candidates_before_reranking(self) -> None:
         reranker = FakeReranker()
         candidates = _results([f"C{i}" for i in range(10)], "rrf")
-        out = rerank_top(
-            "query", candidates, reranker=reranker, rerank_candidates=4, final_top_k=2
-        )
+        out = rerank_top("query", candidates, reranker=reranker, rerank_candidates=4, final_top_k=2)
         assert reranker.calls[0][1] == candidates[:4]
         assert len(out) == 2
 
     def test_returns_reranked_results_tagged_cross_encoder(self) -> None:
         reranker = FakeReranker("fake-reranker-v1")
         candidates = _results(["A", "B", "C"], "rrf")
-        out = rerank_top(
-            "q", candidates, reranker=reranker, rerank_candidates=3, final_top_k=3
-        )
+        out = rerank_top("q", candidates, reranker=reranker, rerank_candidates=3, final_top_k=3)
         assert [r.retriever for r in out] == [RERANK_NAME] * 3
         assert reranker.model_name == "fake-reranker-v1"
 
@@ -145,12 +137,10 @@ class TestRerankTop:
         reranker = FakeReranker()
         candidates = _results(["A", "B"], "rrf")
         assert (
-            rerank_top("q", candidates, reranker=reranker, rerank_candidates=0, final_top_k=5)
-            == []
+            rerank_top("q", candidates, reranker=reranker, rerank_candidates=0, final_top_k=5) == []
         )
         assert (
-            rerank_top("q", candidates, reranker=reranker, rerank_candidates=5, final_top_k=0)
-            == []
+            rerank_top("q", candidates, reranker=reranker, rerank_candidates=5, final_top_k=0) == []
         )
 
     def test_empty_candidates_stay_empty(self) -> None:

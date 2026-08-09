@@ -5,10 +5,10 @@ from hybridrag.domain.models import (
     Classification,
     Document,
     DocumentStatus,
+    FinalResponse,
     RankedChunk,
     SourceType,
     StructuredAnswer,
-    FinalResponse,
     content_hash,
     make_chunk_id,
 )

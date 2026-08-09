@@ -6,7 +6,7 @@ their parts are also emitted, and the query side is analyzed identically to the
 document side.
 """
 
-from hybridrag.indexing.bm25_store import analyze, STOPWORDS
+from hybridrag.indexing.bm25_store import STOPWORDS, analyze
 
 
 class TestIdentifiers:

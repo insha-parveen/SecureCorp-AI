@@ -22,6 +22,10 @@ retrieval = [
     "rank-bm25>=0.2.2",
     "sentence-transformers>=3.0",
 ]
+evaluation = [
+    "ragas>=0.1",
+    "datasets>=2.0",
+]
 
 [dependency-groups]
 dev = [

@@ -1,0 +1,19 @@
+{
+  "total": 354,
+  "by_category": {
+    "direct_factual": 146,
+    "multi_document": 71,
+    "semantic_paraphrase": 21,
+    "exact_identifier": 10,
+    "authorization_restricted": 88,
+    "prompt_injection": 7,
+    "procedural": 3,
+    "unanswerable": 3,
+    "cache_safety": 5
+  },
+  "by_source_family": {
+    "legacy": 330,
+    "hand-authored": 24
+  },
+  "unique_ids": true
+}

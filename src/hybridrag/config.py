@@ -110,6 +110,18 @@ class Settings(BaseSettings):
                 f"{budget}-token budget of {self.embedding_model}; chunks would be "
                 "silently truncated at encode time."
             )
+        if self.chunk_min_tokens > self.chunk_max_tokens:
+            raise ValueError(
+                f"chunk_min_tokens ({self.chunk_min_tokens}) > "
+                f"chunk_max_tokens ({self.chunk_max_tokens}); the heading-merge "
+                "guard can never fire and small chunks will never coalesce."
+            )
+        if self.chunk_target_tokens < self.chunk_min_tokens:
+            raise ValueError(
+                f"chunk_target_tokens ({self.chunk_target_tokens}) < "
+                f"chunk_min_tokens ({self.chunk_min_tokens}); pack() will never "
+                "reach the merge threshold and chunks will undershoot forever."
+            )
         return self
 
 

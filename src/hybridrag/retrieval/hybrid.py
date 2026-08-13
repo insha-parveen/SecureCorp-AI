@@ -84,7 +84,9 @@ class HybridRetriever:
 
         # 2. Run retrieval
         bm25_results = self._bm25.search(query, user_context=user_context, top_n=cfg.bm25_top_n)
-        dense_results = self._dense_search(query, where=final_where, top_n=cfg.dense_top_n)
+        dense_results = self._dense_search(
+            query, user_context=user_context, where=final_where, top_n=cfg.dense_top_n
+        )
 
         fused = rrf_fuse(bm25_results, dense_results)
         return rerank_top(
@@ -98,17 +100,40 @@ class HybridRetriever:
     # -- internals ---------------------------------------------------------
 
     def _dense_search(
-        self, query: str, *, where: dict[str, Any] | None, top_n: int
+        self,
+        query: str,
+        *,
+        user_context: UserContext,
+        where: dict[str, Any] | None,
+        top_n: int,
     ) -> list[RankedChunk]:
-        """Run dense similarity search and convert matches to ``RankedChunk``."""
+        """Run dense similarity search and convert matches to ``RankedChunk``.
+
+        The Chroma ``where`` filter only pushes the *simple* authorization
+        conditions (public, owner, department-internal) down to the index.
+        Classification types like CONFIDENTIAL and RESTRICTED require
+        role *and* department intersection checks that Chroma metadata
+        filtering cannot express reliably with tuple-valued fields — so
+        every match is **post-filtered** through
+        :meth:`~hybridrag.authorization.engine.AuthorizationEngine.is_authorized`
+        to guarantee the "zero unauthorized chunks reach the LLM" invariant.
+        """
         embedding = self._embeddings.embed_query(query)
         matches = self._store.query(embedding, top_k=top_n, where=where)
-        return [
-            RankedChunk(
-                chunk=decode_chunk(match.text, match.metadata),
-                score=float(match.distance),
-                rank=rank,
-                retriever=RETRIEVER_NAME,
+
+        ranked: list[RankedChunk] = []
+        for rank, match in enumerate(matches, start=1):
+            chunk = decode_chunk(match.text, match.metadata)
+            # Post-filter: ensure the chunk is authorized for this user. The
+            # Chroma where-clause is an optimization, not the security boundary.
+            if not AuthorizationEngine.is_authorized(user_context, chunk):
+                continue
+            ranked.append(
+                RankedChunk(
+                    chunk=chunk,
+                    score=float(match.distance),
+                    rank=rank,
+                    retriever=RETRIEVER_NAME,
+                )
             )
-            for rank, match in enumerate(matches, start=1)
-        ]
+        return ranked

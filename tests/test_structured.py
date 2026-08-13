@@ -16,10 +16,12 @@ from hybridrag.structured.query_path import StructuredQueryPath
 def db_setup():
     settings = get_settings()
     db = DatabaseManager(settings)
+    if not db.ping():
+        pytest.skip("PostgreSQL unavailable; skipping structured-data test")
     db.initialize_schema()
 
     # Seed minimal data for testing
-    with db.get_connection() as conn:
+    with db._get_pool().connection() as conn:
         with conn.cursor() as cur:
             cur.execute(
                 "INSERT INTO employees "

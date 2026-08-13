@@ -31,7 +31,7 @@ class TestBuild:
             "github",
         }
         assert stats["policy"] == 19
-        assert stats["knowledge_base"] == 10
+        assert stats["knowledge_base"] == 11  # 10 original + ABOUT-001 company overview
         assert stats["meeting"] == 12
         assert stats["slack"] == 27  # threads, not files (10 files)
         assert stats["jira"] == 25

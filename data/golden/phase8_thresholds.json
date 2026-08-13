@@ -1,0 +1,40 @@
+{
+  "_comment": "Phase 8 non-holdout regression thresholds. Populated by the first run of scripts/run_phase8_eval.py. Empty starting values means: no threshold enforcement yet (every script just records actual measurements).",
+  "retrieval": {
+    "Hybrid-Rerank": {
+      "recall_at_5": {"min": null, "current": null},
+      "mrr": {"min": null, "current": null},
+      "ndcg_at_5": {"min": null, "current": null},
+      "precision_at_5": {"min": null, "current": null}
+    },
+    "Hybrid-RRF": {
+      "recall_at_5": {"min": null, "current": null},
+      "mrr": {"min": null, "current": null}
+    },
+    "Dense-Only": {
+      "recall_at_5": {"min": null, "current": null}
+    },
+    "BM25-Only": {
+      "recall_at_5": {"min": null, "current": null}
+    }
+  },
+  "ragas": {
+    "faithfulness": {"min": null, "current": null},
+    "answer_relevancy": {"min": null, "current": null},
+    "context_precision": {"min": null, "current": null},
+    "context_recall": {"min": null, "current": null},
+    "abstention_recall": {"min": null, "current": null}
+  },
+  "citations": {
+    "valid_citation_rate": {"min": null, "current": null},
+    "invalid_citation_rate": {"max": null, "current": null},
+    "citation_coverage": {"min": null, "current": null}
+  },
+  "security": {
+    "unauthorized_retrieval_count": {"max": 0, "current": null},
+    "security_leakage_rate": {"max": 0.0, "current": null}
+  },
+  "cache": {
+    "isolation_violation": {"must_equal": false, "current": null}
+  }
+}

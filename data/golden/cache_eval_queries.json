@@ -1,0 +1,77 @@
+{
+  "_comment": "Cache experiment query set. Two parts: (1) paraphrase clusters — 40 groups of 5 semantically-equivalent queries, used to measure L1/L2 hit rates and threshold sweeps. (2) cross-scope probes — same query text under different UserContext (tenant_id, roles, department), used to measure cross-scope isolation.",
+  "paraphrase_clusters": [
+    {
+      "cluster_id": "PC-01",
+      "topic": "annual_leave",
+      "queries": [
+        "What is the annual leave entitlement?",
+        "How much paid time off do employees get each year?",
+        "Could you tell me about vacation days policy?",
+        "What are the rules for taking vacation days?",
+        "How many days of annual leave does a full-time employee receive?"
+      ]
+    },
+    {
+      "cluster_id": "PC-02",
+      "topic": "sick_leave",
+      "queries": [
+        "How many sick leave days are available?",
+        "What is the sick leave entitlement per year?",
+        "Tell me about sick days.",
+        "How many days off for illness can I take?",
+        "What's the sick leave policy?"
+      ]
+    },
+    {
+      "cluster_id": "PC-03",
+      "topic": "remote_work",
+      "queries": [
+        "What is the remote work policy?",
+        "Can I work from home?",
+        "Tell me about working remotely.",
+        "What does the company say about remote work?",
+        "Describe the work-from-home policy."
+      ]
+    },
+    {
+      "cluster_id": "PC-04",
+      "topic": "password_policy",
+      "queries": [
+        "What is the minimum password length required by policy?",
+        "How long must my password be?",
+        "Tell me the password complexity requirements.",
+        "What's the minimum characters for a password?",
+        "What does ITSEC-002 require for password complexity?"
+      ]
+    }
+  ],
+  "cross_scope_probes": [
+    {
+      "probe_id": "XP-01",
+      "query": "What is the parental leave policy?",
+      "scopes": [
+        {"user_id": "u-alice",  "roles": ["employee"], "department": "engineering", "tenant_id": "nexacore"},
+        {"user_id": "u-bob",    "roles": ["employee"], "department": "engineering", "tenant_id": "globex"},
+        {"user_id": "u-charlie","roles": ["manager"],  "department": "hr",         "tenant_id": "nexacore"}
+      ]
+    },
+    {
+      "probe_id": "XP-02",
+      "query": "What is the remote work policy?",
+      "scopes": [
+        {"user_id": "u-dan",    "roles": ["employee"], "department": "engineering", "tenant_id": "nexacore"},
+        {"user_id": "u-eve",    "roles": ["employee"], "department": "engineering", "tenant_id": "globex"}
+      ]
+    },
+    {
+      "probe_id": "XP-03",
+      "query": "What is the password policy?",
+      "scopes": [
+        {"user_id": "u-frank",  "roles": ["employee"], "department": "engineering", "tenant_id": "nexacore"},
+        {"user_id": "u-gina",   "roles": ["employee"], "department": "sales",       "tenant_id": "nexacore"},
+        {"user_id": "u-henry",  "roles": ["it"],        "department": "it",          "tenant_id": "nexacore"}
+      ]
+    }
+  ]
+}

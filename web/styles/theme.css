@@ -1,0 +1,97 @@
+/* SecureCorp AI — design tokens (dark-first).
+ *
+ * The palette is validated against the dashboard surface
+ * (#0d1117) by the data-viz validator (scripts/validate_palette.js).
+ * Eight categorical slots, two semantic accents (success / critical),
+ * one warning, one secondary violet. Tokens are referenced everywhere
+ * by role (--color-success) — never by raw hex.
+ *
+ * `prefers-reduced-motion` is honored at the *animation* layer; we set
+ * CSS transitions to 0ms for users who opt out.
+ */
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent-violet: var(--accent-violet);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: oklch(0.99 0 0);
+  --color-warning: var(--warning);
+  --color-warning-foreground: oklch(0.14 0.005 250);
+  --color-critical: var(--critical);
+  --color-critical-foreground: oklch(0.99 0 0);
+  --color-series-1: var(--series-1);
+  --color-series-2: var(--series-2);
+  --color-series-3: var(--series-3);
+  --color-series-4: var(--series-4);
+  --color-series-5: var(--series-5);
+  --color-series-6: var(--series-6);
+  --color-series-7: var(--series-7);
+  --color-series-8: var(--series-8);
+}
+
+:root {
+  /* Dark is the default — set on <html>. Light mode lives behind a
+     [data-theme="light"] attribute for the future toggle; not wired in MVP. */
+  --background: oklch(0.14 0.005 250);
+  --foreground: oklch(0.96 0.005 250);
+  --card: oklch(0.18 0.006 250);
+  --card-foreground: oklch(0.96 0.005 250);
+  --primary: oklch(0.72 0.15 270);
+  --primary-foreground: oklch(0.99 0 0);
+  --muted: oklch(0.24 0.006 250);
+  --muted-foreground: oklch(0.72 0.01 250);
+  --accent: oklch(0.28 0.01 250);
+  --accent-foreground: oklch(0.96 0.005 250);
+  --accent-violet: oklch(0.62 0.20 290);
+  --border: oklch(0.28 0.006 250);
+  --ring: oklch(0.72 0.15 270);
+  --destructive: oklch(0.62 0.22 25);
+  --destructive-foreground: oklch(0.99 0 0);
+  --success: oklch(0.74 0.17 152);
+  --warning: oklch(0.78 0.16 80);
+  --critical: oklch(0.65 0.23 25);
+
+  /* Chart categorical slots — fixed order (slot ordering is the CVD-safety
+     mechanism, not cosmetics). Validated dark-mode against surface
+     #0d1117; adjacent ΔE target ≥ 12. */
+  --series-1: #3b82f6; /* blue   — primary brand, BM25                       */
+  --series-2: #0891b2; /* cyan   — Dense                                     */
+  --series-3: #a855f7; /* violet — Hybrid (RRF), gradient start              */
+  --series-4: #059669; /* green  — Hybrid+Rerank, success indicators         */
+  --series-5: #d97706; /* amber  — Cross-Encoder Reranker, warning           */
+  --series-6: #ef4444; /* red    — critical / blocked                        */
+  --series-7: #8b5cf6; /* violet-2 — secondary violet                       */
+  --series-8: #0891b2; /* cyan-2 — secondary cyan (matches slot 2; catalog
+                            series share palette; this slot exists for the
+                            "9th+ series" case and is currently unused)    */
+}
+
+/* The dark dashboard surface that the chart palette is validated against.
+   Kept as a named token so the validator can be re-run with the same value. */
+:root {
+  --surface-dashboard: #0d1117;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

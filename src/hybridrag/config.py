@@ -45,6 +45,15 @@ class Settings(BaseSettings):
     redis_url: str = "redis://localhost:6379/0"
     cache_ttl: int = 3600  # 1 hour default
     semantic_cache_threshold: float = 0.95
+    # Version stamps baked into every cache key. Bumping any of these
+    # invalidates the affected cache cohort without a manual Redis flush.
+    cache_prompt_version: str = "v1"
+    # Whether the cache should be used at all. Set to false to bypass
+    # Redis entirely (e.g., in tests or when Redis is unavailable).
+    cache_enabled: bool = True
+    # Max number of semantic-cache entries to scan per scope. Prevents
+    # unbounded O(n) scans on active scopes.
+    semantic_cache_max_scan: int = 500
 
     # --- Embedding / dense index ---
     # Asymmetric models (e5, bge, ...) need different prefixes for passages and
@@ -94,6 +103,22 @@ class Settings(BaseSettings):
     # --- Corpus versioning (bump when raw corpus changes; used by cache keys) ---
     corpus_version: str = "2026-08-corpus-v2"
 
+    # --- API / auth (Phase 9 MVP) ---
+    # Self-issued JWT secret. The default is for local dev only; set via env
+    # in any deployed environment. Startup logs a warning if the default is
+    # in use (api/app.py).
+    jwt_secret: str = "dev-only-insecure-jwt-secret-change-me"
+    jwt_ttl_seconds: int = 3600
+    # Cookie name for the session JWT.
+    auth_cookie_name: str = "sc_auth"
+    # Cookie domain for the session JWT. "localhost" lets the browser attach
+    # the cookie across localhost ports (dev :3000 ↔ :8000). Set to empty via
+    # env (HYBRIDRAG_AUTH_COOKIE_DOMAIN=) to use the exact request host — e.g.
+    # in tests or behind a single production proxy origin.
+    auth_cookie_domain: str | None = "localhost"
+    # CORS origins allowed for the API (dev default: localhost:3000).
+    cors_origins: list[str] = ["http://localhost:3000", "http://127.0.0.1:3000"]
+
     @model_validator(mode="after")
     def _chunks_must_fit_the_embedding_model(self) -> "Settings":
         """Reject any configuration that would produce truncated chunks.
@@ -109,6 +134,18 @@ class Settings(BaseSettings):
                 f"chunk_overlap_tokens + chunk_max_tokens = {worst_case} exceeds the "
                 f"{budget}-token budget of {self.embedding_model}; chunks would be "
                 "silently truncated at encode time."
+            )
+        if self.chunk_min_tokens > self.chunk_max_tokens:
+            raise ValueError(
+                f"chunk_min_tokens ({self.chunk_min_tokens}) > "
+                f"chunk_max_tokens ({self.chunk_max_tokens}); the heading-merge "
+                "guard can never fire and small chunks will never coalesce."
+            )
+        if self.chunk_target_tokens < self.chunk_min_tokens:
+            raise ValueError(
+                f"chunk_target_tokens ({self.chunk_target_tokens}) < "
+                f"chunk_min_tokens ({self.chunk_min_tokens}); pack() will never "
+                "reach the merge threshold and chunks will undershoot forever."
             )
         return self
 

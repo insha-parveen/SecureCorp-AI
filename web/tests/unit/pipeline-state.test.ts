@@ -89,8 +89,8 @@ describe("DOCUMENT_RAG branch", () => {
       done(),
     ];
     const s = pipelineStateFromEvents(events, false);
-    expect(statusesOf(["user", "auth", "authz", "router", "doc_rag", "generation", "citation", "response"], s.statuses)).toEqual(
-      ["completed", "completed", "completed", "completed", "completed", "completed", "completed", "completed"],
+    expect(statusesOf(["user", "auth", "authz", "semantic_cache", "router", "doc_rag", "generation", "citation", "response"], s.statuses)).toEqual(
+      ["completed", "completed", "completed", "completed", "completed", "completed", "completed", "completed", "completed"],
     );
     expect(s.statuses.structured_sql).toBe("idle");
     expect(s.statuses.refuse).toBe("idle");
@@ -134,7 +134,7 @@ describe("REFUSE branch", () => {
     ];
     const s = pipelineStateFromEvents(events);
     expect(s.activeNodeId).toBe("refuse");
-    expect(s.path).toEqual(["user", "auth", "authz", "router", "refuse", "response"]);
+    expect(s.path).toEqual(["user", "auth", "authz", "semantic_cache", "router", "refuse", "response"]);
     expect(s.statuses.doc_rag).toBe("idle");
     expect(s.statuses.structured_sql).toBe("idle");
     expect(s.statuses.generation).toBe("idle");
@@ -155,6 +155,8 @@ describe("cache hits", () => {
     expect(s.statuses.doc_rag).toBe("idle");
     expect(s.statuses.generation).toBe("idle");
     expect(s.statuses.router).toBe("idle");
+    // The semantic cache node IS lit on a cache hit.
+    expect(s.statuses.semantic_cache).toBe("completed");
     // The cache path completes at response.
     expect(s.statuses.response).toBe("completed");
   });

@@ -136,6 +136,76 @@ def test_evidence_events_come_before_tokens(authed_client: TestClient) -> None:
         assert last_evidence_idx < first_token_idx
 
 
+def test_evidence_carries_real_document_title(authed_client: TestClient) -> None:
+    """The `document_title` in the evidence event must be the chunk's real
+    document title (from metadata), falling back to the document_id only
+    when the title is absent."""
+    import json as _json
+
+    # Chunk with a real title in metadata.
+    chunk = _fake_chunk()
+    chunk = chunk.model_copy(update={"metadata": {"title": "Remote Work Policy"}})
+    rc = RankedChunk(chunk=chunk, score=0.9, rank=1, retriever="rrf")
+    events: list[Any] = [
+        EvidenceEvent(evidence=[rc]),
+        DoneEvent(
+            response=FinalResponse(
+                answer="The policy allows remote work.",
+                evidence=[rc],
+                citations=[1],
+                model="llama3",
+                usage={"prompt_tokens": 0, "completion_tokens": 0},
+            )
+        ),
+    ]
+    authed_client.app.state.assistant = _StubAssistant(events)  # type: ignore[assignment]
+
+    with authed_client.stream("POST", "/api/chat", json={"query": "remote work?"}) as r:
+        assert r.status_code == 200
+        lines = list(r.iter_lines())
+
+    # Collect all evidence data lines.
+    evidence_payloads = []
+    for i, ln in enumerate(lines):
+        if ln.startswith("event: evidence"):
+            for j in range(i + 1, len(lines)):
+                if lines[j].startswith("data:"):
+                    evidence_payloads.append(_json.loads(lines[j][len("data:") :].strip()))
+                    break
+
+    assert len(evidence_payloads) == 1
+    assert evidence_payloads[0]["document_title"] == "Remote Work Policy"
+
+    # Fallback: a chunk without a title in metadata uses the document_id.
+    chunk2 = _fake_chunk("HR-099:v1:0001")
+    rc2 = RankedChunk(chunk=chunk2, score=0.7, rank=1, retriever="rrf")
+    events2: list[Any] = [
+        EvidenceEvent(evidence=[rc2]),
+        DoneEvent(
+            response=FinalResponse(
+                answer="fallback",
+                evidence=[rc2],
+                citations=[1],
+                model="llama3",
+                usage={"prompt_tokens": 0, "completion_tokens": 0},
+            )
+        ),
+    ]
+    authed_client.app.state.assistant = _StubAssistant(events2)  # type: ignore[assignment]
+
+    with authed_client.stream("POST", "/api/chat", json={"query": "fallback?"}) as r:
+        assert r.status_code == 200
+        lines = list(r.iter_lines())
+
+    for i, ln in enumerate(lines):
+        if ln.startswith("event: evidence"):
+            for j in range(i + 1, len(lines)):
+                if lines[j].startswith("data:"):
+                    payload = _json.loads(lines[j][len("data:") :].strip())
+                    assert payload["document_title"] == "HR-099"
+                    break
+
+
 def test_citation_ranks_are_valid_against_evidence(authed_client: TestClient) -> None:
     rc1 = RankedChunk(chunk=_fake_chunk("HR-002:v1:0001"), score=0.9, rank=1, retriever="rrf")
     rc2 = RankedChunk(chunk=_fake_chunk("HR-003:v1:0001"), score=0.8, rank=2, retriever="rrf")

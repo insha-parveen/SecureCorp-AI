@@ -4,14 +4,14 @@
 // the ACTUAL request pipeline (CLAUDE.md §26). Not a dashboard, not a
 // decorative poster.
 //
-//   USER → AUTH → AUTHZ → ROUTER ──┬── DOCUMENT RAG ──┐
-//                                  ├── STRUCTURED SQL ─┤→ GENERATION → CITATION → RESPONSE
-//                                  └── REFUSE ─────────────────────────────────→ (safe response)
+//   USER → AUTH → AUTHZ → SEMANTIC CACHE → ROUTER ──┬── DOCUMENT RAG ──┐
+//                                                    ├── STRUCTURED SQL ─┤→ GENERATION → CITATION → RESPONSE
+//                                                    └── REFUSE ─────────────────────────────────→ (safe response)
 //
-// Layout: a vertical spine (USER→ROUTER), a 3-way branch row, then a
-// rejoin spine (GENERATION→CITATION→RESPONSE). On desktop the branch row
-// is three columns; on mobile it stacks. It never scrolls horizontally
-// forever — the branch row wraps.
+// Layout: a vertical spine (USER→SEMANTIC CACHE→ROUTER), a 3-way branch
+// row, then a rejoin spine (GENERATION→CITATION→RESPONSE). The branch row
+// always stacks vertically so it fits the narrow /chat right rail (320px)
+// without overlapping; it reads cleanly on the full-width landing page too.
 //
 // Truthfulness: node STATUS comes entirely from derivePipelineState (the
 // pure reducer). The only thing this component adds is a time-based
@@ -54,6 +54,7 @@ const SPINE_TOP: NodeMeta[] = [
   { id: "user", label: "User", lines: ["Query"], icon: "User", accent: "neutral" },
   { id: "auth", label: "Authentication", lines: ["JWT", "UserContext"], icon: "KeyRound", accent: "neutral" },
   { id: "authz", label: "Authorization", lines: ["RBAC / ABAC", "Tenant isolation"], icon: "ShieldCheck", accent: "neutral" },
+  { id: "semantic_cache", label: "Semantic Cache", lines: ["L1 exact · L2 semantic", "Auth-scoped lookup"], icon: "Zap", accent: "neutral" },
   { id: "router", label: "Query Router", lines: ["RAG · SQL · Refuse"], icon: "GitBranch", accent: "neutral" },
 ];
 
@@ -201,9 +202,12 @@ export function SecureCorpPipeline({
             />
           </li>
 
-          {/* Branch row: DOCUMENT RAG | STRUCTURED SQL | REFUSE */}
+          {/* Branch row: DOCUMENT RAG | STRUCTURED SQL | REFUSE.
+              Always stacks vertically — the /chat right rail is 320px wide,
+              so 3 columns would overlap. On the full-width landing page the
+              vertical stack also reads cleanly. */}
           <li className="w-full">
-            <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+            <div className="grid grid-cols-1 gap-2">
               {BRANCHES.map((meta) => (
                 <div key={meta.id} className="flex justify-center">
                   {renderNode(meta)}

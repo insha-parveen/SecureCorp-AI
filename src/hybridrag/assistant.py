@@ -4,11 +4,14 @@ This module ties together caching, routing, structured retrieval, hybrid RAG ret
 and generation into a single request-response flow.
 """
 
+import logging
 import time
 import uuid
 from collections.abc import Iterator
 from dataclasses import dataclass
 from typing import Any
+
+logger = logging.getLogger(__name__)
 
 from hybridrag.authorization.models import UserContext
 from hybridrag.caching.history import ConversationHistory
@@ -100,6 +103,40 @@ class SecureCorpAssistant:
 
     def set_retriever(self, retriever: HybridRetriever) -> None:
         self._retriever = retriever
+
+    def _ensure_retriever(self) -> HybridRetriever | None:
+        """Lazily wire the retriever on first use if it wasn't wired at startup.
+
+        The startup wiring in api/app.py can fail (e.g. model download timeout,
+        missing index). Rather than permanently degrading the chat route, retry
+        the wiring on first request so the system self-heals once models are
+        cached or the index is built.
+        """
+        if self._retriever is not None:
+            return self._retriever
+        try:
+            from hybridrag.indexing import (
+                BM25Index,
+                ChromaVectorStore,
+                get_embedding_provider,
+            )
+            from hybridrag.retrieval.hybrid import HybridRetriever
+            from hybridrag.retrieval.reranker import CrossEncoderReranker
+
+            embeddings = get_embedding_provider(self._settings)
+            embeddings.embed_query("warmup")
+            bm25 = BM25Index.from_chunk_file(
+                self._settings.processed_dir / "chunks.jsonl", settings=self._settings
+            )
+            store = ChromaVectorStore.from_settings(self._settings)
+            reranker = CrossEncoderReranker.from_settings(self._settings)
+            reranker.rerank("warmup", [])
+            retriever = HybridRetriever(bm25, store, embeddings, reranker, settings=self._settings)
+            self._retriever = retriever
+            return retriever
+        except Exception as exc:  # noqa: BLE001
+            logger.warning("Lazy retriever wiring failed: %s", exc)
+            return None
 
     def ask(self, query: str, user_context: UserContext, session_id: str | None = None) -> str:
         """Handle a user query from caching to final answer.
@@ -201,10 +238,11 @@ class SecureCorpAssistant:
 
         elif route == Route.DOCUMENT_RAG:
             # 3b. RAG Path
-            if not self._retriever:
+            retriever = self._ensure_retriever()
+            if retriever is None:
                 return "Retrieval system is not initialized."
 
-            evidence = self._retriever.retrieve(query, user_context=user_context)
+            evidence = retriever.retrieve(query, user_context=user_context)
             response = self._generator.generate_answer(query, evidence, history=history)
             answer = response.answer
             final_response = response
@@ -383,7 +421,8 @@ class SecureCorpAssistant:
             return
 
         # 4. DOCUMENT_RAG
-        if not self._retriever:
+        retriever = self._ensure_retriever()
+        if retriever is None:
             yield DoneEvent(
                 response=self._build_prose_response(
                     "Retrieval system is not initialized.",
@@ -399,7 +438,7 @@ class SecureCorpAssistant:
                 user_context.tenant_id, user_context.user_id, session_id
             )
 
-        evidence = self._retriever.retrieve(query, user_context=user_context)
+        evidence = retriever.retrieve(query, user_context=user_context)
         yield EvidenceEvent(evidence=evidence)
 
         final_response: FinalResponse | None = None

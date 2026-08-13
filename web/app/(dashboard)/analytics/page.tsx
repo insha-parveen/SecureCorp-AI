@@ -9,9 +9,6 @@
 // to that fetch without changing the panel.
 
 import { PageHeader } from "@/components/layout/page-header";
-import { AnalyticsOverviewRow } from "@/components/dashboard/analytics-overview-row";
-import { QueriesOverTime } from "@/components/dashboard/queries-over-time";
-import { QueryTypesDonut } from "@/components/dashboard/query-types-donut";
 import { RetrievalTable } from "@/components/dashboard/retrieval-table";
 import { RagasRow } from "@/components/dashboard/ragas-row";
 import { SecurityIsolationCard } from "@/components/dashboard/security-isolation-card";
@@ -42,17 +39,6 @@ export default function AnalyticsPage() {
     <>
       <PageHeader title="Analytics" eyebrow="Performance" />
       <div className="space-y-6 p-4 sm:p-6">
-        <AnalyticsOverviewRow />
-
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-          <div className="lg:col-span-2">
-            <QueriesOverTime />
-          </div>
-          <div>
-            <QueryTypesDonut />
-          </div>
-        </div>
-
         <RetrievalTable />
 
         <RagasRow />

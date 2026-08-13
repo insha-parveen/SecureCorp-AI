@@ -51,11 +51,15 @@ def _evidence_to_model(rank: int, rc: RankedChunk) -> EvidenceEventModel:
     """Convert a ``RankedChunk`` to its public ``EvidenceEventModel``."""
     chunk = rc.chunk
     excerpt = chunk.text[:240]
+    # The chunk's metadata carries the real document title (set at chunking
+    # time from the registry Document.title). Fall back to the document_id
+    # only if the title is somehow absent.
+    document_title = str(chunk.metadata.get("title") or chunk.document_id)
     return EvidenceEventModel(
         rank=rank,
         chunk_id=chunk.chunk_id,
         document_id=chunk.document_id,
-        document_title=chunk.document_id,  # the registry carries titles; v1 keeps it short
+        document_title=document_title,
         section_title=chunk.section_title,
         excerpt=excerpt,
     )

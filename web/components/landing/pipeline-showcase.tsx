@@ -40,11 +40,30 @@ const SHOWCASE_MESSAGE: AssistantMessage = {
   error: null,
 };
 
-// Sweep ≈ 8 path nodes × 420ms cursor interval; freeze after a buffer, hold
+// A completed L1 cache-hit run: auth+authz scoping, then the semantic cache
+// serves the answer — routing, retrieval, and generation are skipped. This
+// demonstrates the semantic cache node lighting up on the landing page.
+const CACHE_HIT_MESSAGE: AssistantMessage = {
+  meta: { route: null, cache_tier: "L1" },
+  evidence: [],
+  text: "",
+  done: {
+    answer: "",
+    citations: [],
+    evidence: [],
+    model: EXAMPLE_TRACE.model,
+    usage: {},
+    extras: {},
+  },
+  error: null,
+};
+
+// Sweep ≈ 9 path nodes × 420ms cursor interval; freeze after a buffer, hold
 // the completed state, then replay.
 const SWEEP_MS = 4200;
 const HOLD_MS = 2600;
 const LEAD_MS = 500;
+const CACHE_HOLD_MS = 1800;
 
 export function LandingPipelineShowcase({ title }: { title?: string }) {
   const reduced = useReducedMotion();
@@ -79,8 +98,14 @@ export function LandingPipelineShowcase({ title }: { title?: string }) {
         if (cancelled) return;
         setStreaming(false);
       });
-      // 4. hold, then replay
-      at(LEAD_MS + SWEEP_MS + HOLD_MS, run);
+      // 4. hold the RAG path, then show a cache hit
+      at(LEAD_MS + SWEEP_MS + HOLD_MS, () => {
+        if (cancelled) return;
+        setMessage(CACHE_HIT_MESSAGE);
+        setStreaming(false);
+      });
+      // 5. hold the cache hit, then replay
+      at(LEAD_MS + SWEEP_MS + HOLD_MS + CACHE_HOLD_MS, run);
     };
     run();
 

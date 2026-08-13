@@ -17,7 +17,7 @@ from hybridrag.indexing import VectorMatch, encode_chunk
 from hybridrag.retrieval import HybridRetriever, Reranker
 from hybridrag.retrieval.hybrid import RETRIEVER_NAME as DENSE_NAME
 from hybridrag.retrieval.reranker import RETRIEVER_NAME as RERANK_NAME
-from tests.unit.test_indexing import MODEL, FakeEmbeddings, _chunk
+from tests.evaluation.unit.test_indexing import MODEL, FakeEmbeddings, _chunk
 
 # Dummy user that satisfies the basic authorization checks performed by the
 # retriever's dense filter (employee + HR department).

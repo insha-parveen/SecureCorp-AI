@@ -33,13 +33,24 @@ def seed_data():
     ]
     roles = ["employee", "manager", "director", "vp"]
 
-    for tenant in tenants:
+    for t_idx, tenant in enumerate(tenants):
+        # The primary tenant (index 0, nexacore_main — where the demo users
+        # live) gets the canonical IDs documented in CLAUDE.md §10:
+        # EMP-0104, INV-2026-0108, INC-1042. Additional tenants are offset by
+        # 500 per index so primary keys never collide across tenants (the id
+        # columns are globally-unique PKs) and cross-tenant isolation stays
+        # genuinely testable. Max per-table count (40) << 500, so no overlap.
+        offset = 500 * t_idx
+        emp_base = 104 + offset
+        inv_base = 108 + offset
+        exp_base = 301 + offset
+        inc_base = 1042 + offset
         logger.info(f"Seeding data for tenant: {tenant}")
 
         # 1. Seed Employees
         employee_ids = []
         for i in range(20):
-            emp_id = f"EMP-{tenant[:3].upper()}-{100 + i:03d}"
+            emp_id = f"EMP-{emp_base + i:04d}"
             employee_ids.append(emp_id)
 
             name = fake.name()
@@ -64,7 +75,7 @@ def seed_data():
 
         # 2. Seed Invoices
         for i in range(30):
-            inv_id = f"INV-2026-{1000 + i:04d}"
+            inv_id = f"INV-2026-{inv_base + i:04d}"
             amount = fake.pydecimal(left_digits=4, right_digits=2, positive=True, min_value=100)
             inv_date = fake.date_between(start_date="-1y", end_date="today")
             vendor = fake.company()
@@ -83,7 +94,7 @@ def seed_data():
 
         # 3. Seed Expense Claims
         for i in range(40):
-            claim_id = f"EXP-{tenant[:3].upper()}-{100 + i:03d}"
+            claim_id = f"EXP-{exp_base + i:04d}"
             emp_id = random.choice(employee_ids)
             amount = fake.pydecimal(left_digits=3, right_digits=2, positive=True, min_value=10)
             category = random.choice(["Travel", "Hardware", "Software", "Meals", "Education"])
@@ -102,8 +113,10 @@ def seed_data():
                 conn.commit()
 
         # 4. Seed IT Tickets
+        # Canonical incident IDs (CLAUDE.md §10: INC-1042). The router's ticket
+        # regex matches inc/tkt/ticket prefixes, so INC- is the correct prefix.
         for i in range(30):
-            ticket_id = f"TIC-{tenant[:3].upper()}-{100 + i:03d}"
+            ticket_id = f"INC-{inc_base + i:04d}"
             emp_id = random.choice(employee_ids)
             summary = fake.sentence(nb_words=6)
             priority = random.choice(["Low", "Medium", "High", "Critical"])

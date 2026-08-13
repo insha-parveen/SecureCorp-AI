@@ -12,7 +12,7 @@ from pathlib import Path
 import pytest
 
 from hybridrag.indexing import ChromaVectorStore, VectorRecord, VectorStore, encode_chunk
-from tests.unit.test_indexing import MODEL, FakeEmbeddings, _chunk
+from tests.evaluation.unit.test_indexing import MODEL, FakeEmbeddings, _chunk
 
 chromadb = pytest.importorskip("chromadb", reason="retrieval extra not installed")
 

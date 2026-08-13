@@ -1,0 +1,104 @@
+@import "tailwindcss";
+@import "../styles/theme.css";
+
+/* Type system (task #47). The three families are loaded by next/font in
+   layout.tsx, each exposed under its own variable on <html>
+   (--font-space-grotesk / --font-inter / --font-jetbrains-mono). Here we map
+   the *semantic* Tailwind keys onto them so `font-display`, `font-sans`, and
+   `font-mono` resolve correctly, each with a system fallback for the brief
+   moment before swap. Distinct source names avoid a self-referential cycle. */
+@theme inline {
+  --font-display:
+    var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-sans:
+    var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono:
+    var(--font-jetbrains-mono), ui-monospace, "SF Mono", "Cascadia Code",
+    "Roboto Mono", Menlo, Consolas, monospace;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    /* Inter, loaded via next/font (globals set the var on <html>). Falls back
+       to the system stack until the font swaps in. */
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  /* Inline identifiers, telemetry, and code default to the mono face so the
+     "trace console" vernacular is consistent wherever raw values appear. */
+  code,
+  kbd,
+  samp,
+  pre {
+    font-family: var(--font-mono);
+  }
+}
+
+@layer components {
+  /* The streaming caret. One CSS animation, respects reduced-motion via the
+     global override in theme.css. */
+  .streaming-caret::after {
+    content: "▍";
+    margin-left: 1px;
+    color: var(--color-primary);
+    animation: caret-blink 1s steps(2) infinite;
+  }
+  @keyframes caret-blink {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  /* Security-isolation orbit decoration. Slow rotate on the orbit ring;
+     three colored "satellite" dots stay in their CSS positions and the
+     parent transform rotates them around the panel anchor.
+     Respects prefers-reduced-motion via the global override in theme.css. */
+  .security-orbit {
+    animation: security-orbit-rotate 18s linear infinite;
+  }
+  @keyframes security-orbit-rotate {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* Authz-decision traveling dot. One loop, slow enough to read. */
+  .authz-dot {
+    animation: authz-dot-move 3s ease-in-out infinite alternate;
+  }
+  @keyframes authz-dot-move {
+    from {
+      transform: translateX(0);
+      opacity: 0.6;
+    }
+    to {
+      transform: translateX(18px);
+      opacity: 1;
+    }
+  }
+
+  /* Pipeline traveling dot. Slides down the connector between the
+     active node and the next. */
+  .pipeline-dot {
+    animation: pipeline-dot-travel 0.9s ease-in-out infinite alternate;
+  }
+  @keyframes pipeline-dot-travel {
+    from {
+      transform: translateY(-4px);
+      opacity: 0.5;
+    }
+    to {
+      transform: translateY(4px);
+      opacity: 1;
+    }
+  }
+}

@@ -36,16 +36,39 @@ DISTANCE_SPACE = "cosine"
 class ChromaVectorStore:
     """Persistent, local-first Chroma collection behind the store interface."""
 
-    def __init__(self, persist_dir: Path, collection_name: str) -> None:
+    def __init__(
+        self,
+        persist_dir: Path | None = None,
+        collection_name: str | None = None,
+        *,
+        chroma_cloud: bool = False,
+        chroma_api_key: str | None = None,
+        chroma_server_url: str | None = None,
+        chroma_tenant: str | None = None,
+        chroma_database: str | None = None,
+    ) -> None:
         self._persist_dir = persist_dir
         self._collection_name = collection_name
         self._client: ClientAPI | None = None
         self._collection: Collection | None = None
+        self._chroma_cloud = chroma_cloud
+        self._chroma_api_key = chroma_api_key
+        self._chroma_server_url = chroma_server_url
+        self._chroma_tenant = chroma_tenant
+        self._chroma_database = chroma_database
 
     @classmethod
     def from_settings(cls, settings: Settings | None = None) -> "ChromaVectorStore":
         cfg = settings or get_settings()
-        return cls(cfg.chroma_dir, cfg.chroma_collection)
+        return cls(
+            persist_dir=cfg.chroma_dir,
+            collection_name=cfg.chroma_collection,
+            chroma_cloud=cfg.chroma_cloud,
+            chroma_api_key=cfg.chroma_api_key,
+            chroma_server_url=cfg.chroma_server_url,
+            chroma_tenant=cfg.chroma_tenant,
+            chroma_database=cfg.chroma_database,
+        )
 
     # -- lazy connection ---------------------------------------------------
 
@@ -59,8 +82,17 @@ class ChromaVectorStore:
         if self._collection is None:
             import chromadb
 
-            self._persist_dir.mkdir(parents=True, exist_ok=True)
-            self._client = chromadb.PersistentClient(path=str(self._persist_dir))
+            if self._chroma_cloud:
+                self._client = chromadb.CloudClient(
+                    api_key=self._chroma_api_key,
+                    tenant=self._chroma_tenant or "",
+                    database=self._chroma_database or "securecorp",
+                    host=self._chroma_server_url or "api.chromadb.com",
+                )
+            else:
+                self._persist_dir.mkdir(parents=True, exist_ok=True)
+                self._client = chromadb.PersistentClient(path=str(self._persist_dir))
+
             self._collection = self._client.get_or_create_collection(
                 name=self._collection_name,
                 metadata={"hnsw:space": DISTANCE_SPACE},
@@ -159,8 +191,16 @@ class ChromaVectorStore:
         import chromadb
 
         if self._client is None:
-            self._persist_dir.mkdir(parents=True, exist_ok=True)
-            self._client = chromadb.PersistentClient(path=str(self._persist_dir))
+            if self._chroma_cloud:
+                self._client = chromadb.CloudClient(
+                    api_key=self._chroma_api_key,
+                    tenant=self._chroma_tenant or "",
+                    database=self._chroma_database or "securecorp",
+                    host=self._chroma_server_url or "api.chromadb.com",
+                )
+            else:
+                self._persist_dir.mkdir(parents=True, exist_ok=True)
+                self._client = chromadb.PersistentClient(path=str(self._persist_dir))
         # The collection may simply not exist yet; dropping is best-effort.
         with suppress(Exception):
             self._client.delete_collection(self._collection_name)

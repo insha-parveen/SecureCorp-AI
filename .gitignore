@@ -230,3 +230,4 @@ data/cache/
 node_modules/
 test_output.txt
 images/*.png
+.next/

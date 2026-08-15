@@ -4,17 +4,24 @@
 # on Railway's injected $PORT — see the Dockerfile CMD. Do not add a `port`
 # key; it is not part of the schema and Railway routes to $PORT.
 #
+# Deploy topology: frontend on Vercel, this API on Railway, plus Railway
+# managed Postgres + Redis services in the same environment.
+#
 # Required service variables (set in the Railway dashboard, not here):
-#   HYBRIDRAG_DATABASE_URL   = ${{Postgres.DATABASE_URL}}
-#   HYBRIDRAG_REDIS_URL      = ${{Redis.REDIS_URL}}
+#   Postgres + Redis: add the two managed services, then wire either the
+#     native names (Settings now reads DATABASE_URL / REDIS_URL directly) or
+#     the prefixed references (the prefixed name wins if both are set):
+#       HYBRIDRAG_DATABASE_URL = ${{Postgres.DATABASE_URL}}
+#       HYBRIDRAG_REDIS_URL    = ${{Redis.REDIS_URL}}
 #   HYBRIDRAG_JWT_SECRET     = <a real secret>
 #   HYBRIDRAG_GROQ_API_KEY   = <groq key>
 #   HYBRIDRAG_CHROMA_CLOUD   = true
 #   HYBRIDRAG_CHROMA_API_KEY / _TENANT / _DATABASE / _SERVER_URL = <chroma cloud>
-#   HYBRIDRAG_CORS_ORIGINS   = ["https://<your-web-service>.up.railway.app"]
-#   HYBRIDRAG_AUTH_COOKIE_DOMAIN = <shared parent domain, or empty for single origin>
-#   HYBRIDRAG_AUTH_COOKIE_SAMESITE = none   (cross-site cookie for a split deploy)
-#   HYBRIDRAG_AUTH_COOKIE_SECURE   = true
+#   Split deploy (Vercel frontend ↔ Railway API), for the cross-site cookie:
+#     HYBRIDRAG_CORS_ORIGINS       = ["https://<your-app>.vercel.app"]
+#     HYBRIDRAG_AUTH_COOKIE_DOMAIN =            (empty)
+#     HYBRIDRAG_AUTH_COOKIE_SAMESITE = none
+#     HYBRIDRAG_AUTH_COOKIE_SECURE   = true
 
 [build]
   builder = "DOCKERFILE"
@@ -26,7 +33,9 @@
   # the schema (CREATE TABLE IF NOT EXISTS) and seeds synthetic NexaCore
   # records. Idempotent: initialize_schema() is IF-NOT-EXISTS and every seed
   # INSERT is ON CONFLICT DO NOTHING, so it is safe to re-run on every deploy.
-  # Connects to Railway Postgres via HYBRIDRAG_DATABASE_URL.
+  # Connects to the managed Postgres via DATABASE_URL / HYBRIDRAG_DATABASE_URL.
+  # If no real DB is wired yet, the script logs a warning and exits 0 so the
+  # deploy still proceeds (document-RAG-only mode) instead of hard-failing.
   preDeployCommand = ["python scripts/seed_db.py"]
   healthcheckPath = "/api/health"
   healthcheckTimeout = 300

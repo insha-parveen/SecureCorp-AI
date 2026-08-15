@@ -8,7 +8,7 @@ architecture rule that nothing retrieval-related is hardcoded.
 from functools import lru_cache
 from pathlib import Path
 
-from pydantic import model_validator
+from pydantic import AliasChoices, Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -37,12 +37,25 @@ class Settings(BaseSettings):
     openai_api_key: str | None = None
 
     # --- Database (PostgreSQL) ---
-    # Railway provides this as DATABASE_URL. For local docker:
-    # postgresql://nexacore_admin:nexacore_password@localhost:5432/nexacore_db
-    database_url: str = "postgresql://nexacore_admin:nexacore_password@localhost:5432/nexacore_db"
+    # Railway's managed Postgres exposes the native ``DATABASE_URL``; we also
+    # accept our own ``HYBRIDRAG_DATABASE_URL``. AliasChoices is tried
+    # left-to-right, so the prefixed name wins when both are set (lets you
+    # override a platform-injected URL). When neither is set this falls back to
+    # the local-dev default below. NOTE: giving a field a validation_alias
+    # opts it out of env_prefix, which is exactly why the prefixed name must be
+    # listed explicitly here.
+    database_url: str = Field(
+        default="postgresql://nexacore_admin:nexacore_password@localhost:5432/nexacore_db",
+        validation_alias=AliasChoices("HYBRIDRAG_DATABASE_URL", "DATABASE_URL"),
+    )
 
     # --- Cache (Redis) ---
-    redis_url: str = "redis://localhost:6379/0"
+    # Same aliasing as database_url: accept Railway's native ``REDIS_URL`` as
+    # well as ``HYBRIDRAG_REDIS_URL`` (prefixed wins when both are set).
+    redis_url: str = Field(
+        default="redis://localhost:6379/0",
+        validation_alias=AliasChoices("HYBRIDRAG_REDIS_URL", "REDIS_URL"),
+    )
     cache_ttl: int = 3600  # 1 hour default
     semantic_cache_threshold: float = 0.95
     # Version stamps baked into every cache key. Bumping any of these

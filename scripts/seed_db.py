@@ -7,6 +7,7 @@ across multiple tenants to verify multi-tenant isolation.
 import logging
 import random
 import sys
+from urllib.parse import urlsplit
 
 from faker import Faker
 
@@ -16,8 +17,29 @@ from hybridrag.structured.db import DatabaseManager
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# Hosts that mean "no real database was configured" — the app's local-dev
+# default (config.py) points here. On Railway, a wired DATABASE_URL resolves
+# to an internal service host, never one of these.
+_LOCAL_DB_HOSTS = {"localhost", "127.0.0.1", "::1", ""}
 
-def seed_data():
+
+def _database_is_configured(database_url: str) -> bool:
+    """True when database_url points somewhere other than a local default.
+
+    Used by the deploy seed step to distinguish "no Postgres wired yet"
+    (skip and let the deploy proceed) from "a real DB that is unreachable"
+    (a genuine misconfiguration that should fail loudly).
+    """
+    try:
+        host = urlsplit(database_url).hostname or ""
+    except ValueError:
+        # An unparseable URL is a real, configured-but-broken value — do not
+        # treat it as "unconfigured".
+        return True
+    return host.lower() not in _LOCAL_DB_HOSTS
+
+
+def seed_data() -> None:
     settings = get_settings()
     db = DatabaseManager(settings)
     db.initialize_schema()
@@ -140,8 +162,23 @@ def seed_data():
 if __name__ == "__main__":
     # Entry point for the Railway preDeployCommand (and local `python
     # scripts/seed_db.py`). The seed is idempotent, so re-running on every
-    # deploy is safe. Exit non-zero on failure so Railway aborts the deploy
-    # rather than starting the API against an unseeded / unreachable database.
+    # deploy is safe.
+    #
+    # Deploy-ordering safety net: if no real database is wired yet (the URL is
+    # still the local default), skip the seed and exit 0 so the deploy proceeds
+    # in document-RAG-only mode instead of hard-failing. Once Postgres is
+    # provisioned and DATABASE_URL is set, this branch is not taken.
+    if not _database_is_configured(get_settings().database_url):
+        logger.warning(
+            "Postgres not configured (DATABASE_URL still points at a local "
+            "default); skipping seed. Structured-SQL features are disabled "
+            "until a real DATABASE_URL / HYBRIDRAG_DATABASE_URL is set."
+        )
+        sys.exit(0)
+
+    # A real DB is configured: seed it. If it is unreachable or the seed
+    # fails, exit non-zero so Railway aborts the deploy rather than starting
+    # the API against an unseeded / misconfigured database.
     try:
         seed_data()
     except Exception:

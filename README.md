@@ -200,6 +200,73 @@ cd web && npm install && npm run dev  # localhost:3000
 
 ---
 
+## 🚀 Deployment
+
+**Topology:** Next.js frontend on **Vercel**, FastAPI backend on **Railway**,
+with Railway **managed Postgres + Redis** and **Chroma Cloud** for the dense
+index. The backend builds from the root `Dockerfile` (see `railway.toml`); the
+frontend builds from `web/Dockerfile` / Vercel's native Next.js build.
+
+### 1. Railway — backend + data services
+
+1. Create a project and add two plugins: **Postgres** and **Redis**.
+2. Add your repo as a service (Railway auto-detects the `Dockerfile`).
+3. Set the service variables (Variables tab → RAW editor). The app reads
+   Railway's **native** `DATABASE_URL` / `REDIS_URL` directly, or the prefixed
+   overrides — set whichever you prefer:
+
+   ```bash
+   # Data services — reference the plugins (names must match your services)
+   HYBRIDRAG_DATABASE_URL=${{Postgres.DATABASE_URL}}
+   HYBRIDRAG_REDIS_URL=${{Redis.REDIS_URL}}
+
+   # Secrets / providers
+   HYBRIDRAG_JWT_SECRET=<a long random secret>
+   HYBRIDRAG_GROQ_API_KEY=<groq key>
+
+   # Chroma Cloud (dense index)
+   HYBRIDRAG_CHROMA_CLOUD=true
+   HYBRIDRAG_CHROMA_API_KEY=<key>
+   HYBRIDRAG_CHROMA_TENANT=<tenant-uuid>
+   HYBRIDRAG_CHROMA_DATABASE=securecorp
+   HYBRIDRAG_CHROMA_SERVER_URL=api.trychroma.com
+
+   # Split-domain auth cookie (frontend and API are on different origins)
+   HYBRIDRAG_CORS_ORIGINS=["https://<your-app>.vercel.app"]
+   HYBRIDRAG_AUTH_COOKIE_DOMAIN=
+   HYBRIDRAG_AUTH_COOKIE_SAMESITE=none
+   HYBRIDRAG_AUTH_COOKIE_SECURE=true
+   ```
+
+   > The `preDeployCommand` (`python scripts/seed_db.py`) creates the schema and
+   > seeds synthetic records on each deploy — idempotent (`IF NOT EXISTS` +
+   > `ON CONFLICT DO NOTHING`). If Postgres isn't wired yet it logs a warning and
+   > **skips** (exit 0) so the deploy still succeeds in document-RAG-only mode.
+
+### 2. Vercel — frontend
+
+1. Import the repo, set the project **root directory** to `web/`.
+2. Set the production env var so the browser calls your Railway API:
+
+   ```bash
+   NEXT_PUBLIC_API_BASE=https://<your-backend>.up.railway.app
+   ```
+
+   > `NEXT_PUBLIC_*` is inlined at **build time**, so a change requires a
+   > redeploy — not just a restart.
+
+### 3. Verify
+
+```bash
+curl https://<your-backend>.up.railway.app/api/health
+# {"status":"ok","retriever_wired":true,"redis_ok":true,"database_ok":true}
+```
+
+Then open the Vercel URL, log in with a demo user, and run a query — the
+cross-site session cookie is sent because the API sets `SameSite=None; Secure`.
+
+---
+
 ## 📜 License
 
 MIT — see [LICENSE](LICENSE) for details.

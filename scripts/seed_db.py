@@ -7,36 +7,34 @@ across multiple tenants to verify multi-tenant isolation.
 import logging
 import random
 import sys
-from urllib.parse import urlsplit
 
 from faker import Faker
 
-from hybridrag.config import get_settings
+from hybridrag.config import Settings, get_settings
 from hybridrag.structured.db import DatabaseManager
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Hosts that mean "no real database was configured" — the app's local-dev
-# default (config.py) points here. On Railway, a wired DATABASE_URL resolves
-# to an internal service host, never one of these.
-_LOCAL_DB_HOSTS = {"localhost", "127.0.0.1", "::1", ""}
-
 
 def _database_is_configured(database_url: str) -> bool:
-    """True when database_url points somewhere other than a local default.
+    """True when a real database URL was configured (not the built-in default).
 
-    Used by the deploy seed step to distinguish "no Postgres wired yet"
-    (skip and let the deploy proceed) from "a real DB that is unreachable"
-    (a genuine misconfiguration that should fail loudly).
+    Compares against the field's declared default in ``Settings`` — which is
+    the precise meaning of "no env var overrode it": the value equals the
+    default iff neither ``HYBRIDRAG_DATABASE_URL`` nor the native
+    ``DATABASE_URL`` was set. This is DRY (single source of truth in config,
+    no drift if the default changes) and has no false-skip risk — any
+    deliberately-configured URL, even an unusual localhost one, is treated as
+    real and so fails loudly when unreachable rather than being silently
+    skipped.
+
+    Used by the deploy seed step to distinguish "no Postgres wired yet" (skip
+    and let the deploy proceed) from "a real DB that is unreachable" (a genuine
+    misconfiguration that should fail the deploy).
     """
-    try:
-        host = urlsplit(database_url).hostname or ""
-    except ValueError:
-        # An unparseable URL is a real, configured-but-broken value — do not
-        # treat it as "unconfigured".
-        return True
-    return host.lower() not in _LOCAL_DB_HOSTS
+    default_url = Settings.model_fields["database_url"].default
+    return bool(database_url != default_url)
 
 
 def seed_data() -> None:

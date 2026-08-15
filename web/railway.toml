@@ -1,0 +1,9 @@
+[build]
+  flavor = "nodejs"
+  buildCommand = "npm run build"
+  startCommand = "npm run start"
+
+[deploy]
+  port = 3000
+  healthcheckPath = "/"
+  healthcheckTimeout = 300

@@ -230,3 +230,6 @@ data/cache/
 node_modules/
 test_output.txt
 images/*.png
+.next/
+CUsersHPOneDriveDesktopSecureCorp-AIwebpackage.json
+CUsersHPOneDriveDesktopSecureCorp-AI.env

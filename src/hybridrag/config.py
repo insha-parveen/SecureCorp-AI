@@ -68,6 +68,13 @@ class Settings(BaseSettings):
     embedding_device: str | None = None
     chroma_collection: str = "nexacore_chunks"
 
+    # --- Cloud ChromaDB (optional) ---
+    chroma_cloud: bool = False
+    chroma_api_key: str | None = None
+    chroma_server_url: str | None = None
+    chroma_tenant: str | None = None
+    chroma_database: str = "securecorp"
+
     # --- BM25 / sparse index ---
     bm25_index_file: str = "bm25_index.json"
     bm25_remove_stopwords: bool = True

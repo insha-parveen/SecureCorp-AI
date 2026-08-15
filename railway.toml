@@ -1,0 +1,9 @@
+[build]
+  flavor = "python"
+  buildCommand = "uv sync --extra api --extra retrieval --no-dev"
+  startCommand = "uvicorn hybridrag.api.app:app --host 0.0.0.0 --port $PORT"
+
+[deploy]
+  port = 8000
+  healthcheckPath = "/api/health"
+  healthcheckTimeout = 300

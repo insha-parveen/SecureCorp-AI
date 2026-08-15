@@ -20,7 +20,7 @@ Two decisions worth recording:
 from collections.abc import Sequence
 from contextlib import suppress
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
 from hybridrag.config import Settings, get_settings
 from hybridrag.indexing.vector_store import VectorMatch, VectorRecord
@@ -28,6 +28,7 @@ from hybridrag.indexing.vector_store import VectorMatch, VectorRecord
 if TYPE_CHECKING:  # pragma: no cover - typing only
     from chromadb.api import ClientAPI
     from chromadb.api.models.Collection import Collection
+    from chromadb.api.types import Embeddings
 
 #: Distance metric for the collection; see the module docstring.
 DISTANCE_SPACE = "cosine"
@@ -48,7 +49,12 @@ class ChromaVectorStore:
         chroma_database: str | None = None,
     ) -> None:
         self._persist_dir = persist_dir
-        self._collection_name = collection_name
+        # Resolve to a concrete collection name. Every real caller supplies one
+        # (from_settings passes cfg.chroma_collection; direct constructions pass
+        # a literal), but the optional param defaulted to None, which would make
+        # get_or_create_collection(name=None) fail deep inside Chroma. Fall back
+        # to the configured default so the attribute is a firm ``str`` invariant.
+        self._collection_name: str = collection_name or get_settings().chroma_collection
         self._client: ClientAPI | None = None
         self._collection: Collection | None = None
         self._chroma_cloud = chroma_cloud
@@ -90,6 +96,14 @@ class ChromaVectorStore:
                 enable_ssl=True,
             )
         else:
+            # Local persistent mode requires a directory. In cloud mode this is
+            # never reached; guard here so a misconfigured local store fails with
+            # a clear message instead of an AttributeError on None.
+            if self._persist_dir is None:
+                raise ValueError(
+                    "persist_dir is required for local ChromaDB (chroma_cloud=False). "
+                    "Set HYBRIDRAG_CHROMA_DIR, or enable HYBRIDRAG_CHROMA_CLOUD."
+                )
             self._persist_dir.mkdir(parents=True, exist_ok=True)
             return chromadb.PersistentClient(path=str(self._persist_dir))
 
@@ -114,11 +128,14 @@ class ChromaVectorStore:
     def upsert(self, records: Sequence[VectorRecord]) -> None:
         if not records:
             return
+        # Chroma's ``Embeddings`` type is invariant over the vector element type;
+        # our plain ``list[list[float]]`` satisfies the runtime contract but not
+        # the invariant static type, so cast at this one SDK boundary.
         self.collection.upsert(
             ids=[r.id for r in records],
             documents=[r.text for r in records],
             metadatas=[r.metadata for r in records],
-            embeddings=[r.embedding for r in records],
+            embeddings=cast("Embeddings", [r.embedding for r in records]),
         )
 
     def delete(self, ids: Sequence[str]) -> None:
@@ -148,7 +165,7 @@ class ChromaVectorStore:
         where: dict[str, Any] | None = None,
     ) -> list[VectorMatch]:
         result = self.collection.query(
-            query_embeddings=[list(embedding)],
+            query_embeddings=cast("Embeddings", [list(embedding)]),
             n_results=top_k,
             where=where,
             include=["documents", "metadatas", "distances"],

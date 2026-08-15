@@ -6,6 +6,7 @@ across multiple tenants to verify multi-tenant isolation.
 
 import logging
 import random
+import sys
 
 from faker import Faker
 
@@ -137,4 +138,12 @@ def seed_data():
 
 
 if __name__ == "__main__":
-    seed_data()
+    # Entry point for the Railway preDeployCommand (and local `python
+    # scripts/seed_db.py`). The seed is idempotent, so re-running on every
+    # deploy is safe. Exit non-zero on failure so Railway aborts the deploy
+    # rather than starting the API against an unseeded / unreachable database.
+    try:
+        seed_data()
+    except Exception:
+        logger.exception("Database seeding failed; aborting deploy.")
+        sys.exit(1)

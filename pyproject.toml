@@ -28,6 +28,11 @@ retrieval = [
     "chromadb>=0.5",
     "rank-bm25>=0.2.2",
     "sentence-transformers>=3.0",
+    # torch is pulled transitively by sentence-transformers. It is declared
+    # explicitly here ONLY so [tool.uv.sources] below can bind it to the CPU
+    # wheel index — the default PyPI resolution drags in ~5-7GB of nvidia-*
+    # CUDA packages that are dead weight on the CPU-only Railway box.
+    "torch>=2.2",
 ]
 evaluation = [
     "ragas>=0.1",
@@ -49,6 +54,23 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/hybridrag"]
+
+# --- CPU-only torch -------------------------------------------------------
+# Default PyPI torch bundles the full CUDA runtime (~5-7GB of nvidia-*
+# wheels), which is dead weight on the CPU-only deployment box and can blow
+# past image-size / build-timeout limits. Bind torch to PyTorch's CPU wheel
+# index on Linux and Windows. macOS is left on PyPI because the CPU index
+# publishes no macOS wheels (macOS torch is already CPU/MPS-only).
+[tool.uv.sources]
+torch = [
+    { index = "pytorch-cpu", marker = "sys_platform == 'linux' or sys_platform == 'win32'" },
+]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
 
 [tool.ruff]
 line-length = 100

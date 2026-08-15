@@ -54,7 +54,14 @@ services:
         condition: service_healthy
 
   web:
-    build: ./web
+    build:
+      context: ./web
+      args:
+        # NEXT_PUBLIC_API_BASE is inlined at build time. For browser access
+        # from the host, the API must be reachable at this URL from the
+        # *browser*, not from inside the compose network — hence localhost:8000
+        # (the published backend port), not http://backend:8000.
+        NEXT_PUBLIC_API_BASE: ${NEXT_PUBLIC_API_BASE:-http://localhost:8000}
     container_name: securecorp-ai-web
     restart: always
     ports:
@@ -62,7 +69,6 @@ services:
     environment:
       - NODE_ENV=production
       - NEXT_TELEMETRY_DISABLED=1
-      - NEXT_PUBLIC_API_BASE=http://localhost:8000
     depends_on:
       - backend
 

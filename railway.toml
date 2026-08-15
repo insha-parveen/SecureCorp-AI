@@ -1,9 +1,34 @@
+# Railway config-as-code for the SecureCorp AI backend service.
+# One builder only: the Dockerfile is the source of truth (Railway also
+# auto-selects it when present, but this is explicit). The container listens
+# on Railway's injected $PORT — see the Dockerfile CMD. Do not add a `port`
+# key; it is not part of the schema and Railway routes to $PORT.
+#
+# Required service variables (set in the Railway dashboard, not here):
+#   HYBRIDRAG_DATABASE_URL   = ${{Postgres.DATABASE_URL}}
+#   HYBRIDRAG_REDIS_URL      = ${{Redis.REDIS_URL}}
+#   HYBRIDRAG_JWT_SECRET     = <a real secret>
+#   HYBRIDRAG_GROQ_API_KEY   = <groq key>
+#   HYBRIDRAG_CHROMA_CLOUD   = true
+#   HYBRIDRAG_CHROMA_API_KEY / _TENANT / _DATABASE / _SERVER_URL = <chroma cloud>
+#   HYBRIDRAG_CORS_ORIGINS   = ["https://<your-web-service>.up.railway.app"]
+#   HYBRIDRAG_AUTH_COOKIE_DOMAIN = <shared parent domain, or empty for single origin>
+#   HYBRIDRAG_AUTH_COOKIE_SAMESITE = none   (cross-site cookie for a split deploy)
+#   HYBRIDRAG_AUTH_COOKIE_SECURE   = true
+
 [build]
-  flavor = "python"
-  buildCommand = "uv sync --extra api --extra retrieval --no-dev"
-  startCommand = "uvicorn hybridrag.api.app:app --host 0.0.0.0 --port $PORT"
+  builder = "DOCKERFILE"
+  dockerfilePath = "Dockerfile"
 
 [deploy]
-  port = 8000
+  startCommand = "sh -c 'uvicorn hybridrag.api.app:app --host 0.0.0.0 --port ${PORT:-8000}'"
+  # Runs in the built image after build, before the container starts. Creates
+  # the schema (CREATE TABLE IF NOT EXISTS) and seeds synthetic NexaCore
+  # records. Idempotent: initialize_schema() is IF-NOT-EXISTS and every seed
+  # INSERT is ON CONFLICT DO NOTHING, so it is safe to re-run on every deploy.
+  # Connects to Railway Postgres via HYBRIDRAG_DATABASE_URL.
+  preDeployCommand = ["python scripts/seed_db.py"]
   healthcheckPath = "/api/health"
   healthcheckTimeout = 300
+  restartPolicyType = "ON_FAILURE"
+  restartPolicyMaxRetries = 3

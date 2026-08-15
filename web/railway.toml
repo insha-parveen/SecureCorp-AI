@@ -1,9 +1,20 @@
+# Railway config-as-code for the SecureCorp AI Next.js web service.
+# Builder is the Dockerfile in this directory. The container honors
+# Railway's injected $PORT (Next.js standalone server reads process.env.PORT)
+# — see web/Dockerfile. Do not add a `port` key; it is not schema.
+#
+# Required service variable (set in the Railway dashboard):
+#   NEXT_PUBLIC_API_BASE = https://<your-backend-service>.up.railway.app
+# NOTE: NEXT_PUBLIC_* is inlined at BUILD time. It must be provided as a
+# build arg (railway passes service variables as build args to the
+# Dockerfile), which web/Dockerfile consumes via `ARG NEXT_PUBLIC_API_BASE`.
+
 [build]
-  flavor = "nodejs"
-  buildCommand = "npm run build"
-  startCommand = "npm run start"
+  builder = "DOCKERFILE"
+  dockerfilePath = "Dockerfile"
 
 [deploy]
-  port = 3000
   healthcheckPath = "/"
   healthcheckTimeout = 300
+  restartPolicyType = "ON_FAILURE"
+  restartPolicyMaxRetries = 3

@@ -123,6 +123,18 @@ class Settings(BaseSettings):
     # env (HYBRIDRAG_AUTH_COOKIE_DOMAIN=) to use the exact request host — e.g.
     # in tests or behind a single production proxy origin.
     auth_cookie_domain: str | None = "localhost"
+    # SameSite policy for the session cookie. "lax" is correct for a
+    # single-origin or shared-parent-domain deploy. For a SPLIT deploy where
+    # the web app and API are on different domains (e.g. two *.up.railway.app
+    # hosts), the browser only sends the cookie on the cross-site /api/chat
+    # request when SameSite=None — and SameSite=None REQUIRES Secure=true
+    # (HTTPS). Set HYBRIDRAG_AUTH_COOKIE_SAMESITE=none and
+    # HYBRIDRAG_AUTH_COOKIE_SECURE=true in that case.
+    auth_cookie_samesite: str = "lax"
+    # Whether the session cookie carries the Secure flag (HTTPS-only). Off in
+    # local dev (HTTP); MUST be true in any HTTPS deployment, and is mandatory
+    # when auth_cookie_samesite="none".
+    auth_cookie_secure: bool = False
     # CORS origins allowed for the API (dev default: localhost:3000).
     cors_origins: list[str] = ["http://localhost:3000", "http://127.0.0.1:3000"]
 
@@ -153,6 +165,30 @@ class Settings(BaseSettings):
                 f"chunk_target_tokens ({self.chunk_target_tokens}) < "
                 f"chunk_min_tokens ({self.chunk_min_tokens}); pack() will never "
                 "reach the merge threshold and chunks will undershoot forever."
+            )
+        return self
+
+    @model_validator(mode="after")
+    def _auth_cookie_flags_are_coherent(self) -> "Settings":
+        """Reject cookie settings the browser would silently drop.
+
+        ``SameSite`` must be one of the three legal values, and the spec makes
+        ``SameSite=None`` conditional on ``Secure`` — a None-without-Secure
+        cookie is rejected by every modern browser, which would look like a
+        broken login rather than a config error. Fail loudly at startup.
+        """
+        normalized = self.auth_cookie_samesite.lower()
+        if normalized not in {"lax", "strict", "none"}:
+            raise ValueError(
+                f"auth_cookie_samesite ({self.auth_cookie_samesite!r}) must be "
+                "one of 'lax', 'strict', or 'none'."
+            )
+        object.__setattr__(self, "auth_cookie_samesite", normalized)
+        if normalized == "none" and not self.auth_cookie_secure:
+            raise ValueError(
+                "auth_cookie_samesite='none' requires auth_cookie_secure=true "
+                "(browsers reject a cross-site cookie without the Secure flag). "
+                "Set HYBRIDRAG_AUTH_COOKIE_SECURE=true for a split HTTPS deploy."
             )
         return self
 

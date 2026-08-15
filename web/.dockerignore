@@ -1,0 +1,28 @@
+# Frontend build context excludes (web/Dockerfile does `COPY . .`).
+# node_modules is reinstalled from package-lock.json inside the image;
+# .next is rebuilt by `next build`. Shipping them wastes ~860M of upload
+# and risks a stale node_modules being copied over the fresh install.
+
+node_modules/
+.next/
+out/
+
+# Env — NEXT_PUBLIC_* is passed as a build ARG, secrets via runtime env
+.env
+.env.*
+!.env.example
+
+# Tooling caches and VCS
+.git/
+.turbo/
+.eslintcache
+coverage/
+playwright-report/
+test-results/
+
+# Editor
+.vscode/
+.idea/
+
+# Docs
+*.md

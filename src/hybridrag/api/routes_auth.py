@@ -55,22 +55,18 @@ def post_token(
             expires_in=ttl,
         ).model_dump()
     )
-    # httpOnly: frontend JS cannot read it; SameSite=Lax: survives top-level nav.
-    # Secure is off in dev (HTTP); in production it must be set via the proxy.
-    # ``domain=None`` in Starlette means the *exact* host the cookie was set
-    # from — which (for the dev FastAPI on :8000 talking to the dev Next.js
-    # on :3000) would scope the cookie to port 8000 and block the
-    # cross-origin POST to /api/chat. ``localhost`` here lets the browser
-    # attach the cookie to any localhost port, which is exactly what we want
-    # for the local MVP. In production behind a single proxy origin, this is
-    # a no-op.
+    # httpOnly: frontend JS cannot read it. SameSite/Secure/Domain come from
+    # config so the same code serves both the local dev setup (lax/insecure/
+    # localhost, cookie shared across :3000↔:8000) and a split HTTPS deploy
+    # (none/secure/shared-or-null-domain, cookie sent on the cross-site
+    # /api/chat request). See Settings.auth_cookie_* and its validator.
     response.set_cookie(
         key=settings.auth_cookie_name,
         value=token,
         max_age=ttl,
         httponly=True,
-        samesite="lax",
-        secure=False,
+        samesite=settings.auth_cookie_samesite,  # type: ignore[arg-type]
+        secure=settings.auth_cookie_secure,
         path="/",
         domain=settings.auth_cookie_domain or None,
     )
@@ -82,7 +78,18 @@ def post_logout(request: Request) -> Response:
     """Clear the auth cookie. Idempotent."""
     settings: Settings = request.app.state.settings
     response = JSONResponse(content={"ok": True})
-    response.delete_cookie(key=settings.auth_cookie_name, path="/")
+    # The delete must mirror the attributes the cookie was SET with (domain,
+    # path, samesite, secure) — a browser will not clear a cookie when these
+    # don't match, so a split-deploy logout would silently leave the session
+    # cookie in place otherwise.
+    response.delete_cookie(
+        key=settings.auth_cookie_name,
+        path="/",
+        domain=settings.auth_cookie_domain or None,
+        samesite=settings.auth_cookie_samesite,  # type: ignore[arg-type]
+        secure=settings.auth_cookie_secure,
+        httponly=True,
+    )
     return response
 
 

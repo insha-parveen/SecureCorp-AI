@@ -1,0 +1,48 @@
+# Backend build context excludes.
+# Keeps the daemon upload small and prevents host-only artifacts from
+# leaking into the image. The image rebuilds its own venv from uv.lock,
+# so none of the local envs/caches are needed.
+
+# Python virtualenv (1.2G on the dev box) and caches
+.venv/
+**/__pycache__/
+*.py[cod]
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Version control and IDE
+.git/
+.gitignore
+.github/
+.claude/
+.vscode/
+.idea/
+
+# The frontend is a separate build context (web/Dockerfile). Never ship it
+# into the backend image.
+web/
+node_modules/
+
+# Dense index is served from Chroma Cloud in deployment, not the local
+# persistent store. The image must not carry the 9.7M local copy.
+data/chroma_db/
+
+# Evaluation/sweep artifacts and local scratch
+data/sweep/
+test_output.txt
+*.log
+
+# Secrets and local env — provided via Railway env vars at runtime
+.env
+.env.*
+!.env.example
+
+# Docs and build junk
+*.md
+!README.md
+dist/
+build/
+*.egg-info/

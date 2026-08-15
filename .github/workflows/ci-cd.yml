@@ -1,8 +1,20 @@
 name: CI/CD Pipeline
 
+# Deploy topology: frontend on Vercel (via Vercel's own Git integration),
+# backend API on Railway (Dockerfile builder, see railway.toml). This workflow
+# runs the test gates on every PR/push and deploys the backend to Railway on
+# main. The frontend is NOT deployed here — Vercel builds and deploys web/
+# automatically on push. In Vercel's project settings, set:
+#   NEXT_PUBLIC_API_BASE = https://<your-backend>.up.railway.app   (Production)
+# and on the Railway backend service set the split-domain cookie/CORS vars:
+#   HYBRIDRAG_AUTH_COOKIE_SAMESITE=none
+#   HYBRIDRAG_AUTH_COOKIE_SECURE=true
+#   HYBRIDRAG_AUTH_COOKIE_DOMAIN=            (empty)
+#   HYBRIDRAG_CORS_ORIGINS=["https://<your-frontend>.vercel.app"]
+
 on:
   push:
-    branches: [ main, web-UI ]
+    branches: [ main ]
   pull_request:
     branches: [ main ]
 
@@ -23,10 +35,12 @@ jobs:
       - name: Install uv
         run: |
           curl -LsSf https://astral.sh/uv/install.sh | sh
-          export PATH="$HOME/.local/bin:$PATH"
+          # $GITHUB_PATH persists PATH to *subsequent* steps; a bare `export`
+          # in this step would not survive into the next one.
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
 
       - name: Install Dependencies
-        run: uv sync --extra api --extra retrieval
+        run: uv sync --extra api --extra retrieval --frozen
 
       - name: Run Backend Tests
         run: uv run pytest tests/ -x -v --ignore=tests/evaluation --ignore=tests/security
@@ -34,7 +48,7 @@ jobs:
           HYBRIDRAG_CHROMA_CLOUD: "false"
           HYBRIDRAG_CACHE_ENABLED: "false"
 
-  # Frontend Lint and Test
+  # Frontend Lint, Typecheck, and Unit Tests (the PR gate; Vercel does the deploy)
   frontend-test:
     name: Frontend Test & Lint
     runs-on: ubuntu-latest
@@ -50,12 +64,7 @@ jobs:
           cache-dependency-path: web/package-lock.json
 
       - name: Install Dependencies
-        run: |
-          cd web
-          if [ ! -f package.json ]; then
-            npm init -y
-          fi
-          npm install
+        run: cd web && npm ci
 
       - name: Run Lint
         run: cd web && npm run lint
@@ -66,52 +75,12 @@ jobs:
       - name: Run Tests
         run: cd web && npm test
 
-  # Build for Production
-  build:
-    name: Build & Push Docker
+  # Deploy the backend API to Railway on main. Railway builds the image from
+  # the Dockerfile per railway.toml — no external registry is involved.
+  deploy-backend:
+    name: Deploy Backend (Railway)
     needs: [backend-test, frontend-test]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Build and Push Web App
-        uses: docker/build-push-action@v5
-        with:
-          context: ./web
-          file: ./web/Dockerfile
-          push: true
-          tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/securecorp-web:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/securecorp-web:${{ github.sha }}
-
-      - name: Build and Push Backend
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ./Dockerfile
-          push: true
-          tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/securecorp-backend:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/securecorp-backend:${{ github.sha }}
-
-      - name: Deploy to Vercel
-        if: github.ref == 'refs/heads/main'
-        run: npx vercel --prod --token ${{ secrets.VERCEL_TOKEN }}
-
-  # Railway Deployment
-  railway:
-    name: Railway Deploy
-    needs: build
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -121,11 +90,6 @@ jobs:
         run: npm install -g @railway/cli
 
       - name: Railway Deploy Backend
-        run: railway up --service securecorp-backend
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-
-      - name: Railway Deploy Web
-        run: railway up --service securecorp-web
+        run: railway up --service securecorp-backend --ci
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}

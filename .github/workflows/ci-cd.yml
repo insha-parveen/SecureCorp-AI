@@ -21,7 +21,9 @@ jobs:
           python-version: '3.11'
 
       - name: Install uv
-        run: pip install uv
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          export PATH="$HOME/.local/bin:$PATH"
 
       - name: Install Dependencies
         run: uv sync --extra api --extra retrieval
@@ -48,7 +50,12 @@ jobs:
           cache-dependency-path: web/package-lock.json
 
       - name: Install Dependencies
-        run: cd web && npm ci
+        run: |
+          cd web
+          if [ ! -f package.json ]; then
+            npm init -y
+          fi
+          npm install
 
       - name: Run Lint
         run: cd web && npm run lint

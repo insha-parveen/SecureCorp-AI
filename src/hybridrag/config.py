@@ -98,9 +98,23 @@ class Settings(BaseSettings):
     bm25_k1: float = 1.5
     bm25_b: float = 0.75
 
-    dense_top_n: int = 50
-    rrf_k: int = 60
-    rerank_candidates: int = 30
+    # Dense candidate pool. Larger than bm25_top_n because dense retrieval is
+    # authorized by an is_authorized POST-filter (not a Chroma pre-filter, see
+    # retrieval/hybrid.py): over-fetching gives that post-filter enough
+    # candidates to keep after unauthorized ones are dropped. Measured on the
+    # 80q set (auth-on): raising 50->150 with no pre-filter lifts Dense-Only
+    # ~30%->76% and Hybrid-RRF ~64%->85%, for ~11ms extra.
+    dense_top_n: int = 150
+    # RRF k tuned on the dev/legacy golden sets (2026-08): the library-default
+    # k=60 flattens the 1/(k+rank) weights so much that fusion scored BELOW
+    # its own dense/BM25 inputs. k=10 restores fusion's top-rank advantage and
+    # lets it beat both inputs (measured: Recall@5 80%->~90% on the 80q set).
+    rrf_k: int = 10
+    # Cross-encoder candidate window. 30 was strictly dominated by 15 on the
+    # golden set: 15 gave HIGHER Recall@5 (90% vs 88.75%) at ~2.4x lower
+    # latency, because reranking >15 candidates feeds the cross-encoder
+    # distractors that push good docs out of the top-5.
+    rerank_candidates: int = 15
     final_top_k: int = 5
 
     # Hard input limit of the embedding model, including the 2 special tokens

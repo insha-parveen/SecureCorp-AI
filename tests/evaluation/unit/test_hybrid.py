@@ -152,10 +152,11 @@ class TestHybridRetriever:
         where = {"classification": "confidential"}
         retriever.retrieve("query", user_context=DUMMY_USER, where=where)
         assert store.calls
-        # The auth filter is combined with the user-supplied filter via $and.
+        # The caller-supplied filter is forwarded directly — there is no longer
+        # an auth pre-filter merged in, because auth is enforced by the
+        # is_authorized post-filter instead (see hybrid.py).
         forwarded = store.calls[0][2]
-        assert forwarded is not None
-        assert where in forwarded.get("$and", [forwarded])
+        assert forwarded == where
 
     def test_empty_dense_results_still_return_bm25_results(self, settings: Any) -> None:
         chunks = _chunks(2)
@@ -196,3 +197,36 @@ class TestHybridRetriever:
         out = retriever.retrieve("query", user_context=DUMMY_USER)
         assert out
         assert all(r.retriever in {DENSE_NAME, "bm25", "rrf", RERANK_NAME} for r in out)
+
+    def test_unauthorized_dense_chunk_never_reaches_output(self, settings: Any) -> None:
+        """Security boundary: with no Chroma auth pre-filter, the is_authorized
+        POST-filter must still exclude a chunk the store returns but the user
+        cannot see. This guards the #1 change (dropping the narrow pre-filter):
+        recall went up, but "zero unauthorized chunks reach the LLM" must hold.
+        """
+        from hybridrag.domain import Classification
+
+        # A CONFIDENTIAL Finance chunk: the HR/employee/hr/admin DUMMY_USER is
+        # NOT authorized for it (confidential needs role AND department match,
+        # and the user's department is HR, not Finance).
+        forbidden = _chunk(
+            0,
+            "confidential finance salary data",
+            document_id="FIN-001",
+            chunk_id="FIN-001:v1:0000",
+            department="Finance",
+            classification=Classification.CONFIDENTIAL,
+            allowed_roles=("finance",),
+            allowed_departments=("Finance",),
+        )
+        allowed = _chunk(1, "public remote work note", classification=Classification.PUBLIC)
+
+        # The store returns BOTH; BM25 returns nothing. Only ``allowed`` may
+        # survive. FakeStore ignores ``where`` anyway, which is exactly the
+        # threat model: the post-filter — not the query filter — is the boundary.
+        retriever, _, _, _ = _retriever([], [forbidden, allowed], settings=settings)
+
+        out = retriever.retrieve("salary", user_context=DUMMY_USER)
+        returned_docs = {r.chunk.document_id for r in out}
+        assert "FIN-001" not in returned_docs, "unauthorized confidential chunk leaked to output"
+        assert returned_docs == {"HR-003"}

@@ -78,9 +78,12 @@ class TestRRFFusion:
     def test_default_k_comes_from_settings(self) -> None:
         from hybridrag.config import get_settings
 
-        assert get_settings().rrf_k == 60
+        # rrf_k default was retuned 60 -> 10 (fusion beat its inputs only at the
+        # lower k; see config.py). This test guards that the default still flows
+        # from Settings rather than being hardcoded in rrf_fuse.
+        assert get_settings().rrf_k == 10
         fused = rrf_fuse(_results(["A"], "bm25"))
-        assert fused[0].score == 1.0 / 61
+        assert fused[0].score == 1.0 / 11
 
     def test_empty_rankings_yield_empty_result(self) -> None:
         assert rrf_fuse() == []

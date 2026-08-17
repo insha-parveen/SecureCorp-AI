@@ -18,7 +18,9 @@ codec, so every returned ``RankedChunk`` carries its authorization/provenance
 metadata intact for the Phase 5 authorization layer.
 
 An optional ``where`` filter is forwarded to dense retrieval only. Authorization
-is intentionally NOT implemented here — that is a separate milestone.
+is enforced by an ``is_authorized`` post-filter on the dense results (see
+``_dense_search``); it is deliberately NOT a Chroma pre-filter, because a narrow
+pre-filter drops authorized-but-role-gated docs from the candidate pool.
 """
 
 from typing import Any
@@ -72,20 +74,20 @@ class HybridRetriever:
         """
         cfg = self._settings
 
-        # 1. Build the authorization filter for dense retrieval
-        auth_filter = AuthorizationEngine.build_dense_filter(user_context)
-
-        # Combine the provided 'where' filter with the auth filter if both exist
-        final_where = auth_filter
-        if where:
-            # Basic merge of filters (simplification: we just use the auth filter
-            # since security must take precedence).
-            final_where = {"$and": [auth_filter, where]}
-
-        # 2. Run retrieval
+        # Authorization is enforced by the ``is_authorized`` POST-filter inside
+        # ``_dense_search`` (the security boundary) — NOT by a Chroma
+        # where-clause. The old narrow ``build_dense_filter`` pre-filter only
+        # pushed public/owner/dept-internal and omitted role-based grants, so
+        # authorized-but-role-gated docs never entered the dense candidate pool;
+        # that cratered dense recall under auth (measured: Dense-Only 30%->76%,
+        # Hybrid-RRF 64%->85% on the 80q set once the pre-filter is dropped).
+        # BM25 already works this way (post-filter only), which is why it never
+        # collapsed. An optional caller-supplied ``where`` is still forwarded as
+        # a plain metadata filter; the post-filter guarantees zero unauthorized
+        # chunks regardless of what the store returns.
         bm25_results = self._bm25.search(query, user_context=user_context, top_n=cfg.bm25_top_n)
         dense_results = self._dense_search(
-            query, user_context=user_context, where=final_where, top_n=cfg.dense_top_n
+            query, user_context=user_context, where=where, top_n=cfg.dense_top_n
         )
 
         fused = rrf_fuse(bm25_results, dense_results)
@@ -109,14 +111,16 @@ class HybridRetriever:
     ) -> list[RankedChunk]:
         """Run dense similarity search and convert matches to ``RankedChunk``.
 
-        The Chroma ``where`` filter only pushes the *simple* authorization
-        conditions (public, owner, department-internal) down to the index.
-        Classification types like CONFIDENTIAL and RESTRICTED require
-        role *and* department intersection checks that Chroma metadata
-        filtering cannot express reliably with tuple-valued fields — so
-        every match is **post-filtered** through
+        Authorization is enforced **only** by the
         :meth:`~hybridrag.authorization.engine.AuthorizationEngine.is_authorized`
-        to guarantee the "zero unauthorized chunks reach the LLM" invariant.
+        post-filter below — that is the security boundary that guarantees the
+        "zero unauthorized chunks reach the LLM" invariant. No authorization
+        ``where`` clause is pushed to Chroma: the previous narrow pre-filter
+        (public/owner/department-internal only) silently dropped
+        authorized-but-role-gated docs from the candidate pool, so it hurt
+        recall without adding any security the post-filter does not already
+        provide. ``where`` here is therefore only an optional *caller-supplied*
+        metadata filter (e.g. a debugging constraint), never the auth check.
         """
         embedding = self._embeddings.embed_query(query)
         matches = self._store.query(embedding, top_k=top_n, where=where)

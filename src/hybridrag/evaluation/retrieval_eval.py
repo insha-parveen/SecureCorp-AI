@@ -14,6 +14,11 @@ Metrics measured (per CLAUDE.md §13):
 Plus per-category breakdown (every CLAUDE.md §14 category gets its own
 Recall@K, MRR, nDCG@K, Precision@K).
 
+All four arms enforce authorization for a single fixed eval user, so the table
+is apples-to-apples and reflects the production auth-enforced path. See
+``_authorized_dense`` and the ``_EVAL_USER_CONTEXT`` note for why this shared
+authorization ceiling keeps the arm-vs-arm comparison fair.
+
 Accepts either a JSON list (legacy) or a JSONL file (Phase 8 golden set).
 """
 
@@ -24,23 +29,66 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+from hybridrag.authorization.engine import AuthorizationEngine
 from hybridrag.authorization.models import UserContext
 from hybridrag.config import Settings, get_settings
 from hybridrag.domain import RankedChunk
 from hybridrag.indexing import (
     BM25Index,
     ChromaVectorStore,
+    EmbeddingProvider,
     get_embedding_provider,
 )
 from hybridrag.retrieval.fusion import rrf_fuse
 from hybridrag.retrieval.hybrid import HybridRetriever
 from hybridrag.retrieval.reranker import CrossEncoderReranker
 
-# Admin user for the eval harness so the golden set is not gated by role
-# checks. The harness measures retrieval quality, not authorization.
+# Fixed identity for every ablation arm. ALL FOUR arms now enforce
+# authorization for this user uniformly — BM25 filters inside ``.search``,
+# dense via ``_authorized_dense`` below, and Hybrid-Rerank via
+# ``hybrid.retrieve`` — so the arms are directly comparable and the reported
+# table reflects the production auth-enforced path. This user is ``admin``/HR
+# and gets NO superuser bypass (see ``AuthorizationEngine.is_authorized``), so
+# golden documents that require another department are legitimately unseen;
+# that recall ceiling is shared across all four arms, which is exactly what
+# makes the comparison fair. (A pure-retrieval, auth-off measurement would need
+# a per-query authorized user or a superuser role — a separate concern.)
 _EVAL_USER_CONTEXT = UserContext(
     user_id="eval", roles=("admin",), department="HR", tenant_id="nexacore"
 )
+
+
+def _authorized_dense(
+    query: str,
+    *,
+    store: ChromaVectorStore,
+    embeddings: EmbeddingProvider,
+    bm25: BM25Index,
+    user_context: UserContext,
+    settings: Settings,
+) -> list[RankedChunk]:
+    """Dense retrieval with the SAME authorization the production path applies.
+
+    Mirrors :meth:`HybridRetriever._dense_search`: NO authorization ``where``
+    clause is pushed to Chroma (the narrow pre-filter dropped
+    authorized-but-role-gated docs from the candidate pool); instead every match
+    is post-filtered through
+    :meth:`~hybridrag.authorization.engine.AuthorizationEngine.is_authorized`,
+    which is the actual security boundary. Chunk objects are resolved from the
+    in-memory BM25 store by ``chunk_id``. Keeping this in lockstep with
+    ``_dense_search`` is what makes the Dense-Only / Hybrid-RRF arms reflect the
+    real production path rather than an idealized auth-off one.
+    """
+    matches = store.query(embeddings.embed_query(query), top_k=settings.dense_top_n)
+    ranked: list[RankedChunk] = []
+    for rank, match in enumerate(matches, start=1):
+        chunk = bm25.get(match.id)
+        if chunk is None or not AuthorizationEngine.is_authorized(user_context, chunk):
+            continue
+        ranked.append(
+            RankedChunk(chunk=chunk, score=float(match.distance), rank=rank, retriever="dense")
+        )
+    return ranked
 
 
 @dataclass(frozen=True)
@@ -262,32 +310,22 @@ def run_ablation_study(
 
     hybrid = HybridRetriever(bm25, store, embeddings, reranker, settings=cfg)
 
-    # Define the 4 arms
-    # We use the retrieved chunk_id to resolve the full Chunk object from BM25's
-    # in-memory store, which is the most efficient way to get the full metadata.
+    # Define the 4 arms. Every arm enforces authorization for the eval user so
+    # the table is apples-to-apples: BM25 filters inside ``.search``, the dense
+    # arms go through ``_authorized_dense`` (auth ``where`` + is_authorized
+    # post-filter), and Hybrid-Rerank uses the production ``hybrid.retrieve``.
+    def _dense(q: str, user: UserContext) -> list[RankedChunk]:
+        return _authorized_dense(
+            q, store=store, embeddings=embeddings, bm25=bm25, user_context=user, settings=cfg
+        )
+
     arms: list[tuple[str, Callable[[str, UserContext], list[RankedChunk]]]] = [
-        (
-            "Dense-Only",
-            lambda q, _user: [
-                RankedChunk(chunk=chunk, score=res.distance, rank=r, retriever="dense")
-                for r, res in enumerate(
-                    store.query(embeddings.embed_query(q), top_k=cfg.dense_top_n), start=1
-                )
-                if (chunk := bm25.get(res.id)) is not None
-            ],
-        ),
+        ("Dense-Only", _dense),
         ("BM25-Only", lambda q, user: bm25.search(q, user_context=user, top_n=cfg.bm25_top_n)),
         (
             "Hybrid-RRF",
             lambda q, user: rrf_fuse(
-                bm25.search(q, user_context=user, top_n=cfg.bm25_top_n),
-                [
-                    RankedChunk(chunk=chunk, score=res.distance, rank=r, retriever="dense")
-                    for r, res in enumerate(
-                        store.query(embeddings.embed_query(q), top_k=cfg.dense_top_n), start=1
-                    )
-                    if (chunk := bm25.get(res.id)) is not None
-                ],
+                bm25.search(q, user_context=user, top_n=cfg.bm25_top_n), _dense(q, user)
             ),
         ),
         ("Hybrid-Rerank", lambda q, user: hybrid.retrieve(q, user_context=user)),
@@ -334,29 +372,18 @@ def run_ablation_study_detailed(
         store = hybrid._store
         embeddings = hybrid._embeddings
 
+    def _dense(q: str, user: UserContext) -> list[RankedChunk]:
+        return _authorized_dense(
+            q, store=store, embeddings=embeddings, bm25=bm25, user_context=user, settings=cfg
+        )
+
     arms: list[tuple[str, Callable[[str, UserContext], list[RankedChunk]]]] = [
-        (
-            "Dense-Only",
-            lambda q, _user: [
-                RankedChunk(chunk=chunk, score=res.distance, rank=r, retriever="dense")
-                for r, res in enumerate(
-                    store.query(embeddings.embed_query(q), top_k=cfg.dense_top_n), start=1
-                )
-                if (chunk := bm25.get(res.id)) is not None
-            ],
-        ),
+        ("Dense-Only", _dense),
         ("BM25-Only", lambda q, user: bm25.search(q, user_context=user, top_n=cfg.bm25_top_n)),
         (
             "Hybrid-RRF",
             lambda q, user: rrf_fuse(
-                bm25.search(q, user_context=user, top_n=cfg.bm25_top_n),
-                [
-                    RankedChunk(chunk=chunk, score=res.distance, rank=r, retriever="dense")
-                    for r, res in enumerate(
-                        store.query(embeddings.embed_query(q), top_k=cfg.dense_top_n), start=1
-                    )
-                    if (chunk := bm25.get(res.id)) is not None
-                ],
+                bm25.search(q, user_context=user, top_n=cfg.bm25_top_n), _dense(q, user)
             ),
         ),
         ("Hybrid-Rerank", lambda q, user: hybrid.retrieve(q, user_context=user)),

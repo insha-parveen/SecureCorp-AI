@@ -17,9 +17,11 @@ from hybridrag.authorization.models import UserContext
 from hybridrag.domain import Chunk, Classification, RankedChunk, SourceType
 from hybridrag.evaluation.retrieval_eval import (
     RetrievalEvaluator,
+    _authorized_dense,
     _ndcg_at_k,
     _precision_at_k,
 )
+from hybridrag.indexing.vector_store import VectorMatch
 
 
 def _make_chunk(doc_id: str, idx: int = 0) -> Chunk:
@@ -170,3 +172,99 @@ def test_evaluator_returns_zero_on_empty_set(tmp_path: Path) -> None:
     assert overall.ndcg_at_k == 0
     assert overall.precision_at_k == 0
     assert overall.hit_at_1 == 0
+
+
+# ---------- authorization is enforced uniformly on the dense arm ----------
+
+
+class _FakeEmbeddings:
+    """Minimal EmbeddingProvider stub — the vector value is irrelevant here."""
+
+    model_name = "fake"
+
+    def embed_query(self, text: str) -> list[float]:
+        return [0.0, 0.0, 0.0]
+
+    def embed_documents(self, texts: list[str]) -> list[list[float]]:
+        return [[0.0, 0.0, 0.0] for _ in texts]
+
+
+class _FakeStore:
+    """A store that returns BOTH an authorized and a forbidden match.
+
+    It intentionally IGNORES the ``where`` filter, so the test proves the
+    ``is_authorized`` post-filter — not the Chroma where-clause — is the real
+    security boundary in ``_authorized_dense``.
+    """
+
+    def __init__(self, matches: list[VectorMatch]) -> None:
+        self._matches = matches
+
+    def query(self, embedding, *, top_k, where=None):  # type: ignore[no-untyped-def]
+        return self._matches[:top_k]
+
+
+class _FakeBM25:
+    """Resolves chunk_id -> Chunk, mirroring BM25Index.get."""
+
+    def __init__(self, chunks: list[Chunk]) -> None:
+        self._by_id = {c.chunk_id: c for c in chunks}
+
+    def get(self, chunk_id: str) -> Chunk | None:
+        return self._by_id.get(chunk_id)
+
+
+def _confidential_chunk(doc_id: str, department: str) -> Chunk:
+    return Chunk(
+        chunk_id=f"{doc_id}:v1:0000",
+        document_id=doc_id,
+        document_version="v1",
+        text=f"confidential body for {department}",
+        chunk_index=0,
+        token_count=10,
+        content_hash="h" * 64,
+        source_type=SourceType.POLICY,
+        document_type="policy",
+        department=department,
+        classification=Classification.CONFIDENTIAL,
+        # Same role on both chunks so DEPARTMENT is the sole discriminator: a
+        # CONFIDENTIAL chunk needs has_role AND dept_match, and the eval user is
+        # department=HR, so only the HR chunk survives.
+        allowed_roles=("admin",),
+        allowed_departments=(department,),
+    )
+
+
+def test_authorized_dense_drops_unauthorized_chunk() -> None:
+    """The dense ablation arm must exclude chunks the eval user can't see.
+
+    This is the fix for the mixed-population ablation table: Dense-Only used to
+    return raw ``store.query`` hits (no auth), while Hybrid-Rerank enforced auth.
+    Now both go through ``_authorized_dense``.
+    """
+    from hybridrag.config import get_settings
+
+    # HR-department admin: NOT authorized for a Finance-department confidential doc.
+    user = UserContext(user_id="eval", roles=("admin",), department="HR", tenant_id="nexacore")
+
+    allowed = _confidential_chunk("DOC-HR", "HR")  # dept matches -> visible
+    forbidden = _confidential_chunk("DOC-FIN", "Finance")  # dept mismatch -> hidden
+
+    def _match(c: Chunk) -> VectorMatch:
+        return VectorMatch(id=c.chunk_id, text=c.text, metadata={}, distance=0.1)
+
+    store = _FakeStore([_match(forbidden), _match(allowed)])
+    bm25 = _FakeBM25([allowed, forbidden])
+
+    result = _authorized_dense(
+        "any query",
+        store=store,  # type: ignore[arg-type]
+        embeddings=_FakeEmbeddings(),  # type: ignore[arg-type]
+        bm25=bm25,  # type: ignore[arg-type]
+        user_context=user,
+        settings=get_settings(),
+    )
+
+    returned_docs = {rc.chunk.document_id for rc in result}
+    # The forbidden Finance chunk must be dropped by the is_authorized post-filter.
+    assert returned_docs == {"DOC-HR"}

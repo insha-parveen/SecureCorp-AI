@@ -9,15 +9,20 @@ are stable contracts the frontend depends on:
 - ``done``     — the terminal event; carries the validated ``FinalResponse``.
 - ``error``    — emitted on assistant errors so the frontend can render
                  a typed error card (never an opaque 500 on the stream).
+                 Carries ``message``, ``type``, and a truncated ``detail``
+                 with the underlying reason; the full traceback is logged
+                 server-side.
 """
 
 from __future__ import annotations
 
 import json
+import logging
 from collections.abc import AsyncIterator
 
 from fastapi import APIRouter, Depends, Request
 from sse_starlette.sse import EventSourceResponse
+from starlette.concurrency import iterate_in_threadpool
 
 from hybridrag.api.auth import current_user_from_cookie
 from hybridrag.api.rate_limit import rate_limit
@@ -36,7 +41,14 @@ from hybridrag.assistant import (
 from hybridrag.authorization.models import UserContext
 from hybridrag.domain import FinalResponse, RankedChunk
 
+logger = logging.getLogger(__name__)
+
 router = APIRouter(prefix="/api/chat", tags=["chat"])
+
+# How much of the underlying exception text to forward to the client. The full
+# traceback is always logged server-side; the client gets a truncated reason so
+# a failure is diagnosable from the UI instead of an opaque "Assistant failed".
+_ERROR_DETAIL_LIMIT = 300
 
 # MVP caveat, surfaced in the API contract: cached answers carry no
 # evidence or citations. Documented so the frontend can render the
@@ -93,8 +105,18 @@ async def post_chat(
     assistant = request.app.state.assistant
 
     async def event_stream() -> AsyncIterator[dict[str, str]]:
+        # ``ask_stream`` is a SYNC generator doing blocking I/O (LLM HTTP calls,
+        # Redis, Chroma, the local reranker). Iterating it directly inside this
+        # coroutine would block the event loop for the whole request, so tokens
+        # could not be flushed as they arrive and concurrent requests would
+        # stall behind this one. ``iterate_in_threadpool`` runs each ``next()``
+        # in a worker thread, so every yielded event reaches the client
+        # immediately and the server stays responsive while the LLM streams.
+        events = iterate_in_threadpool(
+            assistant.ask_stream(body.query, user, session_id=body.session_id)
+        )
         try:
-            for ev in assistant.ask_stream(body.query, user, session_id=body.session_id):
+            async for ev in events:
                 if isinstance(ev, MetaEvent):
                     payload = MetaEventModel(route=ev.route, cache_tier=ev.cache_tier).model_dump()
                     yield {"event": "meta", "data": json.dumps(payload)}
@@ -109,10 +131,26 @@ async def post_chat(
                     payload = _final_to_done_model(ev.response).model_dump()
                     yield {"event": "done", "data": json.dumps(payload)}
         except Exception as exc:  # noqa: BLE001
-            # Surface errors as an event so the frontend can render a card.
+            # Log the full traceback server-side — an opaque client-side message
+            # previously made production failures (e.g. an LLM model that the
+            # API key cannot access) undiagnosable from the logs.
+            logger.exception(
+                "chat stream failed for user=%s tenant=%s",
+                user.user_id,
+                user.tenant_id,
+            )
+            # Surface a typed error event (never an opaque 500 mid-stream) and
+            # include a truncated reason so the UI can show what went wrong.
+            detail = str(exc)[:_ERROR_DETAIL_LIMIT]
             yield {
                 "event": "error",
-                "data": json.dumps({"message": "Assistant failed", "type": type(exc).__name__}),
+                "data": json.dumps(
+                    {
+                        "message": "Assistant failed",
+                        "type": type(exc).__name__,
+                        "detail": detail,
+                    }
+                ),
             }
 
     return EventSourceResponse(event_stream())

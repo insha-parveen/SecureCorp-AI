@@ -53,7 +53,14 @@ export function StreamingAnswer({ message }: { message: AssistantMessage }) {
         role="alert"
         className="rounded-md border border-[var(--color-destructive)] bg-[var(--color-destructive)]/10 p-3 text-sm text-[var(--color-destructive)]"
       >
-        {message.error.message}
+        <p className="font-medium">{message.error.message}</p>
+        {/* The backend sends a truncated reason (e.g. an unavailable LLM
+            model). Showing it turns an opaque failure into a diagnosable one. */}
+        {message.error.detail ? (
+          <p className="mt-1 font-mono text-xs opacity-80 break-words">
+            {message.error.type}: {message.error.detail}
+          </p>
+        ) : null}
       </div>
     );
   }

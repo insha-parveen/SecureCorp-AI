@@ -37,6 +37,15 @@ export interface MetaPayload {
   cache_tier: "L1" | "L2" | "MISS";
 }
 
+// A stream error. `detail` carries a truncated reason from the backend (the
+// full traceback is logged server-side) so failures are diagnosable in the UI
+// instead of showing an opaque "Assistant failed".
+export interface ChatStreamError {
+  message: string;
+  type: string;
+  detail?: string;
+}
+
 // The SSE event shapes the chat route emits. The `data` payload is
 // already JSON-parsed by the SSE client before reaching the hook.
 export type ChatEvent =
@@ -44,7 +53,7 @@ export type ChatEvent =
   | { event: "evidence"; data: RankedEvidence }
   | { event: "token"; data: { text: string } }
   | { event: "done"; data: DonePayload }
-  | { event: "error"; data: { message: string; type: string } };
+  | { event: "error"; data: ChatStreamError };
 
 // The shape that the chat UI actually renders. Built incrementally by the
 // streaming hook as SSE events arrive.
@@ -53,7 +62,7 @@ export interface AssistantMessage {
   evidence: RankedEvidence[];
   text: string;
   done: DonePayload | null;
-  error: { message: string; type: string } | null;
+  error: ChatStreamError | null;
 }
 
 export interface UserMessage {

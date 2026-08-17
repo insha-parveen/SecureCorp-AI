@@ -374,3 +374,35 @@ def test_meta_event_on_cache_hit_has_null_route(authed_client: TestClient) -> No
     payload = _json.loads(meta_data)
     assert payload["route"] is None
     assert payload["cache_tier"] == "L1"
+
+
+def test_error_event_carries_the_underlying_reason(authed_client: TestClient) -> None:
+    """A mid-stream failure must report WHY, not just "Assistant failed".
+
+    Production once failed with an opaque message because the configured LLM
+    model was not available to the API key; the reason was neither streamed nor
+    logged. The ``error`` event now carries the exception type and a truncated
+    ``detail`` so the failure is diagnosable from the UI.
+    """
+    import json as _json
+
+    class _ExplodingAssistant:
+        def ask_stream(self, query: str, user_context: Any, session_id: str | None = None) -> Any:
+            yield MetaEvent(route="DOCUMENT_RAG", cache_tier="MISS")
+            raise RuntimeError("model `llama3` does not exist or you do not have access to it")
+
+    authed_client.app.state.assistant = _ExplodingAssistant()  # type: ignore[assignment]
+
+    with authed_client.stream("POST", "/api/chat", json={"query": "anything"}) as r:
+        assert r.status_code == 200
+        lines = list(r.iter_lines())
+
+    order = [ln[len("event:") :].strip() for ln in lines if ln.startswith("event:")]
+    assert order[-1] == "error"
+
+    error_data = [ln[len("data:") :].strip() for ln in lines if ln.startswith("data:")][-1]
+    payload = _json.loads(error_data)
+    assert payload["message"] == "Assistant failed"
+    assert payload["type"] == "RuntimeError"
+    # The real reason is forwarded so the UI can render it.
+    assert "does not exist" in payload["detail"]

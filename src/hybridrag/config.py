@@ -115,6 +115,14 @@ class Settings(BaseSettings):
     # latency, because reranking >15 candidates feeds the cross-encoder
     # distractors that push good docs out of the top-5.
     rerank_candidates: int = 15
+    # Skip the cross-encoder when the query names an exact identifier
+    # (ITSEC-002, INV-2026-0108, ...). Measured on the holdout: the reranker
+    # took exact_identifier Recall@5 from 100% to 0% because ms-marco scores
+    # semantic prose above the chunk that literally contains the ID — the same
+    # weakness dense retrieval shows on the identifier probe. BM25 already
+    # ranks those correctly, so fusion order is better left alone. Also saves
+    # the ~1s reranker pass on ID lookups. Set false to always rerank.
+    rerank_skip_identifier_queries: bool = True
     final_top_k: int = 5
 
     # Hard input limit of the embedding model, including the 2 special tokens

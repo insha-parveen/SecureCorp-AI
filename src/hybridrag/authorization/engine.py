@@ -82,6 +82,15 @@ class AuthorizationEngine:
         The filter is designed to capture the 'OR' of several authorization conditions.
         Note: Complex RBAC logic often requires multiple queries or post-filtering,
         but we aim to push as much as possible to the index.
+
+        NOT wired into the live retrieval path: :meth:`HybridRetriever._dense_search`
+        deliberately does not use this as a Chroma pre-filter, because it omits
+        role-based grants and so drops authorized-but-role-gated docs from the
+        candidate pool (measured: ~46pt Dense-Only recall loss under auth). The
+        security boundary is the :meth:`is_authorized` post-filter instead. This
+        method is retained as a documented future optimization — usable only once
+        the index also carries the role/classification metadata needed to make
+        the pushed-down filter a *superset* of what ``is_authorized`` accepts.
         """
         # We build a filter that matches PUBLIC or a specific department/role if applicable.
         # Since ChromaDB 'where' filters can be complex, we use $or.

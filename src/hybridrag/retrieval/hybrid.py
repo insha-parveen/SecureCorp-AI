@@ -34,6 +34,7 @@ from hybridrag.indexing import (
     EmbeddingProvider,
     VectorStore,
     decode_chunk,
+    query_has_identifier,
 )
 from hybridrag.retrieval.fusion import rrf_fuse
 from hybridrag.retrieval.reranker import Reranker, rerank_top
@@ -58,6 +59,16 @@ class HybridRetriever:
         self._embeddings = embeddings
         self._reranker = reranker
         self._settings = settings or get_settings()
+
+    @property
+    def bm25(self) -> BM25Index:
+        """The BM25 index, read-only.
+
+        Exposed so callers needing corpus-wide facts (e.g. the access-summary
+        endpoint counting how many documents a user may see) can reach the
+        in-memory corpus through a public surface instead of ``_bm25``.
+        """
+        return self._bm25
 
     def retrieve(
         self, query: str, user_context: UserContext, *, where: dict[str, Any] | None = None
@@ -91,6 +102,16 @@ class HybridRetriever:
         )
 
         fused = rrf_fuse(bm25_results, dense_results)
+
+        # Exact-ID lookups skip the cross-encoder. It reorders by semantic
+        # relevance, which on an identifier query pushes the chunk literally
+        # containing the ID out of the top-K (measured: exact_identifier
+        # Recall@5 100% -> 0% on the holdout). BM25 already puts those first, so
+        # the fused order is the better answer — and skipping also drops ~1s of
+        # reranker latency. See Settings.rerank_skip_identifier_queries.
+        if cfg.rerank_skip_identifier_queries and query_has_identifier(query):
+            return fused[: cfg.final_top_k]
+
         return rerank_top(
             query,
             fused,

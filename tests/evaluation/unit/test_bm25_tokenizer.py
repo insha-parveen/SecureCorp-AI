@@ -6,7 +6,32 @@ their parts are also emitted, and the query side is analyzed identically to the
 document side.
 """
 
-from hybridrag.indexing.bm25_store import STOPWORDS, analyze
+from hybridrag.indexing.bm25_store import STOPWORDS, analyze, query_has_identifier
+
+
+class TestQueryHasIdentifier:
+    """Gates the reranker bypass, so false positives/negatives both cost recall."""
+
+    def test_detects_the_corpus_identifier_shapes(self) -> None:
+        for query in (
+            "What does ITSEC-002 require for password complexity?",
+            "What was the security incident JIRA-SEC-001?",
+            "What is the total of invoice INV-2026-0108?",
+            "Who is EMP-0104?",
+            "status of PO-8491",
+            "lowercase itsec-002 still counts",
+        ):
+            assert query_has_identifier(query), query
+
+    def test_ignores_ordinary_prose_and_bare_numbers(self) -> None:
+        for query in (
+            "What is the remote work policy?",
+            "two days per week, up to 3 days",
+            "what happened in 2026",
+            "the 2026-01-01 effective date",  # digits-only parts, no alpha part
+            "",
+        ):
+            assert not query_has_identifier(query), query
 
 
 class TestIdentifiers:

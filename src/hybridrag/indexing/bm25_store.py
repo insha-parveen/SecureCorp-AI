@@ -112,6 +112,32 @@ def analyze(text: str, remove_stopwords: bool = True, expand_identifiers: bool =
     return terms
 
 
+def query_has_identifier(query: str) -> bool:
+    """True when ``query`` mentions a corpus-style exact identifier.
+
+    Recognizes the compound ``LETTERS-DIGITS`` shape the corpus uses for policy
+    codes and record IDs — ``ITSEC-002``, ``HR-003``, ``JIRA-SEC-001``,
+    ``INV-2026-0108``, ``EMP-0104``. The test is structural, not a fixed prefix
+    list: a token must split on an identifier separator into an alphabetic part
+    AND an all-digit part. That keeps it working for record types nobody has
+    added yet, and it will not fire on ordinary prose like "2 days per week"
+    (no separator) or a bare year (no alphabetic part).
+
+    Used to decide whether the cross-encoder reranker should run: on exact-ID
+    lookups it demotes the chunk that literally contains the identifier in
+    favour of semantically prettier prose, which is the same weakness dense
+    retrieval shows on the identifier probe (CLAUDE.md §7). Reuses this module's
+    tokenizer so the notion of "identifier" cannot drift from what BM25 indexes.
+    """
+    for token in _TERM_RE.findall(query.lower()):
+        parts = _ID_SEPARATORS.split(token)
+        if len(parts) < 2:
+            continue
+        if any(p.isdigit() for p in parts) and any(p.isalpha() for p in parts):
+            return True
+    return False
+
+
 class BM25Index:
     """In-memory BM25 index over a chunk corpus, returning RankedChunk."""
 
@@ -171,6 +197,17 @@ class BM25Index:
 
     def get(self, chunk_id: str) -> Chunk | None:
         return self._by_id.get(chunk_id)
+
+    @property
+    def chunks(self) -> tuple[Chunk, ...]:
+        """The full indexed chunk corpus, read-only.
+
+        Exposed so callers that need corpus-wide facts (e.g. "how many
+        documents can this user see?") can iterate the already-in-memory
+        corpus instead of re-reading ``chunks.jsonl`` or reaching into
+        ``_chunks``. Returns a tuple so callers cannot mutate the index.
+        """
+        return tuple(self._chunks)
 
     def search(
         self, query: str, user_context: UserContext, top_n: int | None = None

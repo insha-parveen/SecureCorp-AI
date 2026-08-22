@@ -24,7 +24,7 @@ Accepts either a JSON list (legacy) or a JSONL file (Phase 8 golden set).
 
 import json
 import math
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -32,7 +32,7 @@ from typing import Any
 from hybridrag.authorization.engine import AuthorizationEngine
 from hybridrag.authorization.models import UserContext
 from hybridrag.config import Settings, get_settings
-from hybridrag.domain import RankedChunk
+from hybridrag.domain import Chunk, RankedChunk
 from hybridrag.indexing import (
     BM25Index,
     ChromaVectorStore,
@@ -43,18 +43,19 @@ from hybridrag.retrieval.fusion import rrf_fuse
 from hybridrag.retrieval.hybrid import HybridRetriever
 from hybridrag.retrieval.reranker import CrossEncoderReranker
 
-# Fixed identity for every ablation arm. ALL FOUR arms now enforce
-# authorization for this user uniformly — BM25 filters inside ``.search``,
-# dense via ``_authorized_dense`` below, and Hybrid-Rerank via
-# ``hybrid.retrieve`` — so the arms are directly comparable and the reported
-# table reflects the production auth-enforced path. This user is ``admin``/HR
-# and gets NO superuser bypass (see ``AuthorizationEngine.is_authorized``), so
-# golden documents that require another department are legitimately unseen;
-# that recall ceiling is shared across all four arms, which is exactly what
-# makes the comparison fair. (A pure-retrieval, auth-off measurement would need
-# a per-query authorized user or a superuser role — a separate concern.)
+_EVAL_TENANT = "nexacore"
+
+# Fallback identity, used for rows with no expected documents (refuse/abstain)
+# and by callers that do not supply a resolver. ALL FOUR arms enforce
+# authorization uniformly — BM25 filters inside ``.search``, dense via
+# ``_authorized_dense`` below, and Hybrid-Rerank via ``hybrid.retrieve`` — so
+# the arms stay directly comparable and reflect the production auth-enforced
+# path. This user is ``admin``/HR and gets NO superuser bypass, so on its own it
+# imposes a recall ceiling: golden documents requiring another department are
+# legitimately unseen. ``build_authorized_user_resolver`` removes that ceiling
+# per query without weakening the authorization check itself.
 _EVAL_USER_CONTEXT = UserContext(
-    user_id="eval", roles=("admin",), department="HR", tenant_id="nexacore"
+    user_id="eval", roles=("admin",), department="HR", tenant_id=_EVAL_TENANT
 )
 
 
@@ -164,6 +165,124 @@ def _precision_at_k(expected: set[str], retrieved: list[RankedChunk], k: int) ->
     return hits / len(top_k)
 
 
+def _expected_docs(row: dict[str, Any]) -> list[str]:
+    """The golden row's expected document ids, minus wildcards/blanks."""
+    raw = row.get("expected_chunk_sources") or row.get("expected_documents") or []
+    return [d for d in raw if d and d != "*"]
+
+
+def build_authorized_user_resolver(
+    chunks: Sequence[Chunk],
+) -> Callable[[dict[str, Any]], UserContext]:
+    """Build a per-query identity that is authorized for that query's answer.
+
+    WHY: with one fixed eval identity, every golden document that identity may
+    not read counts as a retrieval miss — so the score conflates "retrieval
+    failed" with "authorization correctly refused". On this corpus that put a
+    hard ceiling of roughly 10 points on every arm.
+
+    This does NOT weaken authorization. ``is_authorized`` still runs on every
+    retrieved chunk, and chunks outside the resolved identity's scope are still
+    excluded; we only stop penalizing retrieval for documents the *arbitrary*
+    eval user happened to lack. The resolved identity is derived from the golden
+    row itself: its ``expected_roles`` plus the roles/departments the expected
+    documents actually grant. A user has exactly one department, so when a
+    query's expected documents span departments we pick the department that
+    authorizes the most of them — see ``residual_auth_ceiling`` for how many
+    rows remain partially unreachable.
+
+    Rows with no expected documents (refuse/abstain cases) fall back to the
+    fixed identity, since there is nothing to be authorized for.
+    """
+    by_doc: dict[str, list[Chunk]] = {}
+    for chunk in chunks:
+        by_doc.setdefault(chunk.document_id, []).append(chunk)
+
+    def resolve(row: dict[str, Any]) -> UserContext:
+        expected = _expected_docs(row)
+        if not expected:
+            return _EVAL_USER_CONTEXT
+
+        roles: set[str] = set(row.get("expected_roles") or ())
+        departments: set[str] = set()
+        for doc_id in expected:
+            for chunk in by_doc.get(doc_id, ()):
+                roles.update(chunk.allowed_roles)
+                if chunk.department:
+                    departments.add(chunk.department)
+                departments.update(chunk.allowed_departments)
+
+        def candidate(department: str | None) -> UserContext:
+            return UserContext(
+                user_id="eval",
+                roles=tuple(sorted(roles)),
+                department=department,
+                tenant_id=_EVAL_TENANT,
+            )
+
+        # One department per user, so choose the one covering the most expected
+        # documents. Deterministic: ties break on the sorted department name.
+        # An empty set still needs one attempt with department=None (a
+        # public/role-only document needs no department match).
+        candidates: list[str | None] = list(sorted(departments)) if departments else [None]
+        best = _EVAL_USER_CONTEXT
+        best_covered = -1
+        for department in candidates:
+            user = candidate(department)
+            covered = sum(
+                1
+                for doc_id in expected
+                if any(
+                    AuthorizationEngine.is_authorized(user, chunk)
+                    for chunk in by_doc.get(doc_id, ())
+                )
+            )
+            if covered > best_covered:
+                best, best_covered = user, covered
+        return best
+
+    return resolve
+
+
+def residual_auth_ceiling(
+    queries: Sequence[dict[str, Any]],
+    chunks: Sequence[Chunk],
+) -> dict[str, int]:
+    """Count golden rows the per-query identity still cannot fully reach.
+
+    Reported alongside the metrics so the remaining ceiling is visible rather
+    than silently depressing the score. ``fully_reachable`` rows have every
+    expected document authorized; ``partial`` and ``unreachable`` rows cap the
+    best achievable recall no matter how good retrieval is.
+    """
+    resolve = build_authorized_user_resolver(chunks)
+    by_doc: dict[str, list[Chunk]] = {}
+    for chunk in chunks:
+        by_doc.setdefault(chunk.document_id, []).append(chunk)
+
+    counts = {"fully_reachable": 0, "partial": 0, "unreachable": 0, "no_expected_docs": 0}
+    for row in queries:
+        expected = _expected_docs(row)
+        if not expected:
+            counts["no_expected_docs"] += 1
+            continue
+        user = resolve(row)
+        covered = sum(
+            1
+            for doc_id in expected
+            if any(
+                AuthorizationEngine.is_authorized(user, chunk) for chunk in by_doc.get(doc_id, ())
+            )
+        )
+        if covered == len(expected):
+            counts["fully_reachable"] += 1
+        elif covered:
+            counts["partial"] += 1
+        else:
+            counts["unreachable"] += 1
+    return counts
+
+
 class RetrievalEvaluator:
     """Evaluates a retrieval pipeline against a golden set of queries."""
 
@@ -171,11 +290,16 @@ class RetrievalEvaluator:
         self,
         queries_path: Path,
         settings: Settings | None = None,
+        user_context_for: Callable[[dict[str, Any]], UserContext] | None = None,
     ) -> None:
         self._settings = settings or get_settings()
         self._queries = _load_queries(queries_path)
         # Pre-extract categories for per-category breakdown
         self._has_categories = any("category" in q for q in self._queries)
+        # Per-row identity resolver. Defaults to the single fixed eval user,
+        # which imposes an authorization ceiling on the score — see
+        # ``build_authorized_user_resolver``.
+        self._user_context_for = user_context_for or (lambda _row: _EVAL_USER_CONTEXT)
 
     def _evaluate_arm(
         self,
@@ -204,7 +328,7 @@ class RetrievalEvaluator:
             expected_docs = set(q.get("expected_chunk_sources", q.get("expected_documents", [])))
             category = q.get("category", "_uncategorized")
 
-            results = retrieval_fn(query_text, _EVAL_USER_CONTEXT)
+            results = retrieval_fn(query_text, self._user_context_for(q))
 
             # Per-query metrics
             first_hit_rank = 0
@@ -296,13 +420,20 @@ def run_ablation_study(
     Returns the 4 overall metrics as a flat list (backward compatible).
     """
     cfg = settings or get_settings()
-    evaluator = RetrievalEvaluator(queries_path, settings=cfg)
 
     # Initialize components once
     bm25 = BM25Index.from_chunk_file(cfg.processed_dir / "chunks.jsonl", settings=cfg)
     store = ChromaVectorStore.from_settings(cfg)
     embeddings = get_embedding_provider(cfg)
     reranker = CrossEncoderReranker.from_settings(cfg)
+
+    # Per-query authorized identity, so the score measures retrieval rather
+    # than the arbitrary eval user's clearance (see the resolver's docstring).
+    evaluator = RetrievalEvaluator(
+        queries_path,
+        settings=cfg,
+        user_context_for=build_authorized_user_resolver(bm25.chunks),
+    )
 
     # Warm up models: Force a load now so we catch network errors early
     embeddings.embed_query("warmup")
@@ -350,7 +481,6 @@ def run_ablation_study_detailed(
     share model loads across grid cells.
     """
     cfg = settings or get_settings()
-    evaluator = RetrievalEvaluator(queries_path, settings=cfg)
 
     if prebuilt is None:
         bm25 = BM25Index.from_chunk_file(cfg.processed_dir / "chunks.jsonl", settings=cfg)
@@ -363,7 +493,7 @@ def run_ablation_study_detailed(
         hybrid = HybridRetriever(bm25, store, embeddings, reranker, settings=cfg)
     else:
         hybrid = prebuilt
-        bm25 = hybrid._bm25
+        bm25 = hybrid.bm25
         if not isinstance(hybrid._store, ChromaVectorStore):
             raise TypeError(
                 f"HybridRetriever._store must be ChromaVectorStore for ablation arms; "
@@ -371,6 +501,14 @@ def run_ablation_study_detailed(
             )
         store = hybrid._store
         embeddings = hybrid._embeddings
+
+    # Per-query authorized identity, so the score measures retrieval rather
+    # than the arbitrary eval user's clearance (see the resolver's docstring).
+    evaluator = RetrievalEvaluator(
+        queries_path,
+        settings=cfg,
+        user_context_for=build_authorized_user_resolver(bm25.chunks),
+    )
 
     def _dense(q: str, user: UserContext) -> list[RankedChunk]:
         return _authorized_dense(

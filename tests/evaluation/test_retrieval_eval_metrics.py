@@ -13,6 +13,7 @@ from pathlib import Path
 
 import pytest
 
+from hybridrag.authorization.engine import AuthorizationEngine
 from hybridrag.authorization.models import UserContext
 from hybridrag.domain import Chunk, Classification, RankedChunk, SourceType
 from hybridrag.evaluation.retrieval_eval import (
@@ -268,3 +269,62 @@ def test_authorized_dense_drops_unauthorized_chunk() -> None:
     returned_docs = {rc.chunk.document_id for rc in result}
     # The forbidden Finance chunk must be dropped by the is_authorized post-filter.
     assert returned_docs == {"DOC-HR"}
+
+
+# ---------- per-query authorized identity (removing the eval auth ceiling) ----------
+
+
+def test_resolver_grants_access_to_the_rows_own_expected_docs() -> None:
+    """A Finance-only golden row must be evaluated by a Finance-capable user.
+
+    With one fixed HR identity, this row's expected document is invisible and
+    scores as a retrieval miss even when retrieval is perfect — that is the
+    ceiling this resolver removes. Authorization itself is unchanged: the
+    resolved identity is still checked by ``is_authorized``.
+    """
+    from hybridrag.evaluation.retrieval_eval import build_authorized_user_resolver
+
+    fin = _confidential_chunk("FIN-001", "Finance")
+    hr = _confidential_chunk("DOC-HR", "HR")
+    resolve = build_authorized_user_resolver([fin, hr])
+
+    user = resolve({"query": "q", "expected_chunk_sources": ["FIN-001"]})
+    assert AuthorizationEngine.is_authorized(user, fin)
+    assert user.department == "Finance"
+
+
+def test_resolver_falls_back_for_rows_with_no_expected_docs() -> None:
+    """Refuse/abstain rows have nothing to authorize, so keep the fixed user."""
+    from hybridrag.evaluation.retrieval_eval import (
+        _EVAL_USER_CONTEXT,
+        build_authorized_user_resolver,
+    )
+
+    resolve = build_authorized_user_resolver([_confidential_chunk("FIN-001", "Finance")])
+    assert resolve({"query": "q", "expected_chunk_sources": []}) == _EVAL_USER_CONTEXT
+    assert resolve({"query": "q", "expected_chunk_sources": ["*"]}) == _EVAL_USER_CONTEXT
+
+
+def test_residual_ceiling_reports_unreachable_rows() -> None:
+    """The remaining ceiling must be reported, not silently absorbed.
+
+    A user has one department, so a row whose expected docs span two
+    departments cannot be fully authorized by any single identity.
+    """
+    from hybridrag.evaluation.retrieval_eval import residual_auth_ceiling
+
+    fin = _confidential_chunk("FIN-001", "Finance")
+    hr = _confidential_chunk("DOC-HR", "HR")
+    chunks = [fin, hr]
+
+    counts = residual_auth_ceiling(
+        [
+            {"query": "a", "expected_chunk_sources": ["FIN-001"]},  # reachable
+            {"query": "b", "expected_chunk_sources": ["FIN-001", "DOC-HR"]},  # cross-dept
+            {"query": "c", "expected_chunk_sources": []},  # nothing expected
+        ],
+        chunks,
+    )
+    assert counts["fully_reachable"] == 1
+    assert counts["partial"] == 1
+    assert counts["no_expected_docs"] == 1

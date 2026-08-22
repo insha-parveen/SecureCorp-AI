@@ -26,6 +26,7 @@ from pathlib import Path
 
 from hybridrag.authorization.models import UserContext
 from hybridrag.config import get_settings
+from hybridrag.domain.models import FinalResponse
 from hybridrag.evaluation.redis_cache_eval import (
     estimate_latency_saved,
     measure_l1_hit_rate,
@@ -45,6 +46,17 @@ def _user_from_scope(scope: dict[str, object], user_id: str) -> UserContext:
         department=scope.get("department"),  # type: ignore[arg-type]
         tenant_id=str(scope.get("tenant_id", "nexacore")),
     )
+
+
+def _stub_response(answer: str) -> FinalResponse:
+    """Wrap a bare answer string in a minimal FinalResponse.
+
+    The cache stores a full FinalResponse (evidence-in-cache hardening),
+    not a bare string, so the experiment seeds with a minimal one. Hit/miss
+    and isolation only depend on whether a stored entry is returned, not on
+    its contents, so empty evidence/citations are correct here.
+    """
+    return FinalResponse(answer=answer, evidence=[], citations=[], model="cache-eval", usage={})
 
 
 def _flush_namespace(cache: object, namespace: str) -> None:
@@ -135,8 +147,10 @@ def main() -> int:
     for cluster in clusters:
         seed = cluster["queries"][0]
         seed_emb = embeddings.embed_query(seed)
-        cache.set_exact(seed, f"answer::{cluster['cluster_id']}", writer_user)
-        cache.set_semantic(seed, seed_emb, f"answer::{cluster['cluster_id']}", writer_user)
+        cache.set_exact(seed, _stub_response(f"answer::{cluster['cluster_id']}"), writer_user)
+        cache.set_semantic(
+            seed, seed_emb, _stub_response(f"answer::{cluster['cluster_id']}"), writer_user
+        )
         n_clusters += 1
 
     # 2. L1 hit rate: re-query with ALL queries across ALL clusters.
@@ -159,8 +173,10 @@ def main() -> int:
         # Seed under the first scope; probe with the rest.
         first_scope = probe["scopes"][0]
         first_user = _user_from_scope(first_scope, first_scope["user_id"])
-        cache.set_exact(seed_query, f"answer::{probe['probe_id']}", first_user)
-        cache.set_semantic(seed_query, seed_emb, f"answer::{probe['probe_id']}", first_user)
+        cache.set_exact(seed_query, _stub_response(f"answer::{probe['probe_id']}"), first_user)
+        cache.set_semantic(
+            seed_query, seed_emb, _stub_response(f"answer::{probe['probe_id']}"), first_user
+        )
         # Probe only the OTHER scopes (skip the first one).
         for scope in probe["scopes"][1:]:
             other_user = _user_from_scope(scope, scope["user_id"])

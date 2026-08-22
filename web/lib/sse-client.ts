@@ -59,7 +59,10 @@ export async function* streamChat(
     {
       method: "POST",
       credentials: "include",
-      headers: { "Content-Type": "application/json", Accept: "text/event-stream" },
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "text/event-stream",
+      },
       body: JSON.stringify({ query, session_id: sessionId }),
       signal,
     },

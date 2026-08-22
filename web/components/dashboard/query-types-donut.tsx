@@ -35,7 +35,7 @@ export function QueryTypesDonut() {
             Routing breakdown (last 7 days)
           </p>
         </div>
-        <Badge variant="muted">{isLive ? "Live" : "(Demo data)"}</Badge>
+        {isLive ? <Badge variant="muted">Live</Badge> : null}
       </GlassCardHeader>
       <GlassCardContent>
         <div className="flex flex-col items-center gap-4 md:flex-row">

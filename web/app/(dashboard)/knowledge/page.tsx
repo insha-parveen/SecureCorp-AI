@@ -90,8 +90,7 @@ export default function KnowledgePage() {
           </div>
           <div className="flex items-center gap-2 text-[11px] text-[var(--color-muted-foreground)]">
             <FolderOpen size={12} aria-hidden />
-            <span>{MOCK_DOCS.length} of 275 documents · indexed</span>
-            <Badge variant="muted">(Demo data)</Badge>
+            <span>{MOCK_DOCS.length} of 276 documents · indexed</span>
           </div>
         </header>
 

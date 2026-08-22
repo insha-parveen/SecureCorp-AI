@@ -2,9 +2,11 @@
 
 // RetrievalProbe — the retrieval section's centerpiece (CLAUDE.md §7). Shows
 // the hybrid pipeline stages and the identifier-recall diagnostic that
-// justifies keeping BM25 (hit@1 40/40 vs dense 4/40). Per the honesty rule,
-// the probe is LABELED a diagnostic, never a benchmark, and its caveat is
+// justifies keeping BM25 (40/40 vs 4/40 on exact identifiers). Per the honesty
+// rule, the probe is LABELED a diagnostic, never a benchmark, and its caveat is
 // rendered inline — this is the number that most needs its context attached.
+// The bars are deliberately NOT labeled "hit@1": that read as each retriever's
+// general Hit@1, which is a different (and much higher) measurement.
 
 import * as React from "react";
 import {
@@ -57,18 +59,18 @@ export function RetrievalProbe() {
         <GlassCardContent className="space-y-4">
           <p className="text-[13px] text-[var(--color-muted-foreground)]">
             Probing all {BM25_PROBE.identifiers} identifiers that occur in
-            exactly one chunk — asking each retriever for the chunk containing
-            it:
+            exactly one chunk — asking each retriever to return that exact
+            chunk first:
           </p>
           <div className="grid grid-cols-2 gap-3">
             <ProbeBar
-              label="BM25 hit@1"
+              label="BM25 · found first"
               hits={BM25_PROBE.bm25HitAt1}
               total={BM25_PROBE.identifiers}
               tone="var(--color-success)"
             />
             <ProbeBar
-              label="Dense hit@1"
+              label="Dense · found first"
               hits={BM25_PROBE.denseHitAt1}
               total={BM25_PROBE.identifiers}
               tone="var(--color-series-2)"

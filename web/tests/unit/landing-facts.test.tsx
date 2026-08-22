@@ -30,6 +30,10 @@ describe("landing-facts honesty guard", () => {
   it("labels the BM25 result a diagnostic probe, not a benchmark", () => {
     expect(BM25_PROBE.caveat.toLowerCase()).toContain("diagnostic probe");
     expect(BM25_PROBE.caveat.toLowerCase()).toContain("not the phase 8");
+    // The probe must also disclaim being either retriever's general Hit@1.
+    // Labeling it "Dense hit@1 4/40" once read as a general metric, which is
+    // false: dense Hit@1 on the golden set is far higher than 4/40.
+    expect(BM25_PROBE.caveat.toLowerCase()).toContain("general hit@1");
     // The real measured values from §7.
     expect(BM25_PROBE.bm25HitAt1).toBe(40);
     expect(BM25_PROBE.denseHitAt1).toBe(4);

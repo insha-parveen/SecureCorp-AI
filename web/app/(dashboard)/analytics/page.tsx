@@ -51,7 +51,6 @@ export default function AnalyticsPage() {
                 4-cell grid on the Hybrid-Rerank arm (n=30 frozen subset)
               </p>
             </div>
-            <Badge variant="muted">(Demo data)</Badge>
           </GlassCardHeader>
           <GlassCardContent>
             <div className="overflow-x-auto">

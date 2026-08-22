@@ -11,8 +11,6 @@ from collections.abc import Iterator
 from dataclasses import dataclass
 from typing import Any
 
-logger = logging.getLogger(__name__)
-
 from hybridrag.authorization.models import UserContext
 from hybridrag.caching.history import ConversationHistory
 from hybridrag.caching.redis_cache import RedisCache
@@ -29,6 +27,8 @@ from hybridrag.retrieval.hybrid import HybridRetriever
 from hybridrag.routing.router import QueryRouter, Route
 from hybridrag.structured.db import DatabaseManager
 from hybridrag.structured.query_path import StructuredQueryPath
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True)

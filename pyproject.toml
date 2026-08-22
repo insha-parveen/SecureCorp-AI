@@ -81,8 +81,10 @@ src = ["src", "tests"]
 select = ["E", "F", "I", "UP", "B", "SIM"]
 # FastAPI's canonical idiom is ``Depends(...)`` as an argument default. B008
 # flags it; allow it explicitly in the api/ package and any future route
-# modules. Everything else still gets checked.
-per-file-ignores = { "src/hybridrag/api/**/*.py" = ["B008"] }
+# modules. Everything else still gets checked. The golden-expansion script is
+# a one-off authoring tool whose query/answer literals are data, not logic, so
+# the line-length rule (E501) is waived there only.
+per-file-ignores = { "src/hybridrag/api/**/*.py" = ["B008"], "scripts/author_golden_expansion.py" = ["E501"] }
 
 [tool.mypy]
 python_version = "3.11"
@@ -91,7 +93,9 @@ mypy_path = "src"
 
 # rank_bm25, sentence_transformers, chromadb, and fastapi ship without
 # (or with incomplete) type stubs. Scoped to those imports only so the
-# rest of the codebase stays strictly checked.
+# rest of the codebase stays strictly checked. ragas/datasets are eval-only
+# optional deps (installed by the `evaluation` extra) that ship no py.typed
+# marker, so mypy must not fail on them once they are resolvable.
 [[tool.mypy.overrides]]
 module = [
     "rank_bm25",
@@ -103,6 +107,10 @@ module = [
     "fastapi.*",
     "sse_starlette",
     "sse_starlette.*",
+    "ragas",
+    "ragas.*",
+    "datasets",
+    "datasets.*",
 ]
 ignore_missing_imports = true
 

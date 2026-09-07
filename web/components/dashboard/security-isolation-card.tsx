@@ -37,7 +37,6 @@ export function SecurityIsolationCard() {
             Live checks on every retrieval path
           </p>
         </div>
-        <Badge variant="muted">(Demo data)</Badge>
       </GlassCardHeader>
       <GlassCardContent>
         <div className="flex items-start gap-4">

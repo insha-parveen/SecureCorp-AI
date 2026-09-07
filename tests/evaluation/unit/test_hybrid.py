@@ -66,16 +66,21 @@ class FakeStore:
 
 
 class FakeReranker:
-    """A reranker that returns candidates unchanged (identity), tagged."""
+    """A reranker that returns candidates unchanged (identity), tagged.
+
+    Records every call so tests can assert whether it ran at all.
+    """
 
     def __init__(self, model_name: str = "fake-reranker") -> None:
         self._model_name = model_name
+        self.calls: list[str] = []
 
     @property
     def model_name(self) -> str:
         return self._model_name
 
     def rerank(self, query: str, candidates: Sequence[RankedChunk]) -> list[RankedChunk]:
+        self.calls.append(query)
         return [
             RankedChunk(chunk=c.chunk, score=float(1.0 / rank), rank=rank, retriever=RERANK_NAME)
             for rank, c in enumerate(candidates, start=1)
@@ -230,3 +235,59 @@ class TestHybridRetriever:
         returned_docs = {r.chunk.document_id for r in out}
         assert "FIN-001" not in returned_docs, "unauthorized confidential chunk leaked to output"
         assert returned_docs == {"HR-003"}
+
+
+class TestIdentifierRerankBypass:
+    """The cross-encoder must not run on exact-identifier lookups.
+
+    On an ID query the reranker scores semantic prose above the chunk that
+    literally contains the identifier, which measured as exact_identifier
+    Recall@5 dropping 100% -> 0% on the holdout. BM25 already ranks those
+    correctly, so the fused order is kept and the ~1s rerank pass is skipped.
+    """
+
+    def test_identifier_query_skips_the_reranker(self, settings: Any) -> None:
+        chunks = _chunks(3)
+        bm25_results = [
+            RankedChunk(chunk=chunks[i], score=1.0, rank=i + 1, retriever="bm25") for i in range(3)
+        ]
+        reranker = FakeReranker()
+        retriever, _, _, _ = _retriever(bm25_results, chunks, reranker=reranker, settings=settings)
+
+        out = retriever.retrieve("What does ITSEC-002 require?", user_context=DUMMY_USER)
+
+        assert reranker.calls == [], "reranker ran on an exact-identifier query"
+        # Results still come back — the fused order is returned, bounded by K.
+        assert out
+        assert len(out) <= settings.final_top_k
+        assert all(r.retriever != RERANK_NAME for r in out)
+
+    def test_semantic_query_still_reranks(self, settings: Any) -> None:
+        chunks = _chunks(3)
+        bm25_results = [
+            RankedChunk(chunk=chunks[i], score=1.0, rank=i + 1, retriever="bm25") for i in range(3)
+        ]
+        reranker = FakeReranker()
+        retriever, _, _, _ = _retriever(bm25_results, chunks, reranker=reranker, settings=settings)
+
+        out = retriever.retrieve("what is the remote work policy", user_context=DUMMY_USER)
+
+        assert reranker.calls, "reranker was skipped on a non-identifier query"
+        assert all(r.retriever == RERANK_NAME for r in out)
+
+    def test_bypass_can_be_disabled_by_config(self) -> None:
+        from hybridrag.config import Settings
+
+        cfg = Settings(
+            bm25_top_n=10,
+            dense_top_n=10,
+            rerank_candidates=20,
+            final_top_k=3,
+            rerank_skip_identifier_queries=False,
+        )
+        chunks = _chunks(2)
+        reranker = FakeReranker()
+        retriever, _, _, _ = _retriever([], chunks, reranker=reranker, settings=cfg)
+
+        retriever.retrieve("What does ITSEC-002 require?", user_context=DUMMY_USER)
+        assert reranker.calls, "config flag did not re-enable reranking"

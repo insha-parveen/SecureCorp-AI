@@ -23,13 +23,14 @@ import json
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from hybridrag.authorization.models import UserContext
 from hybridrag.config import Settings
 from hybridrag.domain import FinalResponse
 from hybridrag.evaluation.ragas_adapter import ProjectRagasEmbeddings, ProjectRagasLLM
 from hybridrag.evaluation.retrieval_eval import _load_queries
+from hybridrag.generation.abstention import looks_like_abstention
 from hybridrag.generation.generator import RAGGenerator
 from hybridrag.generation.provider import GenerationProvider
 from hybridrag.indexing.embeddings import EmbeddingProvider
@@ -85,20 +86,12 @@ def _build_rows(
         except Exception as exc:  # noqa: BLE001 — keep RAGAS runner defensive
             raise RuntimeError(f"row build failed at id={q.get('id', '?')}: {exc!r}") from exc
 
-        # Abstention accounting against the golden truth.
+        # Abstention accounting against the golden truth. Uses the SAME
+        # detector the generator uses, so a correct decline can never be scored
+        # as a failure just because its phrasing differs from a local list.
         if expected_abstain:
             n_should_abstain += 1
-            answer_lower = response.answer.lower()
-            if any(
-                marker in answer_lower
-                for marker in (
-                    "do not know",
-                    "insufficient information",
-                    "outside my scope",
-                    "i cannot answer",
-                    "i am sorry",
-                )
-            ):
+            if looks_like_abstention(response.answer):
                 n_did_abstain += 1
 
         contexts = [rc.chunk.text for rc in response.evidence]
@@ -150,10 +143,13 @@ def run_ragas(
         )
 
     try:
-        # ragas + datasets are optional eval-only deps; import lazily.
-        import ragas  # type: ignore[import-not-found]
-        from datasets import Dataset  # type: ignore[import-not-found]
-        from ragas.metrics import (  # type: ignore[import-not-found]
+        # ragas + datasets are optional eval-only deps; import lazily. They are
+        # treated as untyped via the pyproject mypy override, so no inline
+        # suppression is needed (and one would be flagged as unused whenever the
+        # packages happen to be installed).
+        import ragas
+        from datasets import Dataset
+        from ragas.metrics import (
             answer_relevancy,
             context_precision,
             context_recall,
@@ -172,11 +168,14 @@ def run_ragas(
     ragas_emb = ProjectRagasEmbeddings(embeddings)
 
     try:
+        # The adapters are intentional duck-typed shims (see ragas_adapter.py);
+        # cast to Any so the call type-checks whether or not ragas is installed
+        # with its own type info (a bare ignore would be "unused" when it isn't).
         result = ragas.evaluate(
             dataset,
             metrics=[faithfulness, answer_relevancy, context_precision, context_recall],
-            llm=ragas_llm,
-            embeddings=ragas_emb,
+            llm=cast(Any, ragas_llm),
+            embeddings=cast(Any, ragas_emb),
         )
     except Exception as exc:  # noqa: BLE001
         return RagasReport(

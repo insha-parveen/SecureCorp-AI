@@ -9,7 +9,10 @@ import type { User } from "./types";
 const BASE = process.env.NEXT_PUBLIC_API_BASE ?? "http://localhost:8000";
 
 class HttpError extends Error {
-  constructor(public readonly status: number, message: string) {
+  constructor(
+    public readonly status: number,
+    message: string,
+  ) {
     super(message);
     this.name = "HttpError";
   }
@@ -47,7 +50,10 @@ export function listDemoUsers(): Promise<{ users: User[] }> {
 }
 
 export function login(userId: string): Promise<User> {
-  return jsonFetch<User>("/api/auth/token", { method: "POST", json: { user_id: userId } });
+  return jsonFetch<User>("/api/auth/token", {
+    method: "POST",
+    json: { user_id: userId },
+  });
 }
 
 export function logout(): Promise<{ ok: true }> {
@@ -56,6 +62,21 @@ export function logout(): Promise<{ ok: true }> {
 
 export function me(): Promise<User> {
   return jsonFetch<User>("/api/auth/me");
+}
+
+// How much of the corpus the current user may see. Computed server-side by the
+// real authorization engine (no role, not even admin, gets a superuser
+// bypass), so the demo access indicator shows a live authorization result.
+export interface AccessSummary {
+  accessible_documents: number;
+  total_documents: number;
+  accessible_chunks: number;
+  total_chunks: number;
+  available: boolean;
+}
+
+export function accessSummary(): Promise<AccessSummary> {
+  return jsonFetch<AccessSummary>("/api/auth/access-summary");
 }
 
 export interface AnalyticsOverview {

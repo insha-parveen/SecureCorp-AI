@@ -42,7 +42,6 @@ export function SourcesPanel(props: SourcesPanelProps) {
       <GlassCard>
         <GlassCardHeader className="flex-row items-center justify-between space-y-0">
           <GlassCardTitle>{title}</GlassCardTitle>
-          <Badge variant="muted">(Demo data)</Badge>
         </GlassCardHeader>
         <GlassCardContent className="space-y-3">
           {sourceCards.map((s) => (

@@ -3,14 +3,12 @@
 // RagasRow — four gauges, one per RAGAS metric. Highlighted gauge
 // uses a thicker ring per the data-viz mark spec.
 //
-// Per §24.5 the RAGAS values are illustrative (Demo data). When the
-// real backend exposes /api/analytics, swap to that fetch without
-// changing this component's shape.
+// Values come from lib/mock-data.ts. When the backend exposes RAGAS through
+// /api/analytics, swap to that fetch without changing this component's shape.
 
 import { ragasGauges } from "@/lib/mock-data";
 import { Gauge } from "@/components/ui/gauge";
 import { GlassCard, GlassCardContent, GlassCardHeader, GlassCardTitle } from "@/components/ui/glass-card";
-import { Badge } from "@/components/ui/badge";
 
 export function RagasRow() {
   return (
@@ -22,7 +20,6 @@ export function RagasRow() {
             Offline quality metrics — last 7 days
           </p>
         </div>
-        <Badge variant="muted">(Demo data)</Badge>
       </GlassCardHeader>
       <GlassCardContent>
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4">

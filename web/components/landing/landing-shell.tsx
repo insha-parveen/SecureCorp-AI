@@ -22,6 +22,7 @@ import { Hero } from "@/components/landing/hero";
 import { StatStrip } from "@/components/landing/stat-strip";
 import { Section } from "@/components/landing/section";
 import { RetrievalProbe } from "@/components/landing/retrieval-probe";
+import { RetrievalAblation } from "@/components/landing/retrieval-ablation";
 import { SecurityModel } from "@/components/landing/security-model";
 import { EvidenceDemo } from "@/components/landing/evidence-demo";
 import { CtaBand } from "@/components/landing/cta-band";
@@ -83,7 +84,10 @@ export function LandingShell() {
           title="Hybrid search, not just vectors"
           lead="Dense retrieval alone misses exact identifiers — invoice numbers, policy codes, employee IDs. BM25 catches them. The two ranked lists fuse with Reciprocal Rank Fusion, then a cross-encoder reranks the bounded candidate set."
         >
-          <RetrievalProbe />
+          <div className="space-y-6">
+            <RetrievalProbe />
+            <RetrievalAblation />
+          </div>
         </Section>
 
         <Section

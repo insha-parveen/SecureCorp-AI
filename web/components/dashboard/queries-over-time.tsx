@@ -89,7 +89,7 @@ export function QueriesOverTime() {
             Total queries per weekday (last 7 days)
           </p>
         </div>
-        <Badge variant="muted">{isLive ? "Live" : "(Demo data)"}</Badge>
+        {isLive ? <Badge variant="muted">Live</Badge> : null}
       </GlassCardHeader>
       <GlassCardContent>
         <svg

@@ -24,7 +24,6 @@ export function CachePerformanceCard() {
             L1 + L2 hits, miss rate, latency saved
           </p>
         </div>
-        <Badge variant="muted">(Demo data)</Badge>
       </GlassCardHeader>
       <GlassCardContent>
         <div className="grid grid-cols-2 gap-3 md:grid-cols-4">

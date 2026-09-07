@@ -18,6 +18,7 @@ import { useCurrentUser } from "@/lib/auth-context";
 import { Logo } from "@/components/ui/logo";
 import { Badge } from "@/components/ui/badge";
 import { UserMenu } from "@/components/layout/user-menu";
+import { DemoAccessBadge } from "@/components/layout/demo-access-badge";
 import { cn } from "@/lib/utils";
 
 interface NavItem {
@@ -91,8 +92,9 @@ export function DashboardTopNav() {
           })}
         </nav>
 
-        {/* Right: user menu (desktop + mobile) + mobile hamburger */}
+        {/* Right: demo access indicator + user menu (desktop + mobile) + mobile hamburger */}
         <div className="flex items-center gap-2">
+          <DemoAccessBadge />
           <UserMenu />
           <MobileNav
             open={mobileOpen}

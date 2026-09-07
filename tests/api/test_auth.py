@@ -99,3 +99,42 @@ def test_demo_user_directory_is_public(client: TestClient) -> None:
     user_ids = {u["user_id"] for u in body["users"]}
     # Every pre-seeded user must be present.
     assert set(DEMO_USERS.keys()) <= user_ids
+
+
+def test_access_summary_requires_auth(client: TestClient) -> None:
+    assert client.get("/api/auth/access-summary").status_code == 401
+
+
+def test_access_summary_reflects_the_users_real_scope(client: TestClient) -> None:
+    """The access indicator must be a live authorization result.
+
+    Two invariants matter here and both are security-relevant:
+      * counts never exceed the corpus totals, and
+      * ``admin`` gets NO superuser bypass, so even admin sees strictly fewer
+        than every document. A regression that silently granted blanket access
+        would show up as admin == total.
+
+    Skips when the retrieval stack is not wired (no index in the environment),
+    since the endpoint then correctly reports ``available=false``.
+    """
+    scopes: dict[str, dict[str, int]] = {}
+    for user_id in ("admin", "alice", "eve"):
+        login = client.post("/api/auth/token", json={"user_id": user_id})
+        cookie = login.cookies.get("sc_auth")
+        assert cookie is not None
+        client.cookies.set("sc_auth", cookie)
+
+        response = client.get("/api/auth/access-summary")
+        assert response.status_code == 200
+        body = response.json()
+        if not body["available"]:
+            pytest.skip("retrieval stack not wired in this environment")
+
+        assert 0 < body["accessible_documents"] <= body["total_documents"]
+        assert 0 < body["accessible_chunks"] <= body["total_chunks"]
+        scopes[user_id] = body
+
+    # No superuser bypass: admin must not see the entire corpus.
+    assert scopes["admin"]["accessible_documents"] < scopes["admin"]["total_documents"]
+    # Scope is identity-dependent: a plain employee sees less than admin.
+    assert scopes["eve"]["accessible_documents"] < scopes["admin"]["accessible_documents"]

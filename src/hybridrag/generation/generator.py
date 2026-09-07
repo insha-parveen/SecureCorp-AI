@@ -10,6 +10,7 @@ from typing import cast
 
 from hybridrag.config import Settings, get_settings
 from hybridrag.domain import FinalResponse, RankedChunk, StructuredAnswer
+from hybridrag.generation.abstention import looks_like_abstention
 from hybridrag.generation.formatter import create_generation_prompt, format_evidence
 from hybridrag.generation.provider import GenerationProvider, get_generation_provider
 
@@ -71,7 +72,9 @@ class RAGGenerator:
         context = format_evidence(evidence)
 
         # 2. Construct the full prompt
-        prompt = create_generation_prompt(query, context, history=history)
+        prompt = create_generation_prompt(
+            query, context, history=history, evidence_count=len(evidence)
+        )
 
         # 3. Call the LLM provider
         response = self._provider.generate(
@@ -183,46 +186,29 @@ class RAGGenerator:
         yield GeneratorDoneEvent(response=final)
 
     def _extract_inline_citations(self, text: str) -> list[int]:
-        """Extract citation ranks from inline ``[N]`` markers in prose.
+        """Extract citation ranks from inline ``[[N]]`` markers in prose.
 
-        The streaming prompt instructs the model to cite evidence inline
-        as ``[1]``, ``[2]``, etc. This method parses those markers and
-        returns the unique ranks in order of first appearance.
+        The streaming prompt instructs the model to cite evidence inline as
+        ``[[1]]``, ``[[2]]``, etc. Double brackets are required so a stray
+        single-bracket number in the prose (e.g. a ``[3]`` footnote copied
+        from the evidence text) is not mistaken for a citation.
         """
         import re
 
-        return [int(m) for m in re.findall(r"\[(\d+)\]", text)]
+        return [int(m) for m in re.findall(r"\[\[(\d+)\]\]", text)]
 
     def _is_abstention(self, answer: str, evidence: list[RankedChunk]) -> bool:
         """Detect whether the model abstained from answering.
 
-        The model abstains when:
-          * There is no evidence at all, OR
-          * The answer contains explicit abstention phrases.
-
-        Returns True when the answer should be treated as an abstention
-        rather than a grounded answer.
+        The model abstains when there is no evidence at all, or the answer
+        text matches the canonical abstention markers. Detection is delegated
+        to :func:`hybridrag.generation.abstention.looks_like_abstention` so the
+        generator and the evaluation harness can never disagree on what an
+        abstention looks like.
         """
         if not evidence:
             return True
-
-        # Explicit abstention phrases the model may emit when it cannot
-        # find the answer in the provided evidence.
-        abstention_phrases = (
-            "i don't know",
-            "i do not know",
-            "not in the evidence",
-            "not found in the evidence",
-            "cannot answer",
-            "can't answer",
-            "unable to answer",
-            "no relevant evidence",
-            "i am not sure",
-            "i'm not sure",
-            "insufficient information",
-        )
-        lowered = answer.lower().strip()
-        return any(phrase in lowered for phrase in abstention_phrases)
+        return looks_like_abstention(answer)
 
     def _validate_citations(
         self,

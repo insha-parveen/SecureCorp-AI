@@ -12,7 +12,8 @@ from hybridrag.api.auth import (
     verify_token,
 )
 from hybridrag.api.rate_limit import rate_limit
-from hybridrag.api.schemas import TokenRequest, TokenResponse
+from hybridrag.api.schemas import AccessSummaryResponse, TokenRequest, TokenResponse
+from hybridrag.authorization.engine import AuthorizationEngine
 from hybridrag.authorization.models import UserContext
 from hybridrag.config import Settings
 
@@ -107,6 +108,51 @@ def get_me(
         department=user.department,
         tenant_id=user.tenant_id,
         expires_in=settings.jwt_ttl_seconds,
+    )
+
+
+@router.get("/access-summary", response_model=AccessSummaryResponse)
+def get_access_summary(
+    request: Request,
+    user: UserContext = Depends(current_user_from_cookie()),
+) -> AccessSummaryResponse:
+    """Report how much of the corpus the current user may see.
+
+    Runs the SAME ``AuthorizationEngine.is_authorized`` check the retrieval
+    path uses, over the already-in-memory BM25 corpus, so the "N of M
+    documents accessible" indicator is a live authorization result rather than
+    a hardcoded number. Note that no role — including ``admin`` — gets a
+    superuser bypass, so even an admin sees fewer than all documents.
+
+    Degrades to ``available=false`` with zero counts when the retrieval stack
+    failed to wire, so the UI can hide the indicator instead of showing 0/0.
+    """
+    retriever = getattr(request.app.state, "retriever", None)
+    if retriever is None:
+        return AccessSummaryResponse(
+            accessible_documents=0,
+            total_documents=0,
+            accessible_chunks=0,
+            total_chunks=0,
+            available=False,
+        )
+
+    chunks = retriever.bm25.chunks
+    all_docs: set[str] = set()
+    ok_docs: set[str] = set()
+    ok_chunks = 0
+    for chunk in chunks:
+        all_docs.add(chunk.document_id)
+        if AuthorizationEngine.is_authorized(user, chunk):
+            ok_docs.add(chunk.document_id)
+            ok_chunks += 1
+
+    return AccessSummaryResponse(
+        accessible_documents=len(ok_docs),
+        total_documents=len(all_docs),
+        accessible_chunks=ok_chunks,
+        total_chunks=len(chunks),
+        available=True,
     )
 
 

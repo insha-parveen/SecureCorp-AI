@@ -21,6 +21,20 @@ class GenerationResponse:
     usage: dict[str, int]  # e.g., {"prompt_tokens": 120, "completion_tokens": 45}
 
 
+def _scalar_usage(raw: dict[str, Any] | None) -> dict[str, int]:
+    """Flatten a provider ``usage`` block to scalar int token counts.
+
+    Some models (e.g. Groq's ``gpt-oss-*`` reasoning models) nest extra detail
+    under keys like ``completion_tokens_details: {"reasoning_tokens": 89}``.
+    ``GenerationResponse.usage`` (and the downstream ``FinalResponse.usage``,
+    typed ``dict[str, float | int]``) only holds scalars, so a nested dict would
+    fail validation. Keep the integer counts, drop the nested breakdowns.
+    """
+    if not raw:
+        return {"prompt_tokens": 0, "completion_tokens": 0}
+    return {k: int(v) for k, v in raw.items() if isinstance(v, int | float)}
+
+
 @runtime_checkable
 class GenerationProvider(Protocol):
     """The contract every LLM backend must satisfy."""
@@ -182,7 +196,7 @@ class GroqLLMProvider:
         return GenerationResponse(
             text=content,
             model=self._model_name,
-            usage=data.get("usage", {"prompt_tokens": 0, "completion_tokens": 0}),
+            usage=_scalar_usage(data.get("usage")),
         )
 
     def stream(self, prompt: str, system_prompt: str | None = None) -> Iterator[str]:

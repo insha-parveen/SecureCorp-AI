@@ -27,6 +27,24 @@ class TokenResponse(BaseModel):
     expires_in: int
 
 
+class AccessSummaryResponse(BaseModel):
+    """Response from ``GET /api/auth/access-summary``.
+
+    Reports how much of the indexed corpus the CURRENT user is authorized to
+    see, computed by running the real ``AuthorizationEngine.is_authorized``
+    over the in-memory chunk corpus. Powers the demo access indicator, so the
+    number shown in the UI is a live authorization result rather than a
+    hardcoded claim. ``available`` is false when the retrieval stack is not
+    wired (the counts are then 0 and the UI should degrade).
+    """
+
+    accessible_documents: int
+    total_documents: int
+    accessible_chunks: int
+    total_chunks: int
+    available: bool
+
+
 class ChatRequest(BaseModel):
     """Body for ``POST /api/chat``."""
 
